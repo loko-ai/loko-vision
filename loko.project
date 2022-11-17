@@ -1,0 +1,20 @@
+{
+  "name": "loko-vision",
+  "id": "loko-vision",
+  "description": "",
+  "created_on": "17/11/2022, 14:17:04",
+  "last_modify": "17/11/2022, 14:17:04",
+  "graphs": {
+    "main": {
+      "nodes": [],
+      "edges": [],
+      "__class__": "Graph"
+    }
+  },
+  "open": [
+    "main"
+  ],
+  "active": "main",
+  "version": "1.0.0",
+  "__class__": "Project"
+}
