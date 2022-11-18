@@ -1,0 +1,227 @@
+[
+ {
+  "name": "Vision",
+  "description": "\n### Description\n\nVISION is the Loko AI component which allows to classify images either using a pre-trained Neural Networks, or using a transfer-learning model over one of them. Specifically, VISION helps you with training, predicting and managing your models.\n\n### Configuration\n\nThe heading ***Available services*** allows user to select the VISION instance of interest (remembering that different vision-models will necessarily be found on different instances). \n\nIf you just want to use a pre-trained Neural Network in order to classify your set of images, you can directly link a *File Reader* component to the *Predict* Inputs of VISION. \nMore information about pre-trained models can be found here https://keras.io/api/applications/, where you can see details on their network structure and performances. \nIf you decide to classify your image directly using one of the pre-trained Neural Networks, you should expect to receive as output one of the 1000 possible ImageNet classes (.\n\nIf you want to create a transfer-learning model to customize your classifier on your own data, follow these steps:\n\n\n- **Create a model:** in *Create parameters* choose the name of the model you want to create (*Vision Model Name*) and select the pre-trained models to use (*Pretrained Models*). Then, link a *Trigger* component to the **Create** input;\n\n- **Fit a model:** in *Fit parameters* choose the name of the model you want to train (*Vision Model*), and use a *File Reader* to pass a zipped folder to the VISION component ***Fit*** input.\n\n- **Get prediction with a model:** in *Predict parameters* you can set the model to use (*Vision Model*) choosing between the customized models and the pre-trained NN. Then, you can choose if you want to see directly the predicted class or the probability of each of them, setting the **Predict proba** parameters. \nIf you use a customized model, you can also decide to see predictions as a **generic Multi-Class** or as a **Multi-Label model**; in the latter case, if you don't want to see the probability of belonging to each class you can set the value of the **MultiLabel Threshold**, that indicate the minimum probability value in order to assign a specific class.\n\n\nYou may also want to:\n\n\n- **Delete a model:** in the section *delete parameters* specify the model you want to delete. It's possible to delete only the customized models.\n\n- **Get information about a model:** in *info parameters* you have to set the model name and then choose if you just want to know if the model is fitted and the pre-trained model used, or if you want **advanced** information.\n\n\n\n\n### Output\n\nFor **Create, Fit and Delete** services the output messages will only be a sentence that confirms that the required action has been finalized. For the *fit* service it may take a while to have the output back, depending on how much the fitting lasts.\n\n\nThe output for the **info** services change if the model has already been fitted or not, and based on the setting chosen regarding advanced information. In case the model has been fitted and advanced information was activated the output will be the following:\n\n```json\n{\"predictor_name\": name of the model chosen, \n\"pretrained_model\": name of the pretrained model chosen,\n\"top_layer\": {\"n_layer\":1,\n    \"n_classes\": number of classes,\n    \"metrics\": [\"accuracy\"],\n    \"loss_function\": \"binary_crossentropy\",\n    \"epochs\":100},\n\"fitted\": say if the model was trained or not}\n```\n\nIn case the model *is not fitted* or *the advanced information* is not activated, the output will be the same without the \"top layer\" information.\n\nThe **predict** service has different output based on the settings chosen. If the field *predict proba* has been selected, we can see the probabilities next to each labels:\n\n```json\n{\"fname\": name of the file used for the prediction, \n\"pred\": [[\"cat\",0.9996217489242554],\n        [\"dog\",0.001642674207687378]]}\n```\n\nOtherwise, the output will be:\n\n```json\n{\"fname\": name of the file used for the prediction, \n\"pred\": \"cat\"}\n```\n\nIf *multilabel* is selected the output will be:\n\n```\n{\"fname\": name of the file used for the prediction, \n\"pred\": [\"cat\", \"persian\",\"black\"]}\n```\n",
+  "group": "ComputerVision",
+  "icon": "RiImage2Fill",
+  "click": null,
+  "events": null,
+  "configured": true,
+  "inputs": [
+   {
+    "id": "fit",
+    "label": "fit",
+    "service": "",
+    "to": "fit"
+   },
+   {
+    "id": "predict",
+    "label": "predict",
+    "service": "",
+    "to": "predict"
+   },
+   {
+    "id": "evaluate",
+    "label": "evaluate",
+    "service": "",
+    "to": "evaluate"
+   }
+  ],
+  "outputs": [
+   {
+    "id": "fit",
+    "label": "fit"
+   },
+   {
+    "id": "predict",
+    "label": "predict"
+   },
+   {
+    "id": "evaluate",
+    "label": "evaluate"
+   }
+  ],
+  "options": {
+   "values": {
+    "multilabel_threshold": "0.5"
+   },
+   "args": [
+    {
+     "name": "predictor_name_fit",
+     "type": "asyncSelect",
+     "label": "Vision Model",
+     "helper": "Name of the model you want to use for fitting",
+     "group": "Fit parameters",
+     "value": null,
+     "description": "",
+     "validation": null,
+     "url": "http://0.0.0.0:8080/ds4biz_vision/0.0/models?info=false&model_type=custom"
+    },
+    {
+     "name": "predictor_name_predict",
+     "type": "asyncSelect",
+     "label": "Vision Model",
+     "helper": "Name of the model you want to use for predicting",
+     "group": "Predict parameters",
+     "value": null,
+     "description": "",
+     "validation": null,
+     "url": "http://0.0.0.0:8080/ds4biz_vision/0.0/models"
+    },
+    {
+     "name": "include_probs",
+     "type": "boolean",
+     "label": "Predict proba",
+     "helper": "",
+     "group": "Predict parameters",
+     "value": false,
+     "description": "",
+     "validation": null
+    },
+    {
+     "name": "multilabel",
+     "type": "boolean",
+     "label": "Multilabel",
+     "helper": "",
+     "group": "Predict parameters",
+     "value": false,
+     "description": "If True the results will be seen as a MultiLabel problem, otherwise as a MultiClass",
+     "validation": null
+    },
+    {
+     "name": "multilabel_threshold",
+     "type": "dynamic",
+     "label": "Multilabel Threshold",
+     "helper": "Threshold rate to decide the belongings to one class for the MultiLabel",
+     "group": "Predict parameters",
+     "value": "0.5",
+     "description": "",
+     "validation": null,
+     "parent": "multilabel",
+     "condition": "{parent}===true",
+     "dynamicType": "select",
+     "options": [
+      "0.5",
+      "0.6",
+      "0.7",
+      "0.8",
+      "0.9"
+     ],
+     "fields": null,
+     "url": null
+    }
+   ]
+  }
+ },
+ {
+  "name": "Vision Manager",
+  "description": "\n### Description\n\nVISION is the Loko AI component which allows to classify images either using a pre-trained Neural Networks, or using a transfer-learning model over one of them. Specifically, VISION helps you with training, predicting and managing your models.\n\n### Configuration\n\nThe heading ***Available services*** allows user to select the VISION instance of interest (remembering that different vision-models will necessarily be found on different instances). \n\nIf you just want to use a pre-trained Neural Network in order to classify your set of images, you can directly link a *File Reader* component to the *Predict* Inputs of VISION. \nMore information about pre-trained models can be found here https://keras.io/api/applications/, where you can see details on their network structure and performances. \nIf you decide to classify your image directly using one of the pre-trained Neural Networks, you should expect to receive as output one of the 1000 possible ImageNet classes (.\n\nIf you want to create a transfer-learning model to customize your classifier on your own data, follow these steps:\n\n\n- **Create a model:** in *Create parameters* choose the name of the model you want to create (*Vision Model Name*) and select the pre-trained models to use (*Pretrained Models*). Then, link a *Trigger* component to the **Create** input;\n\n- **Fit a model:** in *Fit parameters* choose the name of the model you want to train (*Vision Model*), and use a *File Reader* to pass a zipped folder to the VISION component ***Fit*** input.\n\n- **Get prediction with a model:** in *Predict parameters* you can set the model to use (*Vision Model*) choosing between the customized models and the pre-trained NN. Then, you can choose if you want to see directly the predicted class or the probability of each of them, setting the **Predict proba** parameters. \nIf you use a customized model, you can also decide to see predictions as a **generic Multi-Class** or as a **Multi-Label model**; in the latter case, if you don't want to see the probability of belonging to each class you can set the value of the **MultiLabel Threshold**, that indicate the minimum probability value in order to assign a specific class.\n\n\nYou may also want to:\n\n\n- **Delete a model:** in the section *delete parameters* specify the model you want to delete. It's possible to delete only the customized models.\n\n- **Get information about a model:** in *info parameters* you have to set the model name and then choose if you just want to know if the model is fitted and the pre-trained model used, or if you want **advanced** information.\n\n\n\n\n### Output\n\nFor **Create, Fit and Delete** services the output messages will only be a sentence that confirms that the required action has been finalized. For the *fit* service it may take a while to have the output back, depending on how much the fitting lasts.\n\n\nThe output for the **info** services change if the model has already been fitted or not, and based on the setting chosen regarding advanced information. In case the model has been fitted and advanced information was activated the output will be the following:\n\n```json\n{\"predictor_name\": name of the model chosen, \n\"pretrained_model\": name of the pretrained model chosen,\n\"top_layer\": {\"n_layer\":1,\n    \"n_classes\": number of classes,\n    \"metrics\": [\"accuracy\"],\n    \"loss_function\": \"binary_crossentropy\",\n    \"epochs\":100},\n\"fitted\": say if the model was trained or not}\n```\n\nIn case the model *is not fitted* or *the advanced information* is not activated, the output will be the same without the \"top layer\" information.\n\nThe **predict** service has different output based on the settings chosen. If the field *predict proba* has been selected, we can see the probabilities next to each labels:\n\n```json\n{\"fname\": name of the file used for the prediction, \n\"pred\": [[\"cat\",0.9996217489242554],\n        [\"dog\",0.001642674207687378]]}\n```\n\nOtherwise, the output will be:\n\n```json\n{\"fname\": name of the file used for the prediction, \n\"pred\": \"cat\"}\n```\n\nIf *multilabel* is selected the output will be:\n\n```\n{\"fname\": name of the file used for the prediction, \n\"pred\": [\"cat\", \"persian\",\"black\"]}\n```\n",
+  "group": "ComputerVision",
+  "icon": "RiSettings5Fill",
+  "click": null,
+  "events": null,
+  "configured": true,
+  "inputs": [
+   {
+    "id": "create",
+    "label": "create",
+    "service": "",
+    "to": "create"
+   },
+   {
+    "id": "info",
+    "label": "info",
+    "service": "",
+    "to": "info"
+   },
+   {
+    "id": "delete",
+    "label": "delete",
+    "service": "",
+    "to": "delete"
+   }
+  ],
+  "outputs": [
+   {
+    "id": "create",
+    "label": "create"
+   },
+   {
+    "id": "info",
+    "label": "info"
+   },
+   {
+    "id": "delete",
+    "label": "delete"
+   }
+  ],
+  "options": {
+   "values": {},
+   "args": [
+    {
+     "name": "predictor_name",
+     "type": "text",
+     "label": "Vision Model Name",
+     "helper": "Name of the model you want to use for fitting/predicting",
+     "group": "Create Parameters",
+     "value": null,
+     "description": "",
+     "validation": null
+    },
+    {
+     "name": "pretrained_model",
+     "type": "asyncSelect",
+     "label": "Pretrained model",
+     "helper": "choose your pretrained NN",
+     "group": "Create Parameters",
+     "value": null,
+     "description": "",
+     "validation": null,
+     "url": "http://0.0.0.0:8080/ds4biz_vision/0.0/models?model_type=pretrained"
+    },
+    {
+     "name": "predictor_tag",
+     "type": "text",
+     "label": "Model tag",
+     "helper": "Create a tag that helps you to recognize the aim of the model",
+     "group": "Create Parameters",
+     "value": null,
+     "description": "",
+     "validation": null
+    },
+    {
+     "name": "predictor_name_info",
+     "type": "asyncSelect",
+     "label": "Vision Model",
+     "helper": "Name of the model you want to know details about",
+     "group": "Info parameters",
+     "value": null,
+     "description": "",
+     "validation": null,
+     "url": "http://0.0.0.0:8080/ds4biz_vision/0.0/models"
+    },
+    {
+     "name": "adv_info",
+     "type": "boolean",
+     "label": "Advanced information",
+     "helper": "",
+     "group": "Info parameters",
+     "value": null,
+     "description": "",
+     "validation": null
+    },
+    {
+     "name": "predictor_name_delete",
+     "type": "asyncSelect",
+     "label": "Vision Model",
+     "helper": "Name of the model you want to delete",
+     "group": "Delete parameters",
+     "value": null,
+     "description": "",
+     "validation": null,
+     "url": "http://0.0.0.0:8080/ds4biz_vision/0.0/models?info=false&model_type=custom"
+    }
+   ]
+  }
+ }
+]
