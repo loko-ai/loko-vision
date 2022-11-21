@@ -3,7 +3,7 @@
   "id": "loko-vision",
   "description": "",
   "created_on": "17/11/2022, 14:17:04",
-  "last_modify": "21/11/2022, 16:50:51",
+  "last_modify": "21/11/2022, 19:06:53",
   "graphs": {
     "Vision Manager": {
       "nodes": [
@@ -521,8 +521,8 @@
           "targetPosition": "left",
           "width": 150,
           "height": 56,
-          "selected": null,
-          "dragging": null,
+          "selected": false,
+          "dragging": false,
           "data": {
             "name": "Vision",
             "events": null,
@@ -651,16 +651,140 @@
               "click": null,
               "icon": "RiImage2Fill",
               "values": {
-                "multilabel_threshold": "0.5"
+                "comment": "",
+                "alias": "",
+                "debug": true,
+                "include_probs": false,
+                "multilabel": false,
+                "predictor_name_fit": "",
+                "predictor_name_predict": "ConvNeXtTiny"
               }
-            }
+            },
+            "locked": null
           },
           "selectable": true,
           "draggable": true,
           "__class__": "Node"
+        },
+        {
+          "id": "277aff39-3244-47aa-99c4-bab032d982e6",
+          "position": {
+            "x": 471,
+            "y": 254
+          },
+          "type": "custom",
+          "dragHandle": "#nodeHandle",
+          "sourcePosition": "right",
+          "targetPosition": "left",
+          "width": 150,
+          "height": 56,
+          "selected": false,
+          "dragging": false,
+          "data": {
+            "name": "File Reader",
+            "events": null,
+            "description": "### Description\nThe FILE READER component allows the reading of individual files.\n\n### Output\nSetting the **Read Content** parameter to **False**, the output provides the file path in PosixPath format. The component will then need to be connected to other components to read the content, for example *LineReader*.\n\nOn the contrary, setting the **Read Content** parameter to **True**, you can choose whether to read the content in *Binary* format. This format will be selected for reading non-text files.",
+            "inputs": [
+              {
+                "id": "input",
+                "label": "input"
+              }
+            ],
+            "outputs": [
+              {
+                "id": "output",
+                "label": "output"
+              }
+            ],
+            "configured": true,
+            "options": {
+              "group": "Inputs",
+              "args": [
+                {
+                  "name": "comment",
+                  "type": "area",
+                  "label": "Node comment",
+                  "helper": "Use it to explain the usage of this node"
+                },
+                {
+                  "name": "alias",
+                  "type": "text",
+                  "label": "Name",
+                  "helper": "Use this name as an alias"
+                },
+                {
+                  "name": "debug",
+                  "type": "boolean",
+                  "label": "Debug to Console",
+                  "divider": true
+                },
+                {
+                  "name": "value",
+                  "type": "files",
+                  "label": "File",
+                  "fragment": "files",
+                  "validation": {
+                    "required": "Required field"
+                  }
+                },
+                {
+                  "name": "read_content",
+                  "type": "boolean",
+                  "label": "Read content"
+                },
+                {
+                  "name": "binary",
+                  "type": "dynamic",
+                  "label": "Binary",
+                  "dynamicType": {
+                    "true": "boolean"
+                  },
+                  "parent": "read_content"
+                }
+              ],
+              "click": "Send file",
+              "icon": "RiFileList3Fill",
+              "values": {
+                "comment": "",
+                "alias": "",
+                "debug": false,
+                "read_content": false,
+                "value": {
+                  "name": "2021_cane.png",
+                  "path": "data/data/2021_cane.png",
+                  "parent": "data/data",
+                  "isDir": false,
+                  "hidden": false
+                }
+              }
+            },
+            "locked": null
+          },
+          "selectable": true,
+          "draggable": true,
+          "positionAbsolute": {
+            "x": 471,
+            "y": 254
+          },
+          "__class__": "Node"
         }
       ],
-      "edges": [],
+      "edges": [
+        {
+          "id": "reactflow__edge-277aff39-3244-47aa-99c4-bab032d982e6output-c91fafa0-d0f3-4940-b408-87e413d49a35predict",
+          "source": "277aff39-3244-47aa-99c4-bab032d982e6",
+          "sourceHandle": "output",
+          "target": "c91fafa0-d0f3-4940-b408-87e413d49a35",
+          "targetHandle": "predict",
+          "data": {
+            "startColor": "#F8637A",
+            "stopColor": "#888"
+          },
+          "selected": false,
+          "dragging": false,
+          "__class__": "Edge"
+        }
+      ],
       "__class__": "Graph"
     }
   },

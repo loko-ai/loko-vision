@@ -93,18 +93,18 @@ class ClassifierWrapper(PredictorWrapper):
     def fit(self, X, y, epochs=100, callbacks=None):
         callbacks = callbacks or []
 
-        for c in callbacks:
-            c.model = self
-            c.on_train_begin()
+        # for c in callbacks:
+        #     c.model = self
+        #     c.on_train_begin()
 
         for epoch in range(epochs):
-            for c in callbacks:
-                c.on_epoch_begin(epoch)
+            # for c in callbacks:
+            #     c.on_epoch_begin(epoch)
             self.predictor.fit(X, y)
             loss = accuracy_score(y, self.predictor.predict(X))
             iters = self.predictor.n_iter_
-            for c in callbacks:
-                c.on_epoch_end(epoch, logs=dict(loss=loss, iterations=iters))
+            # for c in callbacks:
+            #     c.on_epoch_end(epoch, logs=dict(loss=loss, iterations=iters))
 
             if self.stop_training:
                 break

@@ -6,14 +6,14 @@ import tensorflow.keras.applications as models
 from PIL import Image
 from tensorflow.keras.preprocessing import image
 from tensorflow.python.keras import Model
-import tensorflow.keras as keras
+from tensorflow import keras
 
 from config.AppConfig import REPO_PATH
 from config.genericConfig import PRETRAINED_TH_PREDICTION
 from model.callbacks import ClassifierWrapper
 from utils.logger_utils import logger
 from utils.prediction_utils import inverse_sigmoid, softmax
-from utils.service_utils import send_message
+# from utils.service_utils import send_message
 
 repo = Path(REPO_PATH)
 
@@ -62,7 +62,7 @@ class KerasImagePredictor(ImagePredictor):
         return self._base_model
 
     def _preprocess_input(self, X):
-        send_message(self.predictor_name, "Image Pre-Processing")
+        # send_message(self.predictor_name, "Image Pre-Processing")
         input_shape = self.base_model.input.type_spec.shape[1:3]
         X = [image.img_to_array(xx.convert('RGB').resize(input_shape, Image.NEAREST)) for xx in X]
         X = np.array(X)
@@ -81,7 +81,7 @@ class KerasImagePredictor(ImagePredictor):
             self.top_layer.update_model_from_config(mdl_config)
 
     def fit(self, X, y, callbacks=None, **kwargs):
-        send_message(self.predictor_name, "Model Fitting")
+        # send_message(self.predictor_name, "Model Fitting")
         X = self._preprocess_input(X)
         if self.h5:
             self._check_model_input_shape()
@@ -102,7 +102,7 @@ class KerasImagePredictor(ImagePredictor):
         ### transfer learning ###
         X = self._preprocess_input(X)
         if self.top_layer:
-            send_message(self.predictor_name, "Starts prediction")
+            # send_message(self.predictor_name, "Starts prediction")
             logger.debug("creating input vector using pre-trained model")
             vecs = self.base_model.predict(X)
             logger.debug('computing predictions...')
@@ -114,7 +114,7 @@ class KerasImagePredictor(ImagePredictor):
             logger.debug("getting prediction...")
             return [get_preds_with_class(el) for el in preds]
         else:
-            send_message(self.predictor_name, "Starts prediction")
+            # send_message(self.predictor_name, "Starts prediction")
             logger.debug("starting predictions...")
             preds = self.base_model.predict(X)
             n_classes = len(preds[0])

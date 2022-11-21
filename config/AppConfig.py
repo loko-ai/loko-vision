@@ -4,16 +4,16 @@ from pathlib import Path
 from utils.env_utils import EnvInit
 
 #os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID" #If the line below doesn't work, uncomment this line (make sure to comment the line below); it should help.
-os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
+# os.environ['CUDA_VISIBLE_DEVICES'] = '1'
 
 env = EnvInit()
 REPO_PATH = env.REPO or '../repo'
 MODEL_CACHE_TIMEOUT = env.MODEL_CACHE_TIMEOUT or 60
 # HERMES_URL = env.HERMES_URL or 'http://0.0.0.0:8082/'
 # HERMES_EMIT_URL = os.path.join(HERMES_URL, *'/ds4biz/hermes/0.0/emit'.split('/'))
-GATEWAY_URL = env.GATEWAY_URL or 'http://0.0.0.0:8080'
-GATEWAY_EMIT_URL = os.path.join(GATEWAY_URL, *'/emit'.split('/'))
-print(GATEWAY_EMIT_URL)
+# GATEWAY_URL = env.GATEWAY_URL or 'http://0.0.0.0:8080'
+# GATEWAY_EMIT_URL = os.path.join(GATEWAY_URL, *'/emit'.split('/'))
+# print(GATEWAY_EMIT_URL)
 
 KERAS_PRETRAINED_MODELS = [
     "ConvNeXtBase",

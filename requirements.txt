@@ -3,5 +3,5 @@ loko-extensions
 sanic == 22.6.2
 sanic-cors
 sanic-openapi
-sklearn
-tensorflow
+scikit-learn
+tensorflow == 2.11

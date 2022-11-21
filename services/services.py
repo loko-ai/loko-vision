@@ -170,6 +170,7 @@ def predict(request, predictor_name):
         return json("There is no file for model prediction", status=400)
     else:
         f = request.files["file"][0]
+    # print(f)
     # top = int(request.args.get('top', 3))
     proba = eval(request.args.get('include_probs', 'true').capitalize())
     multilabel = eval(request.args.get('multilabel', 'false').capitalize())
@@ -321,6 +322,8 @@ def loko_fit_model(file, args):
 ''')
 @extract_value_args(file=True)
 def loko_predict_model(file, args):
+
+    logger.debug(f"args {args}")
     predictor_name = args.get("predictor_name_predict")
     if predictor_name == "":
         msg = "VISION SETTINGS MISSING!!!Model of interest not selected, you have to specify one model name"
@@ -330,13 +333,12 @@ def loko_predict_model(file, args):
     # else:
     #     f = request.files["file"][0]
     #     # top = int(request.args.get('top', 3))
-    f = file
-    proba = eval(args.get('include_probs', 'true').capitalize())
-    multilabel = eval(args.get('multilabel', 'false').capitalize())
+    proba = args.get('include_probs', True)
+    multilabel = args.get('multilabel', False)
     if multilabel and predictor_name in models_mapping.keys():
         return json('You cannot use a pre-trained model (%s) as multilabel model' % predictor_name, status=400)
     mlb_threshold = float(args.get("multilabel_threshold", 0.5)) if multilabel else None
-    preds_res = predict_task(f, predictor_name, proba, multilabel, mlb_threshold)
+    preds_res = predict_task(file, predictor_name, proba, multilabel, mlb_threshold)
     return json(preds_res)  # , status=200)
 
 
