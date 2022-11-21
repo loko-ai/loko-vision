@@ -50,9 +50,9 @@ def get_app(name):
     return app
 
 
-name = "ds4biz-vision"
+name = "loko-vision"
 app = get_app(name)
-bp = Blueprint("default", url_prefix=f"ds4biz_vision/{get_pom_major_minor()}/models/")
+bp = Blueprint("default", url_prefix=f"loko_vision/{get_pom_major_minor()}/")
 app.config["API_VERSION"] = get_pom_major_minor()
 app.config["API_TITLE"] = name
 CORS(app)
@@ -62,7 +62,7 @@ get_models_params_description = '''
 '''
 
 
-@bp.get("/")
+@bp.get("/models/")
 @doc.tag('Vision')
 @doc.description(get_models_params_description)
 @doc.consumes(doc.String(name="model_type", choices=["all", "custom", "pretrained"], description="Default model_type='all'"))
@@ -79,7 +79,7 @@ delete_params_description = '''
 '''
 
 
-@bp.delete("/<predictor_name>")
+@bp.delete("/models/<predictor_name>")
 @doc.tag('Vision')
 @doc.consumes(doc.String(name="predictor_name"), location="path", required=True)
 def delete_model(request, predictor_name):
@@ -96,7 +96,7 @@ create_params_description = '''
 '''
 
 
-@bp.post("/<predictor_name>")
+@bp.post("/models/<predictor_name>")
 @doc.tag('Vision')
 @doc.description(create_params_description)
 @doc.consumes(doc.String(name="predictor_tag"), location="query")
@@ -125,7 +125,7 @@ fit_params_description = '''
 '''
 
 
-@bp.post("/<predictor_name>/fit")
+@bp.post("/models/<predictor_name>/fit")
 @doc.tag('Vision')
 @doc.description(fit_params_description)
 @doc.consumes(doc.File(name="file"), location="formData", content_type="multipart/form-data", required=True)
@@ -156,7 +156,7 @@ predict_params_description = '''
 '''
 
 
-@bp.post("/<predictor_name>/predict")
+@bp.post("/models/<predictor_name>/predict")
 @doc.tag('Vision')
 @doc.description(predict_params_description)
 @doc.consumes(doc.String(name="predictor_name"), location="path", required=True)
@@ -180,7 +180,7 @@ def predict(request, predictor_name):
     return json(preds_res)  # , status=200)
 
 
-@bp.get("/<predictor_name>/info")
+@bp.get("/models/<predictor_name>/info")
 @doc.tag('Vision')
 @doc.consumes(doc.String(name="predictor_name"), location="path", required=True)
 @doc.consumes(doc.Boolean(name="advanced_info"), location="query")
@@ -193,7 +193,7 @@ def info(request, predictor_name):
 
 
 
-@bp.get("/<predictor_name>/export")
+@bp.get("/models/<predictor_name>/export")
 @doc.tag('Vision')
 @doc.summary('Download existing vision model')
 @doc.consumes(doc.String(name="predictor_name"), location="path", required=True)
@@ -208,7 +208,7 @@ async def export_predictor(request,predictor_name):
     return raw(buffer.getvalue(), headers=headers)
 
 
-@bp.post("/import")
+@bp.post("/models/import")
 @doc.tag('Vision')
 @doc.summary('Upload existing vision model')
 @doc.consumes(doc.File(name="file"), location="formData", content_type="multipart/form-data", required=True)
@@ -231,7 +231,7 @@ async def import_predictor(request):
     return sanic.json('Done')
 
 
-@bp.post("/model/create")
+@bp.post("/loko-services/create")
 @doc.tag('Loko Model Service')
 @doc.summary("Save an object in 'models'")
 @doc.description('''
@@ -258,7 +258,7 @@ def loko_create_model(value, args):
 
 
 
-@bp.post("/model/info")
+@bp.post("/loko-services/info")
 @doc.tag('Loko Model Service')
 @doc.summary("Get info about a model")
 @extract_value_args(file=False)
@@ -274,7 +274,7 @@ def loko_get_model_info(value, args):
 
 
 
-@bp.post("/model/delete")
+@bp.post("/loko-services/delete")
 @doc.tag('Loko Model Service')
 @doc.summary("Delete model")
 @extract_value_args(file=False)
@@ -283,11 +283,13 @@ def loko_delete_model(value, args):
     if predictor_name == "":
         msg = "VISION SETTINGS MISSING!!!Model of interest not selected, you have to specify one model name"
         return json(msg, status=400)
+    if predictor_name not in [m.name for m in pdao.all()]:
+        return json(f'Model {predictor_name} does not exist!', status=400)
     pdao.delete(predictor_name)
     return json(f"Model {predictor_name} deleted")
 
 
-@bp.post("/model/fit")
+@bp.post("/loko-services/fit")
 @doc.tag('Loko Model Service')
 @doc.summary("Fit a model")
 @doc.description('''
@@ -312,7 +314,7 @@ def loko_fit_model(file, args):
     return json(f"Model '{predictor_name}' fitted! Data used: ")
 
 
-@bp.post("/model/predict")
+@bp.post("/loko-services/predict")
 @doc.tag('Loko Model Service')
 @doc.summary("Predict model")
 @doc.description('''

@@ -3,16 +3,16 @@ from loko_extensions.model.components import Arg
 
 from extensions.vision_component_doc import vision_doc
 
-custom_model_list = "http://0.0.0.0:8080/ds4biz_vision/0.0/models?info=false&model_type=custom"
-custom_and_pretrained_model_list = "http://0.0.0.0:8080/ds4biz_vision/0.0/models"
-pretrained_list = "http://0.0.0.0:8080/ds4biz_vision/0.0/models?model_type=pretrained"
+custom_model_list = "http://localhost:9999/routes/loko-vision/loko_vision/0.0/models?info=false&model_type=custom"
+custom_and_pretrained_model_list = "http://localhost:9999/routes/loko-vision/loko_vision/0.0/models"
+pretrained_list = "http://localhost:9999/routes/loko-vision/loko_vision/0.0/models?model_type=pretrained"
 
-create_service = "model/create"
-info_service = "model/info"
-delete_service = "model/delete"
+create_service = "loko_vision/0.0/loko-services/create"
+info_service = "loko_vision/0.0/loko-services/info"
+delete_service = "loko_vision/0.0/loko-services/delete"
 
-fit_service = "model/fit"
-predict_service = "model/predict"
+fit_service = "loko_vision/0.0/loko-services/fit"
+predict_service = "loko_vision/0.0/loko-services/predict"
 evaluate_service = ""
 
 ################################## ARGS ####################################
@@ -92,7 +92,7 @@ info_group = 'Info parameters'
 info_predictor = AsyncSelect(name="predictor_name_info",
                              label="Vision Model",
                              group=info_group,
-                             url=custom_and_pretrained_model_list,
+                             url=custom_model_list,
                              helper='Name of the model you want to know details about')
 
 adv_info = Arg(name='adv_info',

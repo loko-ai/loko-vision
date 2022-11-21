@@ -11,13 +11,13 @@
    {
     "id": "fit",
     "label": "fit",
-    "service": "",
+    "service": "loko_vision/0.0/loko-services/fit",
     "to": "fit"
    },
    {
     "id": "predict",
     "label": "predict",
-    "service": "",
+    "service": "loko_vision/0.0/loko-services/predict",
     "to": "predict"
    },
    {
@@ -55,7 +55,7 @@
      "value": null,
      "description": "",
      "validation": null,
-     "url": "http://0.0.0.0:8080/ds4biz_vision/0.0/models?info=false&model_type=custom"
+     "url": "http://localhost:9999/routes/loko-vision/loko_vision/0.0/models?info=false&model_type=custom"
     },
     {
      "name": "predictor_name_predict",
@@ -66,7 +66,7 @@
      "value": null,
      "description": "",
      "validation": null,
-     "url": "http://0.0.0.0:8080/ds4biz_vision/0.0/models"
+     "url": "http://localhost:9999/routes/loko-vision/loko_vision/0.0/models"
     },
     {
      "name": "include_probs",
@@ -125,19 +125,19 @@
    {
     "id": "create",
     "label": "create",
-    "service": "",
+    "service": "loko_vision/0.0/loko-services/create",
     "to": "create"
    },
    {
     "id": "info",
     "label": "info",
-    "service": "",
+    "service": "loko_vision/0.0/loko-services/info",
     "to": "info"
    },
    {
     "id": "delete",
     "label": "delete",
-    "service": "",
+    "service": "loko_vision/0.0/loko-services/delete",
     "to": "delete"
    }
   ],
@@ -177,7 +177,7 @@
      "value": null,
      "description": "",
      "validation": null,
-     "url": "http://0.0.0.0:8080/ds4biz_vision/0.0/models?model_type=pretrained"
+     "url": "http://localhost:9999/routes/loko-vision/loko_vision/0.0/models?model_type=pretrained"
     },
     {
      "name": "predictor_tag",
@@ -198,7 +198,7 @@
      "value": null,
      "description": "",
      "validation": null,
-     "url": "http://0.0.0.0:8080/ds4biz_vision/0.0/models"
+     "url": "http://localhost:9999/routes/loko-vision/loko_vision/0.0/models?info=false&model_type=custom"
     },
     {
      "name": "adv_info",
@@ -219,7 +219,7 @@
      "value": null,
      "description": "",
      "validation": null,
-     "url": "http://0.0.0.0:8080/ds4biz_vision/0.0/models?info=false&model_type=custom"
+     "url": "http://localhost:9999/routes/loko-vision/loko_vision/0.0/models?info=false&model_type=custom"
     }
    ]
   }
