@@ -1,7 +1,7 @@
 {
   "main": {
     "volumes": [
-      "/home/roberta/loko/projects/loko-vision/repo:/repo"
+      "/home/roberta/loko/projects/loko-vision/repo:/plugin/repo"
     ]
   }
 }

@@ -39,6 +39,7 @@ def read_imgs(f):
             fnames.append(f.name)
         print("files ", fnames)
     except Exception as inst:
+        logger.error(inst)
         logger.error(ReadImgsException("Can't read the image/s"))
     return images, labels, fnames
 

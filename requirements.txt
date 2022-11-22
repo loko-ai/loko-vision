@@ -1,7 +1,9 @@
 Pillow
 loko-extensions
+nvidia-pyindex
 sanic == 22.6.2
 sanic-cors
 sanic-openapi
 scikit-learn
-tensorflow == 2.11
+tensorflow == 2.9
+tensorrt == 8.5.1.7

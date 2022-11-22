@@ -34,10 +34,11 @@ from utils.pom_utils import get_pom_major_minor
 from utils.zip_utils import make_zipfile
 
 
-gpus = tf.config.experimental.list_physical_devices('GPU')
-logger.debug('GPUS: %s' % str(gpus))
-if gpus:
-    tf.config.experimental.set_memory_growth(gpus[0], True)
+#
+# iron["XLA_FLAGS"]="--xla_gpu_cuda_data_dir=/usr/local/cuda-11.8"
+
+os.environ["LD_LIBRARY_PATH"]="$LD_LIBRARY_PATH:$CONDA_PREFIX/venv/lib/python3.10/site-packages/tensorrt/"
+
 
 im_dao = InMemoryDAO()
 pdao = PredictorsDAO()
@@ -64,6 +65,7 @@ get_models_params_description = '''
 
 @bp.get("/models/")
 @doc.tag('Vision')
+
 @doc.description(get_models_params_description)
 @doc.consumes(doc.String(name="model_type", choices=["all", "custom", "pretrained"], description="Default model_type='all'"))
 @doc.consumes(doc.Boolean(name="info", description="Default info='False'"))
@@ -304,14 +306,14 @@ def loko_fit_model(file, args):
         return json(msg, status=400)
     if predictor_name in models_mapping:
         return json("You cannot overwrite %s, it's a pre-trained model." % predictor_name, status=400)
-    # if not .files.get("file"):
-    #     return json("There is no file to train the model", status=400)
-    # else:
-    #     f = request.files["file"][0]
+    if not file:
+        return json("There is no file for model prediction", status=400)
+    else:
+        f = file[0]
     # if predictor_name in [m.name for m in pdao.all()]:
     #     return json('Model %s already exist!' % predictor_name, status=400) #todo: decidere se lasciarlo
     model_info = pdao.get(predictor_name)
-    training_task(file, model_info)
+    training_task(f, model_info)
     return json(f"Model '{predictor_name}' fitted! Data used: ")
 
 
@@ -328,17 +330,17 @@ def loko_predict_model(file, args):
     if predictor_name == "":
         msg = "VISION SETTINGS MISSING!!!Model of interest not selected, you have to specify one model name"
         return json(msg, status=400)
-    # if not files.get("file"):
-    #     return json("There is no file for model prediction", status=400)
-    # else:
-    #     f = request.files["file"][0]
-    #     # top = int(request.args.get('top', 3))
+    if not file:
+        return json("There is no file for model prediction", status=400)
+    else:
+        f = file[0]
+        # top = int(request.args.get('top', 3))
     proba = args.get('include_probs', True)
     multilabel = args.get('multilabel', False)
     if multilabel and predictor_name in models_mapping.keys():
         return json('You cannot use a pre-trained model (%s) as multilabel model' % predictor_name, status=400)
     mlb_threshold = float(args.get("multilabel_threshold", 0.5)) if multilabel else None
-    preds_res = predict_task(file, predictor_name, proba, multilabel, mlb_threshold)
+    preds_res = predict_task(f, predictor_name, proba, multilabel, mlb_threshold)
     return json(preds_res)  # , status=200)
 
 
