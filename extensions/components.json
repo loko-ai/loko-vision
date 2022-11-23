@@ -43,6 +43,7 @@
   ],
   "options": {
    "values": {
+    "probability_th": 0.01,
     "multilabel_threshold": "0.5"
    },
    "args": [
@@ -77,6 +78,22 @@
      "value": false,
      "description": "",
      "validation": null
+    },
+    {
+     "name": "probability_th",
+     "type": "dynamic",
+     "label": "Probability Threshold",
+     "helper": "Set this value to 0.0 if you want to have all the model's classes",
+     "group": "Predict parameters",
+     "value": 0.01,
+     "description": "The probability threshold level represents the miminum probability that a class needs to have in order to be \"shown\" in the results",
+     "validation": null,
+     "parent": "include_probs",
+     "condition": "{parent}===true",
+     "dynamicType": "number",
+     "options": null,
+     "fields": null,
+     "url": null
     },
     {
      "name": "multilabel",

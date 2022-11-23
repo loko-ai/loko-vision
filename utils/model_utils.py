@@ -1,7 +1,7 @@
 from config.FactoryConfig import FACTORY
 from dao.predictors_dao import PredictorsDAO
 from model.mlmodel import models_mapping
-from model.nn_model import NNClassifierWrapper
+from utils.logger_utils import logger
 
 pdao = PredictorsDAO()
 
@@ -24,11 +24,12 @@ def get_models_list(models_type, info=False):
 
 def get_model_info(predictor_name, advanced_info=False):  # , model_info=False):
     p = pdao.get(predictor_name)
+    logger.debug(f"pppppp::: {p.model_parameters}")
+
     tl_params = p.model_parameters
-    fitted = False
-    res = dict(predictor_name=p.predictor_name, pretrained_model=p.pretained_model, predictor_tag= p.predictor_tag)
+    res = dict(predictor_name=p.predictor_name, pretrained_model=p.pretained_model, predictor_tag=p.predictor_tag,
+               fitted=p.fitted)
     if tl_params is not None:
-        fitted=True
         if tl_params["__klass__"] == 'ds4biz.NNpredictor':
             m = FACTORY(p.model_parameters)
             if advanced_info:
@@ -37,9 +38,8 @@ def get_model_info(predictor_name, advanced_info=False):  # , model_info=False):
                 metrics = m.metrics
                 loss_function = m.loss
                 epochs = m.epochs
-                top_layer_info = dict(n_layer=n_layer, n_classes=n_classes, metrics=metrics, loss_function=loss_function,
+                top_layer_info = dict(n_layer=n_layer, n_classes=n_classes, metrics=metrics,
+                                      loss_function=loss_function,
                                       epochs=epochs)
                 res["top_layer"] = top_layer_info
-    res["fitted"] = fitted
     return res
-

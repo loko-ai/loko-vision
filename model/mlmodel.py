@@ -38,7 +38,7 @@ class ImagePredictor:
 
 
 class KerasImagePredictor(ImagePredictor):
-    def __init__(self, predictor_name, pretrained_model="ResNet50", predictor_tag=None,top_layer=None, mlb=False, h5=False):
+    def __init__(self, predictor_name, pretrained_model="ResNet50", predictor_tag=None,top_layer=None, mlb=False, fitted=False, h5=False):
         self.predictor_name = predictor_name
         self.pretrained_model = pretrained_model
         self.predictor_tag = predictor_tag
@@ -51,6 +51,7 @@ class KerasImagePredictor(ImagePredictor):
             else:
                 self.h5 = True
         self.top_layer = top_layer
+        self.fitted = fitted
 
     @property
     def base_model(self):

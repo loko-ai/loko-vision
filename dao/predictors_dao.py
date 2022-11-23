@@ -4,16 +4,16 @@ from builtins import print
 from functools import lru_cache
 from pathlib import Path
 
-from config.AppConfig import REPO_PATH
-
 import joblib
 
+from config.AppConfig import REPO_PATH
 from config.FactoryConfig import FACTORY
-from model.nn_model import logger
+from utils.logger_utils import logger
 from model.predictors_model import PredictorRequest, BLUEPRINT_FILENAME, PRETRAINED_MODEL_LBL, \
-    PREDICTOR_NAME_LBL, PREDICTOR_TAG_LBL
+    PREDICTOR_NAME_LBL, PREDICTOR_TAG_LBL, FITTED_STATUS_LBL
 
 repo = Path(REPO_PATH)
+
 
 class PredictorDAOException(Exception):
     pass
@@ -33,7 +33,7 @@ class PredictorsDAO:
                     json.dump(pr.model_parameters, f, indent=2)
             else:
                 models_info = dict(predictor_name=pr.predictor_name, pretrained_model=pr.pretained_model,
-                                   predictor_tag=pr.predictor_tag)
+                                   predictor_tag=pr.predictor_tag, fitted=False)
                 with open(p / BLUEPRINT_FILENAME, 'w') as f:
                     json.dump(models_info, f, indent=2)
 
@@ -67,19 +67,19 @@ class PredictorsDAO:
                 res = PredictorRequest(predictor_name=blueprint[PREDICTOR_NAME_LBL],
                                        pretained_model=blueprint[PRETRAINED_MODEL_LBL],
                                        predictor_tag=blueprint.get(PREDICTOR_TAG_LBL, None),
-                                       model_obj=model_obj, model_parameters=model_parameters)
+                                       model_obj=model_obj, model_parameters=model_parameters, fitted=blueprint.get(FITTED_STATUS_LBL, False))
             else:
                 res = PredictorRequest(predictor_name=blueprint[PREDICTOR_NAME_LBL],
                                        pretained_model=blueprint[PRETRAINED_MODEL_LBL],
-                                       predictor_tag=blueprint.get(PREDICTOR_TAG_LBL, None),
-                                       )
+                                       predictor_tag=blueprint.get(PREDICTOR_TAG_LBL, None)
+                                       , fitted=blueprint.get(FITTED_STATUS_LBL, False))
         except Exception as inst:
             print(inst)
             raise PredictorDAOException("Can't load predictor")
         return res
 
-if __name__ == '__main__':
 
+if __name__ == '__main__':
     pdao = PredictorsDAO()
     a = pdao.all()
     print([el for el in a])

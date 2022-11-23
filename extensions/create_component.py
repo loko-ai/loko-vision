@@ -63,6 +63,17 @@ pred_proba = Arg(name='include_probs',
                  value=False,
                  helper="")
 
+probability_th = Dynamic(name="probability_th",
+                         label="Probability Threshold",
+                         dynamicType="number",
+                         group=predict_group,
+                         value=0.01,
+                         parent="include_probs",
+                         condition="{parent}===true",
+                         description='The probability threshold level represents the miminum probability that a class needs to have in order to be "shown" in the results',
+                         helper="Set this value to 0.0 if you want to have all the model's classes"
+                         )
+
 multilabel = Arg(name='multilabel',
                  type='boolean',
                  label='Multilabel',
@@ -79,7 +90,7 @@ multilabel_th = Dynamic(name='multilabel_threshold',
                         condition="{parent}===true", value="0.5",
                         helper='Threshold rate to decide the belongings to one class for the MultiLabel')
 
-predict_args_list = [pred_name_pred, pred_proba, multilabel, multilabel_th]
+predict_args_list = [pred_name_pred, pred_proba,probability_th, multilabel, multilabel_th]
 
 ######### evaluate args
 

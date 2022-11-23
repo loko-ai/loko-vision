@@ -4,7 +4,6 @@ from itertools import chain
 from config.FactoryConfig import FACTORY
 from config.genericConfig import MODEL_EPOCHS
 from dao.predictors_dao import PredictorsDAO
-from model.callbacks import LogsCallback
 from model.mlmodel import models_mapping
 from model.predictors_model import PredictorRequest
 from utils.imageutils import read_imgs
@@ -36,8 +35,8 @@ def training_task(f, model_info: PredictorRequest):
                       pretrained_model=pretrained_model,
                       predictor_name=predictor_name,
                       predictor_tag=predictor_tag,
-                      mlb=True)
-
+                      mlb=True,
+                      )
     model = FACTORY(parameters)
     # print(m.top_layer)
     msg = 'model factorized'
@@ -45,14 +44,18 @@ def training_task(f, model_info: PredictorRequest):
     # send_message(predictor_name, msg)
     # print(url)
     # cb = LogsCallback(epochs=MODEL_EPOCHS, url=GATEWAY_EMIT_URL, model_name=predictor_name)
-    model.fit(X, y, epochs=MODEL_EPOCHS)#, callbacks=[cb])
+    model_info.model_parameters = parameters
+    model_info.fitted = "Training"
+    pdao.save(model_info)
+    model.fit(X, y, epochs=MODEL_EPOCHS)  # , callbacks=[cb])
     logger.debug('%s model fitted with pretrained model %s...' % (predictor_name, pretrained_model))
     model_info.model_parameters = parameters
     model_info.model_obj = model
+    model_info.fitted = True
     pdao.save(model_info)
 
 
-def predict_task(f, predictor_name, proba, multilabel, mlb_threshold):
+def predict_task(f, predictor_name, proba, multilabel, mlb_threshold, proba_threshold):
     X, y, fnames = read_imgs(f)
     ### use custom model ###
 
@@ -67,7 +70,8 @@ def predict_task(f, predictor_name, proba, multilabel, mlb_threshold):
                                 predictor_name=predictor_name)
         model = FACTORY(model_parameters)
     preds = model.predict(X, multilabel=multilabel)
-    logger.debug("len preds %s, len files %s" %(str(len(preds)), str(len(fnames))))
+    logger.debug(f"================================================\n{preds}")
+    logger.debug("len preds %s, len files %s" % (str(len(preds)), str(len(fnames))))
     if not proba:
         if mlb_threshold != None:
             logger.debug("prediction without predict_proba, mlb threshold!=none : %s " % str(preds))
@@ -75,11 +79,16 @@ def predict_task(f, predictor_name, proba, multilabel, mlb_threshold):
         else:
             logger.debug("prediction without predict_proba, mlb threshold==none : %s " % str(preds))
 
-            preds = [[pp[0] for pp in p][0] for p in preds]#[0]
+            preds = [[pp[0] for pp in p][0] for p in preds]  # [0]
             logger.debug(len(preds))
+    else:
+        preds = [ [(label[0], label[1]) for label in p if label[1]>=proba_threshold] for p in preds]
     preds_res = [dict(fname=fn, pred=p) for fn, p in zip(fnames, preds)]
 
     # if mlb_threshold != None:
     #     preds = [dict(fname=p["fname"], pred=1) if p["pred"]>mlb_threshold else dict(fname=p["fname"], pred=0) for p in preds ]
     logger.debug('preds: %s' % str(preds_res))
     return preds_res
+
+
+

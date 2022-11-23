@@ -37,7 +37,7 @@ from utils.zip_utils import make_zipfile
 #
 # iron["XLA_FLAGS"]="--xla_gpu_cuda_data_dir=/usr/local/cuda-11.8"
 
-os.environ["LD_LIBRARY_PATH"]="$LD_LIBRARY_PATH:$CONDA_PREFIX/venv/lib/python3.10/site-packages/tensorrt/"
+# os.environ["LD_LIBRARY_PATH"]="$LD_LIBRARY_PATH:$CONDA_PREFIX/venv/lib/python3.10/site-packages/tensorrt/"
 
 
 im_dao = InMemoryDAO()
@@ -266,11 +266,12 @@ def loko_create_model(value, args):
 @doc.summary("Get info about a model")
 @extract_value_args(file=False)
 def loko_get_model_info(value, args):
+    logger.debug(f"args:::: {args}")
     predictor_name = args.get("predictor_name_info")
     if predictor_name == "":
         msg = "VISION SETTINGS MISSING!!!Model of interest not selected, you have to specify one model name"
         return json(msg, status=400)
-    adv_info = eval(args.get('advanced_info', 'false').capitalize())
+    adv_info = args.get('advanced_info', False)
     models = get_model_info(predictor_name=predictor_name, advanced_info=adv_info)
     print(json(models))
     return json(models)
@@ -299,7 +300,7 @@ def loko_delete_model(value, args):
 ''')
 @extract_value_args(file=True)
 def loko_fit_model(file, args):
-    logger.debug(f"file::: {file}")
+    # logger.debug(f"file::: {file}")
     predictor_name = args.get("predictor_name_fit")
     if predictor_name == "":
         msg = "VISION SETTINGS MISSING!!!Model of interest not selected, you have to specify one model name"
@@ -336,14 +337,32 @@ def loko_predict_model(file, args):
         f = file[0]
         # top = int(request.args.get('top', 3))
     proba = args.get('include_probs', True)
+    proba_threshold = float(args.get("probability_th", 0.00)) if proba else None
     multilabel = args.get('multilabel', False)
     if multilabel and predictor_name in models_mapping.keys():
         return json('You cannot use a pre-trained model (%s) as multilabel model' % predictor_name, status=400)
     mlb_threshold = float(args.get("multilabel_threshold", 0.5)) if multilabel else None
-    preds_res = predict_task(f, predictor_name, proba, multilabel, mlb_threshold)
+    preds_res = predict_task(f, predictor_name, proba, multilabel, mlb_threshold, proba_threshold=proba_threshold)
     return json(preds_res)  # , status=200)
 
 
+
+# @bp.post("/loko-services/predict")
+# @doc.tag('Loko Model Service')
+# @doc.summary("Evaluate model")
+# @doc.description('''
+# ''')
+# @extract_value_args(file=True)
+# def loko_evaluate_model(file, args):
+#     logger.debug(f"args {args}")
+#     predictor_name = args.get("predictor_name_predict")
+#     if predictor_name == "":
+#         msg = "VISION SETTINGS MISSING!!!Model of interest not selected, you have to specify one model name"
+#         return json(msg, status=400)
+#     if not file:
+#         return json("There is no file for model prediction", status=400)
+#     else:
+#         f = file[0]
 
 
 
