@@ -4,6 +4,7 @@ from pathlib import Path
 import numpy as np
 import tensorflow.keras.applications as models
 from PIL import Image
+from PIL.Image import Resampling
 from tensorflow.keras.preprocessing import image
 from tensorflow.python.keras import Model
 from tensorflow import keras
@@ -64,7 +65,7 @@ class KerasImagePredictor(ImagePredictor):
     def _preprocess_input(self, X):
         # send_message(self.predictor_name, "Image Pre-Processing")
         input_shape = self.base_model.input.type_spec.shape[1:3]
-        X = [image.img_to_array(xx.convert('RGB').resize(input_shape, Image.NEAREST)) for xx in X]
+        X = [image.img_to_array(xx.convert('RGB').resize(input_shape, Resampling.NEAREST)) for xx in X]
         X = np.array(X)
         X = models_mapping[self.pretrained_model]['preprocess_input'](X)
         return X
