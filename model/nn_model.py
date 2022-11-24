@@ -4,6 +4,7 @@ from typing import List, Union, Dict
 
 import numpy as np
 import tensorflow as tf
+from tensorflow import keras
 import tensorflow.keras
 from sklearn.preprocessing import MultiLabelBinarizer
 
@@ -73,12 +74,17 @@ class NNClassifierWrapper:
         self.model = tf.keras.Sequential().from_config(config)
 
     def fit(self, X, y, callbacks=None, batch_size=64):
+        logger.debug("nnfit....")
         # try:
         if self.multilabel:
             logger.debug("transforming target variable...")
             y = self.target_vectorizer.fit_transform(y)
         logger.debug("casting data to numpy")
+        logger.debug(f"Y val pre:::: {y}")
+
         y = self._cast_target_to_numpy(y)
+        logger.debug(f"Y val:::: {y}")
+
         X = self._cast_target_to_numpy(X)
         logger.debug("compiling and fitting model...")
         self.model.compile(optimizer=self.optimizer, loss=self.loss, metrics=self.metrics)
@@ -93,6 +99,33 @@ class NNClassifierWrapper:
         res = [[float(pred) for pred in el] for el in self.model.predict(X)]
         logger.debug(f"predictor NN predict-proba: {res}",)
         return res
+
+    def evaluate(self, X, y):
+        logger.debug("NN evaluate")
+        logger.debug(f"Y pre val:::: {y}")
+
+        X = self._cast_target_to_numpy(X)
+        if self.multilabel:
+            logger.debug("transforming target variable...")
+            y = self.target_vectorizer.fit_transform(y)
+        y = self._cast_target_to_numpy(y)
+        # logger.debug(X)
+        logger.debug(f"Y val:::: {y}")
+        eval = self.model.evaluate(X, y)
+        logger.debug(f"eval::: {eval}")
+        metrics_name = self.model.metrics_names
+        logger.debug(f"metrics_name = {metrics_name}")
+        eval_res = {m_name: m_value for m_value, m_name in zip(eval, metrics_name)}
+        logger.debug(f"eval_res: {eval_res}")
+        logger.debug(f"keras {keras.__version__}")
+        logger.debug(f"tf {tf.__version__}")
+        if "loss" in eval_res:
+            logger.debug(f"los---- {self.loss}")
+            logger.debug(f"losses {self.model.losses}")
+            loss_name = self.loss
+            eval_res[loss_name] = eval_res.pop("loss")
+        logger.debug(f"evaluate res::::: -----> {eval_res}")
+        return eval_res
 
     def save(self, path):
         self.predictor_name = path.name

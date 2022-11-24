@@ -13,7 +13,7 @@ delete_service = "loko_vision/0.0/loko-services/delete"
 
 fit_service = "loko_vision/0.0/loko-services/fit"
 predict_service = "loko_vision/0.0/loko-services/predict"
-evaluate_service = ""
+evaluate_service = "loko_vision/0.0/loko-services/evaluate"
 
 ################################## ARGS ####################################
 
@@ -94,8 +94,11 @@ predict_args_list = [pred_name_pred, pred_proba,probability_th, multilabel, mult
 
 ######### evaluate args
 
+eval_group = "Evaluate Parameters"
+eval_name_pred = AsyncSelect(name="predictor_name_eval", url=custom_and_pretrained_model_list, label="Vision Model",
+                             group=eval_group, helper='Name of the model you want to evaluate')
 
-eval_args_list = []
+eval_args_list = [eval_name_pred]
 
 ######### info args
 

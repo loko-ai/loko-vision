@@ -17,7 +17,7 @@ from sanic_cors import CORS
 from sanic_openapi import swagger_blueprint
 from sanic_openapi.openapi2 import doc
 
-from business.tf_learning import training_task, predict_task
+from business.tf_learning import training_task, predict_task, evaluate_task
 from config.AppConfig import REPO_PATH
 from dao.inmemory_dao import InMemoryDAO
 from dao.predictors_dao import PredictorsDAO, PredictorDAOException
@@ -35,7 +35,7 @@ from utils.zip_utils import make_zipfile
 
 
 #
-# iron["XLA_FLAGS"]="--xla_gpu_cuda_data_dir=/usr/local/cuda-11.8"
+os.environ["XLA_FLAGS"]="--xla_gpu_cuda_data_dir=/usr/local/cuda-11.8"
 
 # os.environ["LD_LIBRARY_PATH"]="$LD_LIBRARY_PATH:$CONDA_PREFIX/venv/lib/python3.10/site-packages/tensorrt/"
 
@@ -69,7 +69,7 @@ get_models_params_description = '''
 @doc.description(get_models_params_description)
 @doc.consumes(doc.String(name="model_type", choices=["all", "custom", "pretrained"], description="Default model_type='all'"))
 @doc.consumes(doc.Boolean(name="info", description="Default info='False'"))
-def models(request):
+async def models(request):
     model_type = request.args.get("model_type", "all")
     model_info = eval(request.args.get("info", "false").capitalize())
     models = get_models_list(model_type, model_info)
@@ -84,7 +84,7 @@ delete_params_description = '''
 @bp.delete("/models/<predictor_name>")
 @doc.tag('Vision')
 @doc.consumes(doc.String(name="predictor_name"), location="path", required=True)
-def delete_model(request, predictor_name):
+async def delete_model(request, predictor_name):
     # print([m.name for m in pdao.all()])
     if predictor_name not in [m.name for m in pdao.all()]:
         return json('Model %s does not exist!' % name, status=400)
@@ -104,7 +104,7 @@ create_params_description = '''
 @doc.consumes(doc.String(name="predictor_tag"), location="query")
 @doc.consumes(doc.String(name="pretrained_model", choices=list(models_mapping.keys())), location="query")
 @doc.consumes(doc.String(name="predictor_name"), location="path", required=True)
-def create_model(request, predictor_name):
+async def create_model(request, predictor_name):
     if predictor_name in models_mapping.keys():
         raise Exception("You cannot use this name for a custom model")
     if predictor_name in get_models_list(models_type="custom"):
@@ -133,7 +133,7 @@ fit_params_description = '''
 @doc.consumes(doc.File(name="file"), location="formData", content_type="multipart/form-data", required=True)
 # @doc.consumes(doc.Boolean(name="multilabel"), location="query")
 @doc.consumes(doc.String(name="predictor_name"), location="path", required=True)
-def fit(request, predictor_name):
+async def fit(request, predictor_name):
     print(predictor_name)
 
     if predictor_name in models_mapping:
@@ -167,7 +167,7 @@ predict_params_description = '''
 @doc.consumes(doc.Float(name="multilabel_threshold"), location="query")
 @doc.consumes(doc.Boolean(name="include_probs"), location="query")
 @doc.consumes(doc.File(name="file"), location="formData", content_type="multipart/form-data", required=True)
-def predict(request, predictor_name):
+async def predict(request, predictor_name):
     if not request.files.get("file"):
         return json("There is no file for model prediction", status=400)
     else:
@@ -187,7 +187,7 @@ def predict(request, predictor_name):
 @doc.tag('Vision')
 @doc.consumes(doc.String(name="predictor_name"), location="path", required=True)
 @doc.consumes(doc.Boolean(name="advanced_info"), location="query")
-def info(request, predictor_name):
+async def info(request, predictor_name):
     adv_info = eval(request.args.get('advanced_info', 'false').capitalize())
     models = get_model_info(predictor_name=predictor_name, advanced_info=adv_info )
     print(json(models))
@@ -240,7 +240,7 @@ async def import_predictor(request):
 @doc.description('''
 ''')
 @extract_value_args(file=False)
-def loko_create_model(value, args):
+async def loko_create_model(value, args):
     predictor_name = args.get("predictor_name", "")
     if predictor_name=="":
         msg = "VISION SETTINGS MISSING!!!Model name not setted, you have to specify it"
@@ -265,7 +265,7 @@ def loko_create_model(value, args):
 @doc.tag('Loko Model Service')
 @doc.summary("Get info about a model")
 @extract_value_args(file=False)
-def loko_get_model_info(value, args):
+async def loko_get_model_info(value, args):
     logger.debug(f"args:::: {args}")
     predictor_name = args.get("predictor_name_info")
     if predictor_name == "":
@@ -282,7 +282,7 @@ def loko_get_model_info(value, args):
 @doc.tag('Loko Model Service')
 @doc.summary("Delete model")
 @extract_value_args(file=False)
-def loko_delete_model(value, args):
+async def loko_delete_model(value, args):
     predictor_name = args.get("predictor_name_delete")
     if predictor_name == "":
         msg = "VISION SETTINGS MISSING!!!Model of interest not selected, you have to specify one model name"
@@ -299,7 +299,7 @@ def loko_delete_model(value, args):
 @doc.description('''
 ''')
 @extract_value_args(file=True)
-def loko_fit_model(file, args):
+async def loko_fit_model(file, args):
     # logger.debug(f"file::: {file}")
     predictor_name = args.get("predictor_name_fit")
     if predictor_name == "":
@@ -324,7 +324,7 @@ def loko_fit_model(file, args):
 @doc.description('''
 ''')
 @extract_value_args(file=True)
-def loko_predict_model(file, args):
+async def loko_predict_model(file, args):
 
     logger.debug(f"args {args}")
     predictor_name = args.get("predictor_name_predict")
@@ -347,24 +347,45 @@ def loko_predict_model(file, args):
 
 
 
-# @bp.post("/loko-services/predict")
-# @doc.tag('Loko Model Service')
-# @doc.summary("Evaluate model")
-# @doc.description('''
-# ''')
-# @extract_value_args(file=True)
-# def loko_evaluate_model(file, args):
-#     logger.debug(f"args {args}")
-#     predictor_name = args.get("predictor_name_predict")
-#     if predictor_name == "":
-#         msg = "VISION SETTINGS MISSING!!!Model of interest not selected, you have to specify one model name"
-#         return json(msg, status=400)
-#     if not file:
-#         return json("There is no file for model prediction", status=400)
-#     else:
-#         f = file[0]
+@bp.post("/loko-services/evaluate")
+@doc.tag('Loko Model Service')
+@doc.summary("Evaluate model")
+@doc.description('''
+''')
+@extract_value_args(file=True)
+async def loko_evaluate_model(file, args):
+    logger.debug(f"args {args}")
+    predictor_name = args.get("predictor_name_eval")
+    if predictor_name == "":
+        msg = "VISION SETTINGS MISSING!!!Model of interest not selected, you have to specify one model name"
+        return json(msg, status=400)
+    if not file:
+        return json("There is no file for model prediction", status=400)
+    else:
+        f = file[0]
+    res = evaluate_task(f, predictor_name)
+    return json(res)
 
 
+
+@bp.post("/models/<predictor_name>/evaluate")
+@doc.tag('Vision')
+@doc.description(fit_params_description)
+@doc.consumes(doc.File(name="file"), location="formData", content_type="multipart/form-data", required=True)
+# @doc.consumes(doc.Boolean(name="multilabel"), location="query")
+@doc.consumes(doc.String(name="predictor_name"), location="path", required=True)
+async def evaluate_model(request, predictor_name):
+    print(predictor_name)
+
+    if not request.files.get("file"):
+        return json("There is no file to train the model", status=400)
+    else:
+        f = request.files["file"][0]
+    # if predictor_name in [m.name for m in pdao.all()]:
+    #     return json('Model %s already exist!' % predictor_name, status=400) #todo: decidere se lasciarlo
+    res = evaluate_task(f, predictor_name)
+
+    return json(res)  # , status=200)
 
 
 if __name__ == '__main__':

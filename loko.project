@@ -3,7 +3,7 @@
   "id": "loko-vision",
   "description": "",
   "created_on": "17/11/2022, 14:17:04",
-  "last_modify": "23/11/2022, 17:14:16",
+  "last_modify": "24/11/2022, 13:04:49",
   "graphs": {
     "Vision Manager": {
       "nodes": [
@@ -714,10 +714,112 @@
           "__class__": "Node"
         },
         {
-          "id": "f118075e-9bac-4b8a-8a96-be17e93a7a7e",
+          "id": "6a8042b8-c9f3-425d-ae5c-0dd20a3d08e6",
           "position": {
-            "x": 815,
-            "y": 276
+            "x": 486.8006350816255,
+            "y": 440.0455584450384
+          },
+          "type": "custom",
+          "dragHandle": "#nodeHandle",
+          "sourcePosition": "right",
+          "targetPosition": "left",
+          "width": 156,
+          "height": 88,
+          "selected": false,
+          "dragging": false,
+          "data": {
+            "name": "File Reader",
+            "events": null,
+            "description": "### Description\nThe FILE READER component allows the reading of individual files.\n\n### Output\nSetting the **Read Content** parameter to **False**, the output provides the file path in PosixPath format. The component will then need to be connected to other components to read the content, for example *LineReader*.\n\nOn the contrary, setting the **Read Content** parameter to **True**, you can choose whether to read the content in *Binary* format. This format will be selected for reading non-text files.",
+            "inputs": [
+              {
+                "id": "input",
+                "label": "input"
+              }
+            ],
+            "outputs": [
+              {
+                "id": "output",
+                "label": "output"
+              }
+            ],
+            "configured": true,
+            "options": {
+              "group": "Inputs",
+              "args": [
+                {
+                  "name": "comment",
+                  "type": "area",
+                  "label": "Node comment",
+                  "helper": "Use it to explain the usage of this node"
+                },
+                {
+                  "name": "alias",
+                  "type": "text",
+                  "label": "Name",
+                  "helper": "Use this name as an alias"
+                },
+                {
+                  "name": "debug",
+                  "type": "boolean",
+                  "label": "Debug to Console",
+                  "divider": true
+                },
+                {
+                  "name": "value",
+                  "type": "files",
+                  "label": "File",
+                  "fragment": "files",
+                  "validation": {
+                    "required": "Required field"
+                  }
+                },
+                {
+                  "name": "read_content",
+                  "type": "boolean",
+                  "label": "Read content"
+                },
+                {
+                  "name": "binary",
+                  "type": "dynamic",
+                  "label": "Binary",
+                  "dynamicType": {
+                    "true": "boolean"
+                  },
+                  "parent": "read_content"
+                }
+              ],
+              "click": "Send file",
+              "icon": "RiFileList3Fill",
+              "values": {
+                "comment": "",
+                "alias": "",
+                "debug": false,
+                "read_content": false,
+                "value": {
+                  "name": "cane_gatto.zip",
+                  "path": "data/data/cane_gatto.zip",
+                  "parent": "data/data",
+                  "isDir": false,
+                  "hidden": false
+                }
+              }
+            },
+            "locked": null
+          },
+          "selectable": true,
+          "draggable": true,
+          "positionAbsolute": {
+            "x": 486.8006350816255,
+            "y": 440.0455584450384
+          },
+          "__class__": "Node"
+        },
+        {
+          "id": "1de6e648-de1a-4902-aab8-08efb8f87985",
+          "position": {
+            "x": 838,
+            "y": 345
           },
           "type": "custom",
           "dragHandle": "#nodeHandle",
@@ -747,7 +849,7 @@
               {
                 "id": "evaluate",
                 "label": "evaluate",
-                "service": "",
+                "service": "loko_vision/0.0/loko-services/evaluate",
                 "to": "evaluate"
               }
             ],
@@ -866,6 +968,17 @@
                   ],
                   "fields": null,
                   "url": null
+                },
+                {
+                  "name": "predictor_name_eval",
+                  "type": "asyncSelect",
+                  "label": "Vision Model",
+                  "helper": "Name of the model you want to evaluate",
+                  "group": "Evaluate Parameters",
+                  "value": null,
+                  "description": "",
+                  "validation": null,
+                  "url": "http://localhost:9999/routes/loko-vision/loko_vision/0.0/models"
                 }
               ],
               "click": null,
@@ -874,11 +987,11 @@
                 "comment": "",
                 "alias": "",
                 "debug": true,
-                "include_probs": true,
+                "include_probs": false,
                 "multilabel": false,
-                "probability_th": "0.02",
                 "predictor_name_fit": "new_m",
-                "predictor_name_predict": "ResNet50"
+                "predictor_name_predict": "new_m",
+                "predictor_name_eval": "new_m"
               }
             },
             "locked": null
@@ -890,10 +1003,10 @@
       ],
       "edges": [
         {
-          "id": "reactflow__edge-4a5bc458-b007-44c0-af4e-4b5b34fa2e73output-f118075e-9bac-4b8a-8a96-be17e93a7a7efit",
+          "id": "reactflow__edge-4a5bc458-b007-44c0-af4e-4b5b34fa2e73output-1de6e648-de1a-4902-aab8-08efb8f87985fit",
           "source": "4a5bc458-b007-44c0-af4e-4b5b34fa2e73",
           "sourceHandle": "output",
-          "target": "f118075e-9bac-4b8a-8a96-be17e93a7a7e",
+          "target": "1de6e648-de1a-4902-aab8-08efb8f87985",
           "targetHandle": "fit",
           "data": {
             "startColor": "#F8637A",
@@ -904,11 +1017,25 @@
           "__class__": "Edge"
         },
         {
-          "id": "reactflow__edge-277aff39-3244-47aa-99c4-bab032d982e6output-f118075e-9bac-4b8a-8a96-be17e93a7a7epredict",
+          "id": "reactflow__edge-277aff39-3244-47aa-99c4-bab032d982e6output-1de6e648-de1a-4902-aab8-08efb8f87985predict",
           "source": "277aff39-3244-47aa-99c4-bab032d982e6",
           "sourceHandle": "output",
-          "target": "f118075e-9bac-4b8a-8a96-be17e93a7a7e",
+          "target": "1de6e648-de1a-4902-aab8-08efb8f87985",
           "targetHandle": "predict",
+          "data": {
+            "startColor": "#F8637A",
+            "stopColor": "#888"
+          },
+          "selected": false,
+          "dragging": false,
+          "__class__": "Edge"
+        },
+        {
+          "id": "reactflow__edge-6a8042b8-c9f3-425d-ae5c-0dd20a3d08e6output-1de6e648-de1a-4902-aab8-08efb8f87985evaluate",
+          "source": "6a8042b8-c9f3-425d-ae5c-0dd20a3d08e6",
+          "sourceHandle": "output",
+          "target": "1de6e648-de1a-4902-aab8-08efb8f87985",
+          "targetHandle": "evaluate",
           "data": {
             "startColor": "#F8637A",
             "stopColor": "#888"

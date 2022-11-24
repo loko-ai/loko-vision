@@ -91,6 +91,7 @@ class ClassifierWrapper(PredictorWrapper):
         return self.predictor.classes_
 
     def fit(self, X, y, epochs=100, callbacks=None):
+        logger.debug("entro in un altro ft")
         callbacks = callbacks or []
 
         # for c in callbacks:
@@ -109,8 +110,8 @@ class ClassifierWrapper(PredictorWrapper):
             if self.stop_training:
                 break
 
-        for c in callbacks:
-            c.on_train_end()
+        # for c in callbacks:
+        #     c.on_train_end()
 
     def predict_proba(self, X):
         return self.predictor.predict_proba(X)

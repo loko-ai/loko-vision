@@ -18,10 +18,11 @@ def training_task(f, model_info: PredictorRequest):
     predictor_name = model_info.predictor_name
     predictor_tag = model_info.predictor_tag
     X, y, fnames = read_imgs(f)
+
     # print(len(X[0]))
     # print(len(X))
     # print(len(y))
-
+    print(f"============> y {y}")
     n_outputs_lbl = len(set(chain.from_iterable(y)))
     parameters = dict(__klass__='ds4biz.KerasImagePredictor',
                       top_layer=dict(__klass__='ds4biz.NNpredictor',
@@ -90,5 +91,22 @@ def predict_task(f, predictor_name, proba, multilabel, mlb_threshold, proba_thre
     logger.debug('preds: %s' % str(preds_res))
     return preds_res
 
+
+
+
+def evaluate_task(f, predictor_name):
+    X, y, fnames = read_imgs(f)
+
+    if predictor_name not in models_mapping.keys():
+        pr = pdao.get(predictor_name)
+        model = pr.model_obj
+        ## use pretrained model ###
+    else:
+        model_parameters = dict(__klass__='ds4biz.KerasImagePredictor',
+                                pretrained_model=predictor_name,
+                                predictor_name=predictor_name)
+        model = FACTORY(model_parameters)
+    res = model.evaluate(X, y)
+    return res
 
 

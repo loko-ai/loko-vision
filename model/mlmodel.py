@@ -88,6 +88,8 @@ class KerasImagePredictor(ImagePredictor):
         if self.h5:
             self._check_model_input_shape()
         vecs = self.base_model.predict(X)
+        logger.debug(f"yyyyyyyyyyyyy {y}")
+        logger.debug("chiamo top_layer_fit")
         self.top_layer.fit(vecs, y, callbacks=callbacks)
 
 
@@ -124,6 +126,17 @@ class KerasImagePredictor(ImagePredictor):
             preds = models_mapping[self.pretrained_model]['decode_predictions'](preds, top=n_classes)  # , top=top)
             p = [[(x[1], float(x[2])) for x in y if float(x[2]) > PRETRAINED_TH_PREDICTION] for y in preds]
             return p
+
+    def evaluate(self, X, y, **kwargs):
+        logger.debug("KERAS NN eval...")
+        X = self._preprocess_input(X)
+        if self.top_layer:
+            # send_message(self.predictor_name, "Starts prediction")
+            logger.debug("creating input vector using pre-trained model")
+            vecs = self.base_model.predict(X)
+            logger.debug('computing predictions...')
+            eval = self.top_layer.evaluate(vecs, y)
+            return eval
 
     def __getstate__(self):
         logger.debug("I'm being pickled")

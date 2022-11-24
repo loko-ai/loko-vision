@@ -23,7 +23,7 @@
    {
     "id": "evaluate",
     "label": "evaluate",
-    "service": "",
+    "service": "loko_vision/0.0/loko-services/evaluate",
     "to": "evaluate"
    }
   ],
@@ -126,6 +126,17 @@
      ],
      "fields": null,
      "url": null
+    },
+    {
+     "name": "predictor_name_eval",
+     "type": "asyncSelect",
+     "label": "Vision Model",
+     "helper": "Name of the model you want to evaluate",
+     "group": "Evaluate Parameters",
+     "value": null,
+     "description": "",
+     "validation": null,
+     "url": "http://localhost:9999/routes/loko-vision/loko_vision/0.0/models"
     }
    ]
   }
