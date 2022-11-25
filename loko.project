@@ -3,7 +3,7 @@
   "id": "loko-vision",
   "description": "",
   "created_on": "17/11/2022, 14:17:04",
-  "last_modify": "24/11/2022, 13:04:49",
+  "last_modify": "25/11/2022, 09:34:58",
   "graphs": {
     "Vision Manager": {
       "nodes": [
@@ -442,12 +442,12 @@
                 "comment": "",
                 "alias": "",
                 "debug": true,
-                "predictor_name": "new_m",
-                "predictor_tag": "example-model",
-                "adv_info": false,
+                "predictor_name": "example_model",
+                "predictor_tag": "example tag",
+                "adv_info": true,
                 "pretrained_model": "DenseNet169",
-                "predictor_name_info": "new_m",
-                "predictor_name_delete": "new_m"
+                "predictor_name_info": "example_model",
+                "predictor_name_delete": "example_model"
               }
             },
             "locked": null
@@ -816,10 +816,10 @@
           "__class__": "Node"
         },
         {
-          "id": "1de6e648-de1a-4902-aab8-08efb8f87985",
+          "id": "1d3cc276-2c03-4e06-8193-7ee779705524",
           "position": {
-            "x": 838,
-            "y": 345
+            "x": 870,
+            "y": 337
           },
           "type": "custom",
           "dragHandle": "#nodeHandle",
@@ -978,7 +978,7 @@
                   "value": null,
                   "description": "",
                   "validation": null,
-                  "url": "http://localhost:9999/routes/loko-vision/loko_vision/0.0/models"
+                  "url": "http://localhost:9999/routes/loko-vision/loko_vision/0.0/models?info=false&model_type=custom"
                 }
               ],
               "click": null,
@@ -989,24 +989,28 @@
                 "debug": true,
                 "include_probs": false,
                 "multilabel": false,
-                "predictor_name_fit": "new_m",
-                "predictor_name_predict": "new_m",
-                "predictor_name_eval": "new_m"
+                "predictor_name_fit": "example_model",
+                "predictor_name_predict": "",
+                "predictor_name_eval": "ciaone"
               }
             },
             "locked": null
           },
           "selectable": true,
           "draggable": true,
+          "positionAbsolute": {
+            "x": 870,
+            "y": 337
+          },
           "__class__": "Node"
         }
       ],
       "edges": [
         {
-          "id": "reactflow__edge-4a5bc458-b007-44c0-af4e-4b5b34fa2e73output-1de6e648-de1a-4902-aab8-08efb8f87985fit",
+          "id": "reactflow__edge-4a5bc458-b007-44c0-af4e-4b5b34fa2e73output-1d3cc276-2c03-4e06-8193-7ee779705524fit",
           "source": "4a5bc458-b007-44c0-af4e-4b5b34fa2e73",
           "sourceHandle": "output",
-          "target": "1de6e648-de1a-4902-aab8-08efb8f87985",
+          "target": "1d3cc276-2c03-4e06-8193-7ee779705524",
           "targetHandle": "fit",
           "data": {
             "startColor": "#F8637A",
@@ -1017,10 +1021,10 @@
           "__class__": "Edge"
         },
         {
-          "id": "reactflow__edge-277aff39-3244-47aa-99c4-bab032d982e6output-1de6e648-de1a-4902-aab8-08efb8f87985predict",
+          "id": "reactflow__edge-277aff39-3244-47aa-99c4-bab032d982e6output-1d3cc276-2c03-4e06-8193-7ee779705524predict",
           "source": "277aff39-3244-47aa-99c4-bab032d982e6",
           "sourceHandle": "output",
-          "target": "1de6e648-de1a-4902-aab8-08efb8f87985",
+          "target": "1d3cc276-2c03-4e06-8193-7ee779705524",
           "targetHandle": "predict",
           "data": {
             "startColor": "#F8637A",
@@ -1031,10 +1035,10 @@
           "__class__": "Edge"
         },
         {
-          "id": "reactflow__edge-6a8042b8-c9f3-425d-ae5c-0dd20a3d08e6output-1de6e648-de1a-4902-aab8-08efb8f87985evaluate",
+          "id": "reactflow__edge-6a8042b8-c9f3-425d-ae5c-0dd20a3d08e6output-1d3cc276-2c03-4e06-8193-7ee779705524evaluate",
           "source": "6a8042b8-c9f3-425d-ae5c-0dd20a3d08e6",
           "sourceHandle": "output",
-          "target": "1de6e648-de1a-4902-aab8-08efb8f87985",
+          "target": "1d3cc276-2c03-4e06-8193-7ee779705524",
           "targetHandle": "evaluate",
           "data": {
             "startColor": "#F8637A",

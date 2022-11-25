@@ -136,7 +136,7 @@
      "value": null,
      "description": "",
      "validation": null,
-     "url": "http://localhost:9999/routes/loko-vision/loko_vision/0.0/models"
+     "url": "http://localhost:9999/routes/loko-vision/loko_vision/0.0/models?info=false&model_type=custom"
     }
    ]
   }

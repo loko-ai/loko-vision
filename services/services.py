@@ -31,11 +31,21 @@ from utils.pom_utils import get_pom_major_minor
 #      3 - aggiustare parametri dei servizi
 #      4-
 #
+
+
+# todo (25/11/2022):
+#  - gestire re-training modelli gia' trainati;
+#  - gestire apertura modelli una volta "spento" il progetto e "riacceso";
+#  - gestire evaluate di modelli pre-trainati;
+#  - dare piu' info nel servizio evaluate;
+#  - gestire evaluate nel caso di modello non addestrato;
+#  - gestire fit nel caso di nome modello non piu' presente;
+
 from utils.zip_utils import make_zipfile
 
 
 #
-os.environ["XLA_FLAGS"]="--xla_gpu_cuda_data_dir=/usr/local/cuda-11.8"
+# os.environ["XLA_FLAGS"]="--xla_gpu_cuda_data_dir=/usr/local/cuda-11.8"
 
 # os.environ["LD_LIBRARY_PATH"]="$LD_LIBRARY_PATH:$CONDA_PREFIX/venv/lib/python3.10/site-packages/tensorrt/"
 
@@ -241,6 +251,8 @@ async def import_predictor(request):
 ''')
 @extract_value_args(file=False)
 async def loko_create_model(value, args):
+    logger.debug(f"CREATE MODEL SERVICE... args:::: {args}")
+
     predictor_name = args.get("predictor_name", "")
     if predictor_name=="":
         msg = "VISION SETTINGS MISSING!!!Model name not setted, you have to specify it"
@@ -266,7 +278,7 @@ async def loko_create_model(value, args):
 @doc.summary("Get info about a model")
 @extract_value_args(file=False)
 async def loko_get_model_info(value, args):
-    logger.debug(f"args:::: {args}")
+    logger.debug(f"GET INFO SERVICE... args:::: {args}")
     predictor_name = args.get("predictor_name_info")
     if predictor_name == "":
         msg = "VISION SETTINGS MISSING!!!Model of interest not selected, you have to specify one model name"
@@ -283,6 +295,8 @@ async def loko_get_model_info(value, args):
 @doc.summary("Delete model")
 @extract_value_args(file=False)
 async def loko_delete_model(value, args):
+    logger.debug(f"DELETE MODEL SERVICE... args:::: {args}")
+
     predictor_name = args.get("predictor_name_delete")
     if predictor_name == "":
         msg = "VISION SETTINGS MISSING!!!Model of interest not selected, you have to specify one model name"
@@ -301,6 +315,7 @@ async def loko_delete_model(value, args):
 @extract_value_args(file=True)
 async def loko_fit_model(file, args):
     # logger.debug(f"file::: {file}")
+    logger.debug(f"FITTING SERVICE... ARGS: {args}")
     predictor_name = args.get("predictor_name_fit")
     if predictor_name == "":
         msg = "VISION SETTINGS MISSING!!!Model of interest not selected, you have to specify one model name"
@@ -314,6 +329,7 @@ async def loko_fit_model(file, args):
     # if predictor_name in [m.name for m in pdao.all()]:
     #     return json('Model %s already exist!' % predictor_name, status=400) #todo: decidere se lasciarlo
     model_info = pdao.get(predictor_name)
+    logger.debug(f"model info:: {model_info}")
     training_task(f, model_info)
     return json(f"Model '{predictor_name}' fitted! Data used: ")
 
@@ -326,7 +342,7 @@ async def loko_fit_model(file, args):
 @extract_value_args(file=True)
 async def loko_predict_model(file, args):
 
-    logger.debug(f"args {args}")
+    logger.debug(f"PREDICT SERVICE... args {args}")
     predictor_name = args.get("predictor_name_predict")
     if predictor_name == "":
         msg = "VISION SETTINGS MISSING!!!Model of interest not selected, you have to specify one model name"
@@ -354,7 +370,7 @@ async def loko_predict_model(file, args):
 ''')
 @extract_value_args(file=True)
 async def loko_evaluate_model(file, args):
-    logger.debug(f"args {args}")
+    logger.debug(f"EVALUATE SERVICE... args {args}")
     predictor_name = args.get("predictor_name_eval")
     if predictor_name == "":
         msg = "VISION SETTINGS MISSING!!!Model of interest not selected, you have to specify one model name"

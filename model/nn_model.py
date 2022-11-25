@@ -129,6 +129,7 @@ class NNClassifierWrapper:
 
     def save(self, path):
         self.predictor_name = path.name
+        logger.debug(f"saving model to path: {path}")
         self.model.save(path / PREDICTOR_H5_FILENAME)
 
     def load_model(self, predictor_name):

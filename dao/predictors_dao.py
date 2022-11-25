@@ -36,6 +36,7 @@ class PredictorsDAO:
                                    predictor_tag=pr.predictor_tag, fitted=False)
                 with open(p / BLUEPRINT_FILENAME, 'w') as f:
                     json.dump(models_info, f, indent=2)
+            logger.debug(f"predictor to save: {pr.predictor_name}")
 
             joblib.dump(pr.model_obj, p / pr.predictor_name)
         except Exception as inst:
