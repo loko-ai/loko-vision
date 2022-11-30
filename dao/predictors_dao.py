@@ -26,8 +26,10 @@ class PredictorsDAO:
 
     def save(self, pr: PredictorRequest):
         try:
+            logger.debug("saving predictor")
             p = self.path / pr.predictor_name
             p.mkdir(exist_ok=True)
+            logger.debug(f"model params {pr.model_parameters}")
             if pr.model_parameters is not None:
                 with open(p / BLUEPRINT_FILENAME, 'w') as f:
                     json.dump(pr.model_parameters, f, indent=2)

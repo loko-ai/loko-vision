@@ -46,13 +46,13 @@ def training_task(f, model_info: PredictorRequest):
     # print(url)
     # cb = LogsCallback(epochs=MODEL_EPOCHS, url=GATEWAY_EMIT_URL, model_name=predictor_name)
     model_info.model_parameters = parameters
-    model_info.fitted = "Training"
+    model_info.model_parameters["fitted"] = "Training"
     pdao.save(model_info)
     model.fit(X, y, epochs=MODEL_EPOCHS)  # , callbacks=[cb])
     logger.debug('%s model fitted with pretrained model %s...' % (predictor_name, pretrained_model))
     model_info.model_parameters = parameters
     model_info.model_obj = model
-    model_info.fitted = True
+    model_info.model_parameters["fitted"] = True
     pdao.save(model_info)
 
 

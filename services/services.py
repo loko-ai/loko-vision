@@ -283,7 +283,8 @@ async def loko_get_model_info(value, args):
     if predictor_name == "":
         msg = "VISION SETTINGS MISSING!!!Model of interest not selected, you have to specify one model name"
         return json(msg, status=400)
-    adv_info = args.get('advanced_info', False)
+    adv_info = args.get('adv_info', False)
+    logger.debug(f"adv info {adv_info}")
     models = get_model_info(predictor_name=predictor_name, advanced_info=adv_info)
     print(json(models))
     return json(models)
@@ -331,7 +332,7 @@ async def loko_fit_model(file, args):
     model_info = pdao.get(predictor_name)
     logger.debug(f"model info:: {model_info}")
     training_task(f, model_info)
-    return json(f"Model '{predictor_name}' fitted! Data used: ")
+    return json(f"Model '{predictor_name}' fitted! Data used: {f.name} ")
 
 
 @bp.post("/loko-services/predict")
