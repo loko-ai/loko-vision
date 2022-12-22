@@ -34,12 +34,12 @@ from utils.pom_utils import get_pom_major_minor
 
 
 # todo (25/11/2022):
-#  - gestire re-training modelli gia' trainati;
+#  - gestire re-training modelli gia' trainati; FATTO !!!!
 #  - gestire apertura modelli una volta "spento" il progetto e "riacceso";
 #  - gestire evaluate di modelli pre-trainati;
 #  - dare piu' info nel servizio evaluate;
 #  - gestire evaluate nel caso di modello non addestrato;
-#  - gestire fit nel caso di nome modello non piu' presente;
+#  - gestire fit nel caso di nome modello non piu' presente; FATTO!!!!!
 
 from utils.zip_utils import make_zipfile
 
@@ -145,7 +145,8 @@ fit_params_description = '''
 @doc.consumes(doc.String(name="predictor_name"), location="path", required=True)
 async def fit(request, predictor_name):
     print(predictor_name)
-
+    if predictor_name not in [m.name for m in pdao.all()]:
+        return json(f"Model '{predictor_name}' doesn't exists", status=404)
     if predictor_name in models_mapping:
         return json("You cannot overwrite %s, it's a pre-trained model." % predictor_name, status=400)
     if not request.files.get("file"):
@@ -155,6 +156,10 @@ async def fit(request, predictor_name):
     # if predictor_name in [m.name for m in pdao.all()]:
     #     return json('Model %s already exist!' % predictor_name, status=400) #todo: decidere se lasciarlo
     model_info = pdao.get(predictor_name)
+    model_obj = model_info.model_obj
+    if model_obj!=None:
+        return json("Predictor already fitted", status=400)
+
     training_task(f, model_info)
     return json('Model %s fitted! Data used: %s' % (predictor_name, f.name))  # , status=200)
 
@@ -175,6 +180,7 @@ predict_params_description = '''
 # @doc.consumes(doc.Integer(name="top"), location="query")
 @doc.consumes(doc.Boolean(name="multilabel"), location="query")
 @doc.consumes(doc.Float(name="multilabel_threshold"), location="query")
+@doc.consumes(doc.Float(name="proba_threshold"), location="query")
 @doc.consumes(doc.Boolean(name="include_probs"), location="query")
 @doc.consumes(doc.File(name="file"), location="formData", content_type="multipart/form-data", required=True)
 async def predict(request, predictor_name):
@@ -189,7 +195,8 @@ async def predict(request, predictor_name):
     if multilabel and predictor_name in models_mapping.keys():
         return json('You cannot use a pre-trained model (%s) as multilabel model' % predictor_name, status=400)
     mlb_threshold = float(request.args.get("multilabel_threshold", 0.5)) if multilabel else None
-    preds_res = predict_task(f, predictor_name, proba, multilabel, mlb_threshold)
+    proba_threshold = float(request.args.get("proba_threshold", 0.0001))
+    preds_res = predict_task(f, predictor_name, proba, multilabel, mlb_threshold, proba_threshold)
     return json(preds_res)  # , status=200)
 
 
@@ -318,6 +325,8 @@ async def loko_fit_model(file, args):
     # logger.debug(f"file::: {file}")
     logger.debug(f"FITTING SERVICE... ARGS: {args}")
     predictor_name = args.get("predictor_name_fit")
+    if predictor_name not in [m.name for m in pdao.all()]:
+        return json(f"Model '{predictor_name}' doesn't exists", status=404)
     if predictor_name == "":
         msg = "VISION SETTINGS MISSING!!!Model of interest not selected, you have to specify one model name"
         return json(msg, status=400)
@@ -331,6 +340,9 @@ async def loko_fit_model(file, args):
     #     return json('Model %s already exist!' % predictor_name, status=400) #todo: decidere se lasciarlo
     model_info = pdao.get(predictor_name)
     logger.debug(f"model info:: {model_info}")
+    model_obj = model_info.model_obj
+    if model_obj!=None:
+        return json("Predictor already fitted", status=400)
     training_task(f, model_info)
     return json(f"Model '{predictor_name}' fitted! Data used: {f.name} ")
 

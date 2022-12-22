@@ -28,6 +28,7 @@ class PredictorsDAO:
         try:
             logger.debug("saving predictor")
             p = self.path / pr.predictor_name
+            print(f"p path: {p}")
             p.mkdir(exist_ok=True)
             logger.debug(f"model params {pr.model_parameters}")
             if pr.model_parameters is not None:
@@ -57,6 +58,7 @@ class PredictorsDAO:
             with open(self.path / predictor_name / BLUEPRINT_FILENAME, 'r') as f:
                 blueprint = json.load(f)
             # if "model_parameters" in blueprint.
+            print(self.path / predictor_name / predictor_name)
             model_obj = joblib.load(self.path / predictor_name / predictor_name)
             with open(self.path / predictor_name / BLUEPRINT_FILENAME, 'r') as f:
                 blueprint = json.load(f)
