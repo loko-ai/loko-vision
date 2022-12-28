@@ -35,10 +35,9 @@ from utils.pom_utils import get_pom_major_minor
 
 # todo (25/11/2022):
 #  - gestire re-training modelli gia' trainati; FATTO !!!!
-#  - gestire apertura modelli una volta "spento" il progetto e "riacceso";
+#  - gestire apertura modelli una volta "spento" il progetto e "riacceso"; ???? non vedo più lo stesso problema al momento
 #  - gestire evaluate di modelli pre-trainati;
 #  - dare piu' info nel servizio evaluate;
-#  - gestire evaluate nel caso di modello non addestrato;
 #  - gestire fit nel caso di nome modello non piu' presente; FATTO!!!!!
 
 from utils.zip_utils import make_zipfile
@@ -190,6 +189,8 @@ async def predict(request, predictor_name):
         f = request.files["file"][0]
     # print(f)
     # top = int(request.args.get('top', 3))
+    if predictor_name not in get_models_list(models_type="all"):
+        return json(f"Model '{predictor_name}' doesn't exists", status=404)
     proba = eval(request.args.get('include_probs', 'true').capitalize())
     multilabel = eval(request.args.get('multilabel', 'false').capitalize())
     if multilabel and predictor_name in models_mapping.keys():
@@ -365,6 +366,8 @@ async def loko_predict_model(file, args):
     else:
         f = file[0]
         # top = int(request.args.get('top', 3))
+    if predictor_name not in get_models_list(models_type="all"):
+        return json(f"Model '{predictor_name}' doesn't exists", status=404)
     proba = args.get('include_probs', True)
     proba_threshold = float(args.get("probability_th", 0.00)) if proba else None
     multilabel = args.get('multilabel', False)

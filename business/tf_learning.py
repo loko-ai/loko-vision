@@ -1,6 +1,9 @@
 from itertools import chain
 
 # from config.AppConfig import GATEWAY_EMIT_URL
+import sanic
+from sanic.exceptions import SanicException
+
 from config.FactoryConfig import FACTORY
 from config.genericConfig import MODEL_EPOCHS
 from dao.predictors_dao import PredictorsDAO
@@ -62,10 +65,17 @@ def predict_task(f, predictor_name, proba, multilabel, mlb_threshold, proba_thre
 
     ### use custom model ###
     if predictor_name not in models_mapping.keys():
+        logger.debug("using custom model")
         pr = pdao.get(predictor_name)
         model = pr.model_obj
-    ## use pretrained model ###
+        if model is None:
+            msg = f"Predictor '{predictor_name}' not yet fitted, you have to train the model first"
+            logger.error(msg)
+            raise SanicException(msg, status_code=400)
     else:
+        ## use pretrained model ###
+        logger.debug("using pretrained model")
+
         model_parameters = dict(__klass__='ds4biz.KerasImagePredictor',
                                 pretrained_model=predictor_name,
                                 predictor_name=predictor_name)
@@ -98,14 +108,23 @@ def evaluate_task(f, predictor_name):
     X, y, fnames = read_imgs(f)
 
     if predictor_name not in models_mapping.keys():
+        logger.debug("using custom model")
+
         pr = pdao.get(predictor_name)
         model = pr.model_obj
-        ## use pretrained model ###
+        if model is None:
+            msg = f"Predictor '{predictor_name}' not yet fitted, you have to train the model first"
+            logger.error(msg)
+            raise SanicException(msg, status_code=400)
     else:
+        logger.debug("using pretrained model")
+
+        ## use pretrained model ###
         model_parameters = dict(__klass__='ds4biz.KerasImagePredictor',
                                 pretrained_model=predictor_name,
                                 predictor_name=predictor_name)
         model = FACTORY(model_parameters)
+
     res = model.evaluate(X, y)
     return res
 

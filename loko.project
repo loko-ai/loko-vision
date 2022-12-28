@@ -3,7 +3,7 @@
   "id": "loko-vision",
   "description": "",
   "created_on": "17/11/2022, 14:17:04",
-  "last_modify": "22/12/2022, 10:52:53",
+  "last_modify": "28/12/2022, 11:33:03",
   "graphs": {
     "Vision Manager": {
       "nodes": [
@@ -989,9 +989,9 @@
                 "debug": true,
                 "include_probs": false,
                 "multilabel": false,
-                "predictor_name_fit": "example_model",
-                "predictor_name_eval": "ciaone",
-                "predictor_name_predict": ""
+                "predictor_name_fit": "",
+                "predictor_name_predict": "not_fit",
+                "predictor_name_eval": "ciaone"
               }
             },
             "locked": null
