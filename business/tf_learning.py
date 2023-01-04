@@ -1,9 +1,12 @@
 from itertools import chain
 
 # from config.AppConfig import GATEWAY_EMIT_URL
+import keras
 import sanic
 from sanic.exceptions import SanicException
 
+from business.evaluate_report import compute_reports
+from config.AppConfig import PRETRAINED_CLASSES
 from config.FactoryConfig import FACTORY
 from config.genericConfig import MODEL_EPOCHS
 from dao.predictors_dao import PredictorsDAO
@@ -124,8 +127,28 @@ def evaluate_task(f, predictor_name):
                                 pretrained_model=predictor_name,
                                 predictor_name=predictor_name)
         model = FACTORY(model_parameters)
+    if model.top_layer is None:
+        ytrue_labels = list(set(y))
+        if ytrue_labels not in PRETRAINED_CLASSES:
+            pretrained_labels_site = "https://storage.googleapis.com/download.tensorflow.org/data/imagenet_class_index.json"
+            msg = f"The ground truth labels must belong to the Imagenet labels list. You can check the list here: {pretrained_labels_site}"
+            raise SanicException(msg, status_code=400)
+    # if model.top_layer is not None:
+    #     res = model.evaluate(X, y)
+    # logger.debug(f"evaluate metrics: {res}")
+    logger.debug("computing prediction for report")
+    preds = model.predict(X, multilabel=False)
+    preds = [[pp[0] for pp in p][0] for p in preds]
 
-    res = model.evaluate(X, y)
-    return res
+    logger.debug("computing report")
+    y = [el[0] for el in y]
+    if model.top_layer:
+        labels = sorted(model.top_layer.classes_)
+    else:
+        labels=None
+    report = compute_reports(y_true=y, y_pred=preds, labels=labels)
+
+    logger.debug(f"report::: {report}")
+    return report
 
 

@@ -1,7 +1,10 @@
+import json
 import os
 from pathlib import Path
 
 from utils.env_utils import EnvInit
+from keras.utils import data_utils
+
 
 #os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID" #If the line below doesn't work, uncomment this line (make sure to comment the line below); it should help.
 # os.environ['CUDA_VISIBLE_DEVICES'] = '1'
@@ -86,3 +89,20 @@ KERAS_PRETRAINED_MODELS = [
     "VGG19",
     "Xception"
 ]
+
+
+PRETRAINED_CLASS_INDEX_PATH = (
+    "https://storage.googleapis.com/download.tensorflow.org/"
+    "data/imagenet_class_index.json"
+)
+
+fpath = data_utils.get_file(
+    "imagenet_class_index.json",
+    PRETRAINED_CLASS_INDEX_PATH,
+    cache_subdir="models",
+    file_hash="c2c37ea517e94d9795004a39431a14cb",
+)
+with open(fpath) as f:
+    PRETRAINED_CLASS_INDEX = json.load(f)
+
+PRETRAINED_CLASSES = [PRETRAINED_CLASS_INDEX[cl_k][1] for cl_k in PRETRAINED_CLASS_INDEX]

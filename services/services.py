@@ -17,6 +17,7 @@ from sanic_cors import CORS
 from sanic_openapi import swagger_blueprint
 from sanic_openapi.openapi2 import doc
 
+from business.evaluate_report import compute_reports
 from business.tf_learning import training_task, predict_task, evaluate_task
 from config.AppConfig import REPO_PATH
 from dao.inmemory_dao import InMemoryDAO

@@ -100,7 +100,6 @@ class KerasImagePredictor(ImagePredictor):
         def get_preds_with_class(preds, top=None):
             top = top or len(self.top_layer.classes_)
             preds = zip(self.top_layer.classes_, preds)
-            print("Preds")
             return sorted(preds, key=lambda x: x[1], reverse=True)[:top]
 
         ### transfer learning ###
@@ -129,6 +128,7 @@ class KerasImagePredictor(ImagePredictor):
 
     def evaluate(self, X, y, **kwargs):
         logger.debug("KERAS NN eval...")
+        logger.debug(f"y {y}")
         X = self._preprocess_input(X)
         if self.top_layer:
             # send_message(self.predictor_name, "Starts prediction")
@@ -136,7 +136,15 @@ class KerasImagePredictor(ImagePredictor):
             vecs = self.base_model.predict(X)
             logger.debug('computing predictions...')
             eval = self.top_layer.evaluate(vecs, y)
-            return eval
+        return eval
+        # else:
+        #     logger.debug("starting predictions...")
+        #     preds = self.base_model.predict(X)
+        #     preds = models_mapping[self.pretrained_model]['decode_predictions'](preds, top=1)  # , top=top)
+        #     logger.debug("decoding prediction classes..")
+        #     eval = self.base_model.evaluate(preds, y)
+        #     logger.debug(f"eval {eval}")
+        #     return eval
 
     def __getstate__(self):
         logger.debug("I'm being pickled")
