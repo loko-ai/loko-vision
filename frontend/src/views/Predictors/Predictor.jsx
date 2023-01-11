@@ -50,18 +50,6 @@ export function Predictor({ name, onClick, onDelete, onExport, ...rest }) {
     status_alias="Not Fitted"
   }
 
-  // if (state.status_tag==true) {
-  //   state.status_tag = "Fitted"
-  //   color_status = "#94c099";
-  // } else if (state.status_tag=="Training") {
-  //   console.log("SSSSSSSSSSSSSSSSSSSSSSSSSSSSS")
-  //   color_status = "#df8e6e"
-  //   state.status_tag="Training"
-  //   //#d06464
-  // } else if (state.status_tag==false){
-  //   state.status_tag = "Not Fitted"
-  // }
-
 
   console.log("status_tag res ::", state.status_tag)
   console.log("color status res ::", color_status)

@@ -44,7 +44,7 @@ export function PredBaseForm({ onSubmit }) {
         onChange={(e) => (state.pretrained_model = e.target.value)}
       >
         <option></option>
-        {_state.predictors.map((el) => (
+        {_state.pretrained.map((el) => (
           <option key={el}>{el}</option>
         ))}
       </Select>

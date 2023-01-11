@@ -20,6 +20,7 @@ import { Predictors } from "./views/Predictors/Predictors";
 function App() {
   const state = useCompositeState({
     predictors: [],
+    pretrained: [],
     view: "list",
     refresh: null,
   });
@@ -29,7 +30,13 @@ function App() {
       .get({ params: { model_type: "custom" } })
       .then((resp) => (state.predictors = resp.data))
       .catch((err) => console.log(err));
+    CLIENT.models
+      .get({ params: { model_type: "pretrained" } })
+      .then((resp) => (state.pretrained = resp.data))
+      .catch((err) => console.log(err));
   }, [state.refresh]);
+  console.log("PREDICTORSSSSSSSSSS HERE ", state.predictors)
+  console.log("PREDICTORSSSSSSSSSS HERE ", state.pretrained)
 
   switch (state.view) {
     case "list":
@@ -38,7 +45,7 @@ function App() {
           <Flex w="100vw" h="100vh">
             <Tabs w="80%" p="2rem">
               <TabList>
-                <Tab>Models</Tab>
+                <Tab>Predictors</Tab>
               </TabList>
               <TabPanels>
                 <TabPanel>
