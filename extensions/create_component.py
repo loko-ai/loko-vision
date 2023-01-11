@@ -3,17 +3,17 @@ from loko_extensions.model.components import Arg
 
 from extensions.vision_component_doc import vision_doc
 
-custom_model_list = "http://localhost:9999/routes/loko-vision/loko_vision/0.0/models?info=false&model_type=custom"
-custom_and_pretrained_model_list = "http://localhost:9999/routes/loko-vision/loko_vision/0.0/models"
-pretrained_list = "http://localhost:9999/routes/loko-vision/loko_vision/0.0/models?model_type=pretrained"
+custom_model_list = "http://localhost:9999/routes/loko-vision/models?info=false&model_type=custom"
+custom_and_pretrained_model_list = "http://localhost:9999/routes/loko-vision/models"
+pretrained_list = "http://localhost:9999/routes/loko-vision/models?model_type=pretrained"
 
-create_service = "loko_vision/0.0/loko-services/create"
-info_service = "loko_vision/0.0/loko-services/info"
-delete_service = "loko_vision/0.0/loko-services/delete"
+create_service = "loko-services/create"
+info_service = "loko-services/info"
+delete_service = "loko-services/delete"
 
-fit_service = "loko_vision/0.0/loko-services/fit"
-predict_service = "loko_vision/0.0/loko-services/predict"
-evaluate_service = "loko_vision/0.0/loko-services/evaluate"
+fit_service = "loko-services/fit"
+predict_service = "loko-services/predict"
+evaluate_service = "loko-services/evaluate"
 
 ################################## ARGS ####################################
 

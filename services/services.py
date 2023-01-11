@@ -1,4 +1,5 @@
 import logging
+import traceback
 import zipfile
 from itertools import chain
 
@@ -12,6 +13,7 @@ import tensorflow as tf
 from loko_extensions.business.decorators import extract_value_args
 from sanic import Blueprint, text
 from sanic import json, Sanic
+from sanic.exceptions import SanicException, NotFound
 from sanic.response import raw
 from sanic_cors import CORS
 from sanic_openapi import swagger_blueprint
@@ -55,7 +57,7 @@ pdao = PredictorsDAO()
 
 
 def get_app(name):
-    app = Sanic(name)
+    app = Sanic(name,)
     swagger_blueprint.url_prefix = "/api"
     app.blueprint(swagger_blueprint)
     return app
@@ -63,11 +65,13 @@ def get_app(name):
 
 name = "loko-vision"
 app = get_app(name)
-bp = Blueprint("default", url_prefix=f"loko_vision/{get_pom_major_minor()}/")
-app.config["API_VERSION"] = get_pom_major_minor()
+# url_prefix = f"loko_vision/{get_pom_major_minor()}/"
+bp = Blueprint("default")#, url_prefix=url_prefix)
+# app.config["API_VERSION"] = get_pom_major_minor()
 app.config["API_TITLE"] = name
 CORS(app)
-
+app.static("/web", "/frontend/dist")
+#loko_vision/0.0/
 get_models_params_description = '''
 <b>model_type:</b> return the type of models available for the chosen category: pre-trained, custom or both types.
 '''
@@ -75,11 +79,11 @@ get_models_params_description = '''
 
 @bp.get("/models/")
 @doc.tag('Vision')
-
 @doc.description(get_models_params_description)
 @doc.consumes(doc.String(name="model_type", choices=["all", "custom", "pretrained"], description="Default model_type='all'"))
 @doc.consumes(doc.Boolean(name="info", description="Default info='False'"))
 async def models(request):
+    logger.debug("dentro get models")
     model_type = request.args.get("model_type", "all")
     model_info = eval(request.args.get("info", "false").capitalize())
     models = get_models_list(model_type, model_info)
@@ -419,6 +423,23 @@ async def evaluate_model(request, predictor_name):
     res = evaluate_task(f, predictor_name)
 
     return json(res)  # , status=200)
+
+
+
+@app.exception(Exception)
+async def manage_exception(request, exception):
+    status_code = getattr(exception, "status_code", None) or 500
+    logger.debug(f"status_code:::: {status_code}")
+    if isinstance(exception, SanicException):
+        return sanic.json(dict(error=str(exception)), status=status_code)
+
+    e = dict(error=f"{exception.__class__.__name__}: {exception}")
+
+    if isinstance(exception, NotFound):
+        return sanic.json(e, status=404)
+    # logger.error(f"status code {status_code}")
+    logger.error('TracebackERROR: \n' + traceback.format_exc() + '\n\n', exc_info=True)
+    return sanic.json(e, status=status_code)
 
 
 if __name__ == '__main__':

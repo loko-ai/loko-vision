@@ -11,19 +11,19 @@
    {
     "id": "fit",
     "label": "fit",
-    "service": "loko_vision/0.0/loko-services/fit",
+    "service": "loko-services/fit",
     "to": "fit"
    },
    {
     "id": "predict",
     "label": "predict",
-    "service": "loko_vision/0.0/loko-services/predict",
+    "service": "loko-services/predict",
     "to": "predict"
    },
    {
     "id": "evaluate",
     "label": "evaluate",
-    "service": "loko_vision/0.0/loko-services/evaluate",
+    "service": "loko-services/evaluate",
     "to": "evaluate"
    }
   ],
@@ -56,7 +56,7 @@
      "value": null,
      "description": "",
      "validation": null,
-     "url": "http://localhost:9999/routes/loko-vision/loko_vision/0.0/models?info=false&model_type=custom"
+     "url": "http://localhost:9999/routes/loko-vision/models?info=false&model_type=custom"
     },
     {
      "name": "predictor_name_predict",
@@ -67,7 +67,7 @@
      "value": null,
      "description": "",
      "validation": null,
-     "url": "http://localhost:9999/routes/loko-vision/loko_vision/0.0/models"
+     "url": "http://localhost:9999/routes/loko-vision/models"
     },
     {
      "name": "include_probs",
@@ -136,7 +136,7 @@
      "value": null,
      "description": "",
      "validation": null,
-     "url": "http://localhost:9999/routes/loko-vision/loko_vision/0.0/models?info=false&model_type=custom"
+     "url": "http://localhost:9999/routes/loko-vision/models?info=false&model_type=custom"
     }
    ]
   }
@@ -153,19 +153,19 @@
    {
     "id": "create",
     "label": "create",
-    "service": "loko_vision/0.0/loko-services/create",
+    "service": "loko-services/create",
     "to": "create"
    },
    {
     "id": "info",
     "label": "info",
-    "service": "loko_vision/0.0/loko-services/info",
+    "service": "loko-services/info",
     "to": "info"
    },
    {
     "id": "delete",
     "label": "delete",
-    "service": "loko_vision/0.0/loko-services/delete",
+    "service": "loko-services/delete",
     "to": "delete"
    }
   ],
@@ -205,7 +205,7 @@
      "value": null,
      "description": "",
      "validation": null,
-     "url": "http://localhost:9999/routes/loko-vision/loko_vision/0.0/models?model_type=pretrained"
+     "url": "http://localhost:9999/routes/loko-vision/models?model_type=pretrained"
     },
     {
      "name": "predictor_tag",
@@ -226,7 +226,7 @@
      "value": null,
      "description": "",
      "validation": null,
-     "url": "http://localhost:9999/routes/loko-vision/loko_vision/0.0/models?info=false&model_type=custom"
+     "url": "http://localhost:9999/routes/loko-vision/models?info=false&model_type=custom"
     },
     {
      "name": "adv_info",
@@ -247,7 +247,7 @@
      "value": null,
      "description": "",
      "validation": null,
-     "url": "http://localhost:9999/routes/loko-vision/loko_vision/0.0/models?info=false&model_type=custom"
+     "url": "http://localhost:9999/routes/loko-vision/models?info=false&model_type=custom"
     }
    ]
   }

@@ -1,5 +1,7 @@
 .*
 venv
+!.env
+!.env.production
 !.gitignore
 !.dockerignore
 *.pyc
@@ -7,3 +9,5 @@ dist
 __pycache__
 dist
 repo
+**/node_modules
+

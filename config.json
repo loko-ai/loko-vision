@@ -2,6 +2,10 @@
   "main": {
     "volumes": [
       "/home/roberta/loko/projects/loko-vision/repo:/plugin/repo"
-    ]
+    ],
+    "gui": {
+      "name": "Vision GUI",
+      "path": "web/index.html"
+    }
   }
 }
