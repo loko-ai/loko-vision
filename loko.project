@@ -3,7 +3,7 @@
   "id": "loko-vision",
   "description": "",
   "created_on": "17/11/2022, 14:17:04",
-  "last_modify": "09/01/2023, 09:25:24",
+  "last_modify": "27/01/2023, 16:14:33",
   "graphs": {
     "Vision Manager": {
       "nodes": [
@@ -816,10 +816,10 @@
           "__class__": "Node"
         },
         {
-          "id": "1d3cc276-2c03-4e06-8193-7ee779705524",
+          "id": "a4e5c994-53be-4c33-a335-c61cb302d396",
           "position": {
-            "x": 870,
-            "y": 337
+            "x": 902.6073020654925,
+            "y": 322.20552848169774
           },
           "type": "custom",
           "dragHandle": "#nodeHandle",
@@ -832,7 +832,7 @@
           "data": {
             "name": "Vision",
             "events": null,
-            "description": "\n### Description\n\nVISION is the Loko AI component which allows to classify images either using a pre-trained Neural Networks, or using a transfer-learning model over one of them. Specifically, VISION helps you with training, predicting and managing your models.\n\n### Configuration\n\nThe heading ***Available services*** allows user to select the VISION instance of interest (remembering that different vision-models will necessarily be found on different instances). \n\nIf you just want to use a pre-trained Neural Network in order to classify your set of images, you can directly link a *File Reader* component to the *Predict* Inputs of VISION. \nMore information about pre-trained models can be found here https://keras.io/api/applications/, where you can see details on their network structure and performances. \nIf you decide to classify your image directly using one of the pre-trained Neural Networks, you should expect to receive as output one of the 1000 possible ImageNet classes (.\n\nIf you want to create a transfer-learning model to customize your classifier on your own data, follow these steps:\n\n\n- **Create a model:** in *Create parameters* choose the name of the model you want to create (*Vision Model Name*) and select the pre-trained models to use (*Pretrained Models*). Then, link a *Trigger* component to the **Create** input;\n\n- **Fit a model:** in *Fit parameters* choose the name of the model you want to train (*Vision Model*), and use a *File Reader* to pass a zipped folder to the VISION component ***Fit*** input.\n\n- **Get prediction with a model:** in *Predict parameters* you can set the model to use (*Vision Model*) choosing between the customized models and the pre-trained NN. Then, you can choose if you want to see directly the predicted class or the probability of each of them, setting the **Predict proba** parameters. \nIf you use a customized model, you can also decide to see predictions as a **generic Multi-Class** or as a **Multi-Label model**; in the latter case, if you don't want to see the probability of belonging to each class you can set the value of the **MultiLabel Threshold**, that indicate the minimum probability value in order to assign a specific class.\n\n\nYou may also want to:\n\n\n- **Delete a model:** in the section *delete parameters* specify the model you want to delete. It's possible to delete only the customized models.\n\n- **Get information about a model:** in *info parameters* you have to set the model name and then choose if you just want to know if the model is fitted and the pre-trained model used, or if you want **advanced** information.\n\n\n\n\n### Output\n\nFor **Create, Fit and Delete** services the output messages will only be a sentence that confirms that the required action has been finalized. For the *fit* service it may take a while to have the output back, depending on how much the fitting lasts.\n\n\nThe output for the **info** services change if the model has already been fitted or not, and based on the setting chosen regarding advanced information. In case the model has been fitted and advanced information was activated the output will be the following:\n\n```json\n{\"predictor_name\": name of the model chosen, \n\"pretrained_model\": name of the pretrained model chosen,\n\"top_layer\": {\"n_layer\":1,\n    \"n_classes\": number of classes,\n    \"metrics\": [\"accuracy\"],\n    \"loss_function\": \"binary_crossentropy\",\n    \"epochs\":100},\n\"fitted\": say if the model was trained or not}\n```\n\nIn case the model *is not fitted* or *the advanced information* is not activated, the output will be the same without the \"top layer\" information.\n\nThe **predict** service has different output based on the settings chosen. If the field *predict proba* has been selected, we can see the probabilities next to each labels:\n\n```json\n{\"fname\": name of the file used for the prediction, \n\"pred\": [[\"cat\",0.9996217489242554],\n        [\"dog\",0.001642674207687378]]}\n```\n\nOtherwise, the output will be:\n\n```json\n{\"fname\": name of the file used for the prediction, \n\"pred\": \"cat\"}\n```\n\nIf *multilabel* is selected the output will be:\n\n```\n{\"fname\": name of the file used for the prediction, \n\"pred\": [\"cat\", \"persian\",\"black\"]}\n```\n",
+            "description": "\n### Description\n\nVISION is the Loko AI component which allows to classify images either using a pre-trained Neural Networks, or using a transfer-learning model over one of them. Specifically, VISION helps you with training, predicting and managing your models.\n\n### Configuration\n\nThe heading ***Available services*** allows user to select the VISION instance of interest (remembering that different vision-models will necessarily be found on different instances). \n\nIf you just want to use a pre-trained Neural Network in order to classify your set of images, you can directly link a *File Reader* component to the *Predict* Inputs of VISION. \nMore information about pre-trained models can be found here https://keras.io/api/applications/, where you can see details on their network structure and performances. \nIf you decide to classify your image directly using one of the pre-trained Neural Networks, you should expect to receive as output one of the 1000 possible ImageNet classes.\n\nIf you want to create a transfer-learning model to customize your classifier on your own data, follow these steps:\n\n\n- **Create a model:** in *Create parameters* choose the name of the model you want to create (*Vision Model Name*) and select the pre-trained models to use (*Pretrained Models*). Then, link a *Trigger* component to the **Create** input;\n\n- **Fit a model:** in *Fit parameters* choose the name of the model you want to train (*Vision Model*), and use a *File Reader* to pass a zipped folder to the VISION component ***Fit*** input.\n\n- **Get prediction with a model:** in *Predict parameters* you can set the model to use (*Vision Model*) choosing between the customized models and the pre-trained NN. Then, you can choose if you want to see directly the predicted class or the probability of each of them, setting the **Predict proba** parameters. \nIf you use a customized model, you can also decide to see predictions as a **generic Multi-Class** or as a **Multi-Label model**; in the latter case, if you don't want to see the probability of belonging to each class you can set the value of the **MultiLabel Threshold**, that indicate the minimum probability value in order to assign a specific class.\n\n\nYou may also want to:\n\n\n- **Delete a model:** in the section *delete parameters* specify the model you want to delete. It's possible to delete only the customized models.\n\n- **Get information about a model:** in *info parameters* you have to set the model name and then choose if you just want to know if the model is fitted and the pre-trained model used, or if you want **advanced** information.\n\n\n\n\n### Output\n\nFor **Create, Fit and Delete** services the output messages will only be a sentence that confirms that the required action has been finalized. For the *fit* service it may take a while to have the output back, depending on how much the fitting lasts.\n\n\nThe output for the **info** services change if the model has already been fitted or not, and based on the setting chosen regarding advanced information. In case the model has been fitted and advanced information was activated the output will be the following:\n\n```json\n{\"predictor_name\": name of the model chosen, \n\"pretrained_model\": name of the pretrained model chosen,\n\"top_layer\": {\"n_layer\":1,\n    \"n_classes\": number of classes,\n    \"metrics\": [\"accuracy\"],\n    \"loss_function\": \"binary_crossentropy\",\n    \"epochs\":100},\n\"fitted\": say if the model was trained or not}\n```\n\nIn case the model *is not fitted* or *the advanced information* is not activated, the output will be the same without the \"top layer\" information.\n\nThe **predict** service has different output based on the settings chosen. If the field *predict proba* has been selected, we can see the probabilities next to each labels:\n\n```json\n{\"fname\": name of the file used for the prediction, \n\"pred\": [[\"cat\",0.9996217489242554],\n        [\"dog\",0.001642674207687378]]}\n```\n\nOtherwise, the output will be:\n\n```json\n{\"fname\": name of the file used for the prediction, \n\"pred\": \"cat\"}\n```\n\nIf *multilabel* is selected the output will be:\n\n```\n{\"fname\": name of the file used for the prediction, \n\"pred\": [\"cat\", \"persian\",\"black\"]}\n```\n",
             "inputs": [
               {
                 "id": "fit",
@@ -899,6 +899,48 @@
                   "description": "",
                   "validation": null,
                   "url": "http://localhost:9999/routes/loko-vision/models?info=false&model_type=custom"
+                },
+                {
+                  "name": "epochs",
+                  "type": "number",
+                  "label": "Model epochs",
+                  "helper": "",
+                  "group": "Fit parameters",
+                  "value": 150,
+                  "description": "Number of epochs to train the Neural Network",
+                  "validation": null
+                },
+                {
+                  "name": "optimizer",
+                  "type": "select",
+                  "label": "Optimizer",
+                  "helper": "",
+                  "group": "Fit parameters",
+                  "value": "Adam",
+                  "description": "Optimizer to use for the Neural Network training",
+                  "validation": null,
+                  "options": [
+                    "SGD",
+                    "RMSprop",
+                    "Adam",
+                    "AdamW",
+                    "Adadelta",
+                    "Adagrad",
+                    "Adamax",
+                    "Adafactor",
+                    "Nadam",
+                    "Ftrl"
+                  ]
+                },
+                {
+                  "name": "metrics",
+                  "type": "text",
+                  "label": "Metrics",
+                  "helper": "Insert the name of the metrics, comma separeted. E.g.: accuracy,mse,precision",
+                  "group": "Fit parameters",
+                  "value": "accuracy, ",
+                  "description": "Metrics to compute",
+                  "validation": null
                 },
                 {
                   "name": "predictor_name_predict",
@@ -987,11 +1029,14 @@
                 "comment": "",
                 "alias": "",
                 "debug": true,
+                "epochs": "150",
+                "optimizer": "Adam",
+                "metrics": "accuracy, ",
                 "include_probs": false,
                 "multilabel": false,
                 "predictor_name_fit": "lic_reg",
-                "predictor_name_eval": "lic_reg",
-                "predictor_name_predict": "lic_reg"
+                "predictor_name_predict": "lic_reg",
+                "predictor_name_eval": "lic_reg"
               }
             },
             "locked": null
@@ -999,32 +1044,18 @@
           "selectable": true,
           "draggable": true,
           "positionAbsolute": {
-            "x": 870,
-            "y": 337
+            "x": 902.6073020654925,
+            "y": 322.20552848169774
           },
           "__class__": "Node"
         }
       ],
       "edges": [
         {
-          "id": "reactflow__edge-4a5bc458-b007-44c0-af4e-4b5b34fa2e73output-1d3cc276-2c03-4e06-8193-7ee779705524fit",
-          "source": "4a5bc458-b007-44c0-af4e-4b5b34fa2e73",
-          "sourceHandle": "output",
-          "target": "1d3cc276-2c03-4e06-8193-7ee779705524",
-          "targetHandle": "fit",
-          "data": {
-            "startColor": "#F8637A",
-            "stopColor": "#888"
-          },
-          "selected": false,
-          "dragging": false,
-          "__class__": "Edge"
-        },
-        {
-          "id": "reactflow__edge-277aff39-3244-47aa-99c4-bab032d982e6output-1d3cc276-2c03-4e06-8193-7ee779705524predict",
+          "id": "reactflow__edge-277aff39-3244-47aa-99c4-bab032d982e6output-a4e5c994-53be-4c33-a335-c61cb302d396predict",
           "source": "277aff39-3244-47aa-99c4-bab032d982e6",
           "sourceHandle": "output",
-          "target": "1d3cc276-2c03-4e06-8193-7ee779705524",
+          "target": "a4e5c994-53be-4c33-a335-c61cb302d396",
           "targetHandle": "predict",
           "data": {
             "startColor": "#F8637A",
@@ -1035,10 +1066,24 @@
           "__class__": "Edge"
         },
         {
-          "id": "reactflow__edge-6a8042b8-c9f3-425d-ae5c-0dd20a3d08e6output-1d3cc276-2c03-4e06-8193-7ee779705524evaluate",
+          "id": "reactflow__edge-4a5bc458-b007-44c0-af4e-4b5b34fa2e73output-a4e5c994-53be-4c33-a335-c61cb302d396fit",
+          "source": "4a5bc458-b007-44c0-af4e-4b5b34fa2e73",
+          "sourceHandle": "output",
+          "target": "a4e5c994-53be-4c33-a335-c61cb302d396",
+          "targetHandle": "fit",
+          "data": {
+            "startColor": "#F8637A",
+            "stopColor": "#888"
+          },
+          "selected": false,
+          "dragging": false,
+          "__class__": "Edge"
+        },
+        {
+          "id": "reactflow__edge-6a8042b8-c9f3-425d-ae5c-0dd20a3d08e6output-a4e5c994-53be-4c33-a335-c61cb302d396evaluate",
           "source": "6a8042b8-c9f3-425d-ae5c-0dd20a3d08e6",
           "sourceHandle": "output",
-          "target": "1d3cc276-2c03-4e06-8193-7ee779705524",
+          "target": "a4e5c994-53be-4c33-a335-c61cb302d396",
           "targetHandle": "evaluate",
           "data": {
             "startColor": "#F8637A",
@@ -1056,15 +1101,15 @@
         {
           "id": "932ea51b-5b6b-4016-905a-fa28bf4e39fe",
           "position": {
-            "x": 854,
-            "y": 202
+            "x": 772,
+            "y": 190
           },
           "type": "custom",
           "dragHandle": "#nodeHandle",
           "sourcePosition": "right",
           "targetPosition": "left",
-          "width": 150,
-          "height": 56,
+          "width": 181,
+          "height": 60,
           "selected": false,
           "dragging": false,
           "data": {
@@ -1210,16 +1255,16 @@
           "selectable": true,
           "draggable": true,
           "positionAbsolute": {
-            "x": 854,
-            "y": 202
+            "x": 772,
+            "y": 190
           },
           "__class__": "Node"
         },
         {
           "id": "9539bf53-e98b-48eb-9f60-2cb8aa3bede1",
           "position": {
-            "x": 493,
-            "y": 167
+            "x": 487,
+            "y": 159
           },
           "type": "custom",
           "dragHandle": "#nodeHandle",
@@ -1303,195 +1348,9 @@
           "selectable": true,
           "draggable": true,
           "positionAbsolute": {
-            "x": 493,
-            "y": 167
+            "x": 487,
+            "y": 159
           },
-          "__class__": "Node"
-        },
-        {
-          "id": "a3eaa1e2-1ef7-46a3-90ba-e0941996da8c",
-          "position": {
-            "x": 971,
-            "y": 483
-          },
-          "type": "custom",
-          "dragHandle": "#nodeHandle",
-          "sourcePosition": "right",
-          "targetPosition": "left",
-          "width": 150,
-          "height": 56,
-          "selected": false,
-          "dragging": false,
-          "data": {
-            "name": "Vision",
-            "events": null,
-            "description": "\n### Description\n\nVISION is the Loko AI component which allows to classify images either using a pre-trained Neural Networks, or using a transfer-learning model over one of them. Specifically, VISION helps you with training, predicting and managing your models.\n\n### Configuration\n\nThe heading ***Available services*** allows user to select the VISION instance of interest (remembering that different vision-models will necessarily be found on different instances). \n\nIf you just want to use a pre-trained Neural Network in order to classify your set of images, you can directly link a *File Reader* component to the *Predict* Inputs of VISION. \nMore information about pre-trained models can be found here https://keras.io/api/applications/, where you can see details on their network structure and performances. \nIf you decide to classify your image directly using one of the pre-trained Neural Networks, you should expect to receive as output one of the 1000 possible ImageNet classes (.\n\nIf you want to create a transfer-learning model to customize your classifier on your own data, follow these steps:\n\n\n- **Create a model:** in *Create parameters* choose the name of the model you want to create (*Vision Model Name*) and select the pre-trained models to use (*Pretrained Models*). Then, link a *Trigger* component to the **Create** input;\n\n- **Fit a model:** in *Fit parameters* choose the name of the model you want to train (*Vision Model*), and use a *File Reader* to pass a zipped folder to the VISION component ***Fit*** input.\n\n- **Get prediction with a model:** in *Predict parameters* you can set the model to use (*Vision Model*) choosing between the customized models and the pre-trained NN. Then, you can choose if you want to see directly the predicted class or the probability of each of them, setting the **Predict proba** parameters. \nIf you use a customized model, you can also decide to see predictions as a **generic Multi-Class** or as a **Multi-Label model**; in the latter case, if you don't want to see the probability of belonging to each class you can set the value of the **MultiLabel Threshold**, that indicate the minimum probability value in order to assign a specific class.\n\n\nYou may also want to:\n\n\n- **Delete a model:** in the section *delete parameters* specify the model you want to delete. It's possible to delete only the customized models.\n\n- **Get information about a model:** in *info parameters* you have to set the model name and then choose if you just want to know if the model is fitted and the pre-trained model used, or if you want **advanced** information.\n\n\n\n\n### Output\n\nFor **Create, Fit and Delete** services the output messages will only be a sentence that confirms that the required action has been finalized. For the *fit* service it may take a while to have the output back, depending on how much the fitting lasts.\n\n\nThe output for the **info** services change if the model has already been fitted or not, and based on the setting chosen regarding advanced information. In case the model has been fitted and advanced information was activated the output will be the following:\n\n```json\n{\"predictor_name\": name of the model chosen, \n\"pretrained_model\": name of the pretrained model chosen,\n\"top_layer\": {\"n_layer\":1,\n    \"n_classes\": number of classes,\n    \"metrics\": [\"accuracy\"],\n    \"loss_function\": \"binary_crossentropy\",\n    \"epochs\":100},\n\"fitted\": say if the model was trained or not}\n```\n\nIn case the model *is not fitted* or *the advanced information* is not activated, the output will be the same without the \"top layer\" information.\n\nThe **predict** service has different output based on the settings chosen. If the field *predict proba* has been selected, we can see the probabilities next to each labels:\n\n```json\n{\"fname\": name of the file used for the prediction, \n\"pred\": [[\"cat\",0.9996217489242554],\n        [\"dog\",0.001642674207687378]]}\n```\n\nOtherwise, the output will be:\n\n```json\n{\"fname\": name of the file used for the prediction, \n\"pred\": \"cat\"}\n```\n\nIf *multilabel* is selected the output will be:\n\n```\n{\"fname\": name of the file used for the prediction, \n\"pred\": [\"cat\", \"persian\",\"black\"]}\n```\n",
-            "inputs": [
-              {
-                "id": "fit",
-                "label": "fit",
-                "service": "loko-services/fit",
-                "to": "fit"
-              },
-              {
-                "id": "predict",
-                "label": "predict",
-                "service": "loko-services/predict",
-                "to": "predict"
-              },
-              {
-                "id": "evaluate",
-                "label": "evaluate",
-                "service": "loko-services/evaluate",
-                "to": "evaluate"
-              }
-            ],
-            "outputs": [
-              {
-                "id": "fit",
-                "label": "fit"
-              },
-              {
-                "id": "predict",
-                "label": "predict"
-              },
-              {
-                "id": "evaluate",
-                "label": "evaluate"
-              }
-            ],
-            "configured": true,
-            "options": {
-              "group": "ComputerVision",
-              "args": [
-                {
-                  "name": "comment",
-                  "type": "area",
-                  "label": "Node comment",
-                  "helper": "Use it to explain the usage of this node"
-                },
-                {
-                  "name": "alias",
-                  "type": "text",
-                  "label": "Name",
-                  "helper": "Use this name as an alias"
-                },
-                {
-                  "name": "debug",
-                  "type": "boolean",
-                  "label": "Debug to Console",
-                  "divider": true
-                },
-                {
-                  "name": "predictor_name_fit",
-                  "type": "asyncSelect",
-                  "label": "Vision Model",
-                  "helper": "Name of the model you want to use for fitting",
-                  "group": "Fit parameters",
-                  "value": null,
-                  "description": "",
-                  "validation": null,
-                  "url": "http://localhost:9999/routes/loko-vision/models?info=false&model_type=custom"
-                },
-                {
-                  "name": "predictor_name_predict",
-                  "type": "asyncSelect",
-                  "label": "Vision Model",
-                  "helper": "Name of the model you want to use for predicting",
-                  "group": "Predict parameters",
-                  "value": null,
-                  "description": "",
-                  "validation": null,
-                  "url": "http://localhost:9999/routes/loko-vision/models"
-                },
-                {
-                  "name": "include_probs",
-                  "type": "boolean",
-                  "label": "Predict proba",
-                  "helper": "",
-                  "group": "Predict parameters",
-                  "value": false,
-                  "description": "",
-                  "validation": null
-                },
-                {
-                  "name": "probability_th",
-                  "type": "dynamic",
-                  "label": "Probability Threshold",
-                  "helper": "Set this value to 0.0 if you want to have all the model's classes",
-                  "group": "Predict parameters",
-                  "value": 0.01,
-                  "description": "The probability threshold level represents the miminum probability that a class needs to have in order to be \"shown\" in the results",
-                  "validation": null,
-                  "parent": "include_probs",
-                  "condition": "{parent}===true",
-                  "dynamicType": "number",
-                  "options": null,
-                  "fields": null,
-                  "url": null
-                },
-                {
-                  "name": "multilabel",
-                  "type": "boolean",
-                  "label": "Multilabel",
-                  "helper": "",
-                  "group": "Predict parameters",
-                  "value": false,
-                  "description": "If True the results will be seen as a MultiLabel problem, otherwise as a MultiClass",
-                  "validation": null
-                },
-                {
-                  "name": "multilabel_threshold",
-                  "type": "dynamic",
-                  "label": "Multilabel Threshold",
-                  "helper": "Threshold rate to decide the belongings to one class for the MultiLabel",
-                  "group": "Predict parameters",
-                  "value": "0.5",
-                  "description": "",
-                  "validation": null,
-                  "parent": "multilabel",
-                  "condition": "{parent}===true",
-                  "dynamicType": "select",
-                  "options": [
-                    "0.5",
-                    "0.6",
-                    "0.7",
-                    "0.8",
-                    "0.9"
-                  ],
-                  "fields": null,
-                  "url": null
-                },
-                {
-                  "name": "predictor_name_eval",
-                  "type": "asyncSelect",
-                  "label": "Vision Model",
-                  "helper": "Name of the model you want to evaluate",
-                  "group": "Evaluate Parameters",
-                  "value": null,
-                  "description": "",
-                  "validation": null,
-                  "url": "http://localhost:9999/routes/loko-vision/models?info=false&model_type=custom"
-                }
-              ],
-              "click": null,
-              "icon": "RiImage2Fill",
-              "values": {
-                "comment": "",
-                "alias": "",
-                "debug": true,
-                "include_probs": false,
-                "multilabel": true,
-                "predictor_name_fit": "license_registration",
-                "predictor_name_eval": "license_registration",
-                "predictor_name_predict": "license_registration",
-                "multilabel_threshold": "0.7"
-              }
-            },
-            "locked": null
-          },
-          "selectable": true,
-          "draggable": true,
           "__class__": "Node"
         },
         {
@@ -1801,201 +1660,10 @@
           "__class__": "Node"
         },
         {
-          "id": "d1277932-62a3-42b7-b0c9-b4f7dffbf874",
-          "position": {
-            "x": 1582,
-            "y": 373
-          },
-          "type": "custom",
-          "dragHandle": "#nodeHandle",
-          "sourcePosition": "right",
-          "targetPosition": "left",
-          "width": 150,
-          "height": 56,
-          "selected": false,
-          "dragging": false,
-          "data": {
-            "name": "Vision",
-            "events": null,
-            "description": "\n### Description\n\nVISION is the Loko AI component which allows to classify images either using a pre-trained Neural Networks, or using a transfer-learning model over one of them. Specifically, VISION helps you with training, predicting and managing your models.\n\n### Configuration\n\nThe heading ***Available services*** allows user to select the VISION instance of interest (remembering that different vision-models will necessarily be found on different instances). \n\nIf you just want to use a pre-trained Neural Network in order to classify your set of images, you can directly link a *File Reader* component to the *Predict* Inputs of VISION. \nMore information about pre-trained models can be found here https://keras.io/api/applications/, where you can see details on their network structure and performances. \nIf you decide to classify your image directly using one of the pre-trained Neural Networks, you should expect to receive as output one of the 1000 possible ImageNet classes (.\n\nIf you want to create a transfer-learning model to customize your classifier on your own data, follow these steps:\n\n\n- **Create a model:** in *Create parameters* choose the name of the model you want to create (*Vision Model Name*) and select the pre-trained models to use (*Pretrained Models*). Then, link a *Trigger* component to the **Create** input;\n\n- **Fit a model:** in *Fit parameters* choose the name of the model you want to train (*Vision Model*), and use a *File Reader* to pass a zipped folder to the VISION component ***Fit*** input.\n\n- **Get prediction with a model:** in *Predict parameters* you can set the model to use (*Vision Model*) choosing between the customized models and the pre-trained NN. Then, you can choose if you want to see directly the predicted class or the probability of each of them, setting the **Predict proba** parameters. \nIf you use a customized model, you can also decide to see predictions as a **generic Multi-Class** or as a **Multi-Label model**; in the latter case, if you don't want to see the probability of belonging to each class you can set the value of the **MultiLabel Threshold**, that indicate the minimum probability value in order to assign a specific class.\n\n\nYou may also want to:\n\n\n- **Delete a model:** in the section *delete parameters* specify the model you want to delete. It's possible to delete only the customized models.\n\n- **Get information about a model:** in *info parameters* you have to set the model name and then choose if you just want to know if the model is fitted and the pre-trained model used, or if you want **advanced** information.\n\n\n\n\n### Output\n\nFor **Create, Fit and Delete** services the output messages will only be a sentence that confirms that the required action has been finalized. For the *fit* service it may take a while to have the output back, depending on how much the fitting lasts.\n\n\nThe output for the **info** services change if the model has already been fitted or not, and based on the setting chosen regarding advanced information. In case the model has been fitted and advanced information was activated the output will be the following:\n\n```json\n{\"predictor_name\": name of the model chosen, \n\"pretrained_model\": name of the pretrained model chosen,\n\"top_layer\": {\"n_layer\":1,\n    \"n_classes\": number of classes,\n    \"metrics\": [\"accuracy\"],\n    \"loss_function\": \"binary_crossentropy\",\n    \"epochs\":100},\n\"fitted\": say if the model was trained or not}\n```\n\nIn case the model *is not fitted* or *the advanced information* is not activated, the output will be the same without the \"top layer\" information.\n\nThe **predict** service has different output based on the settings chosen. If the field *predict proba* has been selected, we can see the probabilities next to each labels:\n\n```json\n{\"fname\": name of the file used for the prediction, \n\"pred\": [[\"cat\",0.9996217489242554],\n        [\"dog\",0.001642674207687378]]}\n```\n\nOtherwise, the output will be:\n\n```json\n{\"fname\": name of the file used for the prediction, \n\"pred\": \"cat\"}\n```\n\nIf *multilabel* is selected the output will be:\n\n```\n{\"fname\": name of the file used for the prediction, \n\"pred\": [\"cat\", \"persian\",\"black\"]}\n```\n",
-            "inputs": [
-              {
-                "id": "fit",
-                "label": "fit",
-                "service": "loko-services/fit",
-                "to": "fit"
-              },
-              {
-                "id": "predict",
-                "label": "predict",
-                "service": "loko-services/predict",
-                "to": "predict"
-              },
-              {
-                "id": "evaluate",
-                "label": "evaluate",
-                "service": "loko-services/evaluate",
-                "to": "evaluate"
-              }
-            ],
-            "outputs": [
-              {
-                "id": "fit",
-                "label": "fit"
-              },
-              {
-                "id": "predict",
-                "label": "predict"
-              },
-              {
-                "id": "evaluate",
-                "label": "evaluate"
-              }
-            ],
-            "configured": true,
-            "options": {
-              "group": "ComputerVision",
-              "args": [
-                {
-                  "name": "comment",
-                  "type": "area",
-                  "label": "Node comment",
-                  "helper": "Use it to explain the usage of this node"
-                },
-                {
-                  "name": "alias",
-                  "type": "text",
-                  "label": "Name",
-                  "helper": "Use this name as an alias"
-                },
-                {
-                  "name": "debug",
-                  "type": "boolean",
-                  "label": "Debug to Console",
-                  "divider": true
-                },
-                {
-                  "name": "predictor_name_fit",
-                  "type": "asyncSelect",
-                  "label": "Vision Model",
-                  "helper": "Name of the model you want to use for fitting",
-                  "group": "Fit parameters",
-                  "value": null,
-                  "description": "",
-                  "validation": null,
-                  "url": "http://localhost:9999/routes/loko-vision/models?info=false&model_type=custom"
-                },
-                {
-                  "name": "predictor_name_predict",
-                  "type": "asyncSelect",
-                  "label": "Vision Model",
-                  "helper": "Name of the model you want to use for predicting",
-                  "group": "Predict parameters",
-                  "value": null,
-                  "description": "",
-                  "validation": null,
-                  "url": "http://localhost:9999/routes/loko-vision/models"
-                },
-                {
-                  "name": "include_probs",
-                  "type": "boolean",
-                  "label": "Predict proba",
-                  "helper": "",
-                  "group": "Predict parameters",
-                  "value": false,
-                  "description": "",
-                  "validation": null
-                },
-                {
-                  "name": "probability_th",
-                  "type": "dynamic",
-                  "label": "Probability Threshold",
-                  "helper": "Set this value to 0.0 if you want to have all the model's classes",
-                  "group": "Predict parameters",
-                  "value": 0.01,
-                  "description": "The probability threshold level represents the miminum probability that a class needs to have in order to be \"shown\" in the results",
-                  "validation": null,
-                  "parent": "include_probs",
-                  "condition": "{parent}===true",
-                  "dynamicType": "number",
-                  "options": null,
-                  "fields": null,
-                  "url": null
-                },
-                {
-                  "name": "multilabel",
-                  "type": "boolean",
-                  "label": "Multilabel",
-                  "helper": "",
-                  "group": "Predict parameters",
-                  "value": false,
-                  "description": "If True the results will be seen as a MultiLabel problem, otherwise as a MultiClass",
-                  "validation": null
-                },
-                {
-                  "name": "multilabel_threshold",
-                  "type": "dynamic",
-                  "label": "Multilabel Threshold",
-                  "helper": "Threshold rate to decide the belongings to one class for the MultiLabel",
-                  "group": "Predict parameters",
-                  "value": "0.5",
-                  "description": "",
-                  "validation": null,
-                  "parent": "multilabel",
-                  "condition": "{parent}===true",
-                  "dynamicType": "select",
-                  "options": [
-                    "0.5",
-                    "0.6",
-                    "0.7",
-                    "0.8",
-                    "0.9"
-                  ],
-                  "fields": null,
-                  "url": null
-                },
-                {
-                  "name": "predictor_name_eval",
-                  "type": "asyncSelect",
-                  "label": "Vision Model",
-                  "helper": "Name of the model you want to evaluate",
-                  "group": "Evaluate Parameters",
-                  "value": null,
-                  "description": "",
-                  "validation": null,
-                  "url": "http://localhost:9999/routes/loko-vision/models?info=false&model_type=custom"
-                }
-              ],
-              "click": null,
-              "icon": "RiImage2Fill",
-              "values": {
-                "comment": "",
-                "alias": "",
-                "debug": true,
-                "include_probs": true,
-                "multilabel": true,
-                "probability_th": "0.05",
-                "predictor_name_fit": "",
-                "predictor_name_eval": "",
-                "predictor_name_predict": "MobileNet",
-                "multilabel_threshold": "0.5"
-              }
-            },
-            "locked": null
-          },
-          "selectable": true,
-          "draggable": true,
-          "positionAbsolute": {
-            "x": 1582,
-            "y": 373
-          },
-          "__class__": "Node"
-        },
-        {
           "id": "1c562b37-2788-4124-ac72-c42fc3df040d",
           "position": {
-            "x": 1347,
-            "y": 378
+            "x": 1277,
+            "y": 558
           },
           "type": "custom",
           "dragHandle": "#nodeHandle",
@@ -2088,8 +1756,8 @@
           "selectable": true,
           "draggable": true,
           "positionAbsolute": {
-            "x": 1347,
-            "y": 378
+            "x": 1277,
+            "y": 558
           },
           "__class__": "Node"
         },
@@ -2241,7 +1909,7 @@
                 "predictor_tag": "license/reg",
                 "adv_info": true,
                 "pretrained_model": "ResNet50",
-                "predictor_name_delete": "",
+                "predictor_name_delete": "m1",
                 "predictor_name_info": "license_registration"
               }
             },
@@ -2360,8 +2028,8 @@
           "targetPosition": "left",
           "width": 150,
           "height": 56,
-          "selected": null,
-          "dragging": null,
+          "selected": false,
+          "dragging": false,
           "data": {
             "name": "Trigger",
             "events": null,
@@ -2436,6 +2104,475 @@
           "selectable": true,
           "draggable": true,
           "__class__": "Node"
+        },
+        {
+          "id": "947533f2-383f-48b8-9f59-b9a536ab7350",
+          "position": {
+            "x": 863.7176740484824,
+            "y": 530.1987677654433
+          },
+          "type": "custom",
+          "dragHandle": "#nodeHandle",
+          "sourcePosition": "right",
+          "targetPosition": "left",
+          "width": 150,
+          "height": 60,
+          "selected": false,
+          "dragging": false,
+          "data": {
+            "name": "Vision",
+            "events": null,
+            "description": "\n### Description\n\nVISION is the Loko AI component which allows to classify images either using a pre-trained Neural Networks, or using a transfer-learning model over one of them. Specifically, VISION helps you with training, predicting and managing your models.\n\n### Configuration\n\nThe heading ***Available services*** allows user to select the VISION instance of interest (remembering that different vision-models will necessarily be found on different instances). \n\nIf you just want to use a pre-trained Neural Network in order to classify your set of images, you can directly link a *File Reader* component to the *Predict* Inputs of VISION. \nMore information about pre-trained models can be found here https://keras.io/api/applications/, where you can see details on their network structure and performances. \nIf you decide to classify your image directly using one of the pre-trained Neural Networks, you should expect to receive as output one of the 1000 possible ImageNet classes.\n\nIf you want to create a transfer-learning model to customize your classifier on your own data, follow these steps:\n\n\n- **Create a model:** in *Create parameters* choose the name of the model you want to create (*Vision Model Name*) and select the pre-trained models to use (*Pretrained Models*). Then, link a *Trigger* component to the **Create** input;\n\n- **Fit a model:** in *Fit parameters* choose the name of the model you want to train (*Vision Model*), and use a *File Reader* to pass a zipped folder to the VISION component ***Fit*** input.\n\n- **Get prediction with a model:** in *Predict parameters* you can set the model to use (*Vision Model*) choosing between the customized models and the pre-trained NN. Then, you can choose if you want to see directly the predicted class or the probability of each of them, setting the **Predict proba** parameters. \nIf you use a customized model, you can also decide to see predictions as a **generic Multi-Class** or as a **Multi-Label model**; in the latter case, if you don't want to see the probability of belonging to each class you can set the value of the **MultiLabel Threshold**, that indicate the minimum probability value in order to assign a specific class.\n\n\nYou may also want to:\n\n\n- **Delete a model:** in the section *delete parameters* specify the model you want to delete. It's possible to delete only the customized models.\n\n- **Get information about a model:** in *info parameters* you have to set the model name and then choose if you just want to know if the model is fitted and the pre-trained model used, or if you want **advanced** information.\n\n\n\n\n### Output\n\nFor **Create, Fit and Delete** services the output messages will only be a sentence that confirms that the required action has been finalized. For the *fit* service it may take a while to have the output back, depending on how much the fitting lasts.\n\n\nThe output for the **info** services change if the model has already been fitted or not, and based on the setting chosen regarding advanced information. In case the model has been fitted and advanced information was activated the output will be the following:\n\n```json\n{\"predictor_name\": name of the model chosen, \n\"pretrained_model\": name of the pretrained model chosen,\n\"top_layer\": {\"n_layer\":1,\n    \"n_classes\": number of classes,\n    \"metrics\": [\"accuracy\"],\n    \"loss_function\": \"binary_crossentropy\",\n    \"epochs\":100},\n\"fitted\": say if the model was trained or not}\n```\n\nIn case the model *is not fitted* or *the advanced information* is not activated, the output will be the same without the \"top layer\" information.\n\nThe **predict** service has different output based on the settings chosen. If the field *predict proba* has been selected, we can see the probabilities next to each labels:\n\n```json\n{\"fname\": name of the file used for the prediction, \n\"pred\": [[\"cat\",0.9996217489242554],\n        [\"dog\",0.001642674207687378]]}\n```\n\nOtherwise, the output will be:\n\n```json\n{\"fname\": name of the file used for the prediction, \n\"pred\": \"cat\"}\n```\n\nIf *multilabel* is selected the output will be:\n\n```\n{\"fname\": name of the file used for the prediction, \n\"pred\": [\"cat\", \"persian\",\"black\"]}\n```\n",
+            "inputs": [
+              {
+                "id": "fit",
+                "label": "fit",
+                "service": "loko-services/fit",
+                "to": "fit"
+              },
+              {
+                "id": "predict",
+                "label": "predict",
+                "service": "loko-services/predict",
+                "to": "predict"
+              },
+              {
+                "id": "evaluate",
+                "label": "evaluate",
+                "service": "loko-services/evaluate",
+                "to": "evaluate"
+              }
+            ],
+            "outputs": [
+              {
+                "id": "fit",
+                "label": "fit"
+              },
+              {
+                "id": "predict",
+                "label": "predict"
+              },
+              {
+                "id": "evaluate",
+                "label": "evaluate"
+              }
+            ],
+            "configured": true,
+            "options": {
+              "group": "ComputerVision",
+              "args": [
+                {
+                  "name": "comment",
+                  "type": "area",
+                  "label": "Node comment",
+                  "helper": "Use it to explain the usage of this node"
+                },
+                {
+                  "name": "alias",
+                  "type": "text",
+                  "label": "Name",
+                  "helper": "Use this name as an alias"
+                },
+                {
+                  "name": "debug",
+                  "type": "boolean",
+                  "label": "Debug to Console",
+                  "divider": true
+                },
+                {
+                  "name": "predictor_name_fit",
+                  "type": "asyncSelect",
+                  "label": "Vision Model",
+                  "helper": "Name of the model you want to use for fitting",
+                  "group": "Fit parameters",
+                  "value": null,
+                  "description": "",
+                  "validation": null,
+                  "url": "http://localhost:9999/routes/loko-vision/models?info=false&model_type=custom"
+                },
+                {
+                  "name": "epochs",
+                  "type": "number",
+                  "label": "Model epochs",
+                  "helper": "",
+                  "group": "Fit parameters",
+                  "value": 150,
+                  "description": "Number of epochs to train the Neural Network",
+                  "validation": null
+                },
+                {
+                  "name": "optimizer",
+                  "type": "select",
+                  "label": "Optimizer",
+                  "helper": "",
+                  "group": "Fit parameters",
+                  "value": "Adam",
+                  "description": "Optimizer to use for the Neural Network training",
+                  "validation": null,
+                  "options": [
+                    "SGD",
+                    "RMSprop",
+                    "Adam",
+                    "AdamW",
+                    "Adadelta",
+                    "Adagrad",
+                    "Adamax",
+                    "Adafactor",
+                    "Nadam",
+                    "Ftrl"
+                  ]
+                },
+                {
+                  "name": "metrics",
+                  "type": "text",
+                  "label": "Metrics",
+                  "helper": "Insert the name of the metrics, comma separeted. E.g.: accuracy,mse,precision",
+                  "group": "Fit parameters",
+                  "value": "accuracy, ",
+                  "description": "Metrics to compute",
+                  "validation": null
+                },
+                {
+                  "name": "predictor_name_predict",
+                  "type": "asyncSelect",
+                  "label": "Vision Model",
+                  "helper": "Name of the model you want to use for predicting",
+                  "group": "Predict parameters",
+                  "value": null,
+                  "description": "",
+                  "validation": null,
+                  "url": "http://localhost:9999/routes/loko-vision/models"
+                },
+                {
+                  "name": "include_probs",
+                  "type": "boolean",
+                  "label": "Predict proba",
+                  "helper": "",
+                  "group": "Predict parameters",
+                  "value": false,
+                  "description": "",
+                  "validation": null
+                },
+                {
+                  "name": "probability_th",
+                  "type": "dynamic",
+                  "label": "Probability Threshold",
+                  "helper": "Set this value to 0.0 if you want to have all the model's classes",
+                  "group": "Predict parameters",
+                  "value": 0.01,
+                  "description": "The probability threshold level represents the miminum probability that a class needs to have in order to be \"shown\" in the results",
+                  "validation": null,
+                  "parent": "include_probs",
+                  "condition": "{parent}===true",
+                  "dynamicType": "number",
+                  "options": null,
+                  "fields": null,
+                  "url": null
+                },
+                {
+                  "name": "multilabel",
+                  "type": "boolean",
+                  "label": "Multilabel",
+                  "helper": "",
+                  "group": "Predict parameters",
+                  "value": false,
+                  "description": "If True the results will be seen as a MultiLabel problem, otherwise as a MultiClass",
+                  "validation": null
+                },
+                {
+                  "name": "multilabel_threshold",
+                  "type": "dynamic",
+                  "label": "Multilabel Threshold",
+                  "helper": "Threshold rate to decide the belongings to one class for the MultiLabel",
+                  "group": "Predict parameters",
+                  "value": "0.5",
+                  "description": "",
+                  "validation": null,
+                  "parent": "multilabel",
+                  "condition": "{parent}===true",
+                  "dynamicType": "select",
+                  "options": [
+                    "0.5",
+                    "0.6",
+                    "0.7",
+                    "0.8",
+                    "0.9"
+                  ],
+                  "fields": null,
+                  "url": null
+                },
+                {
+                  "name": "predictor_name_eval",
+                  "type": "asyncSelect",
+                  "label": "Vision Model",
+                  "helper": "Name of the model you want to evaluate",
+                  "group": "Evaluate Parameters",
+                  "value": null,
+                  "description": "",
+                  "validation": null,
+                  "url": "http://localhost:9999/routes/loko-vision/models?info=false&model_type=custom"
+                }
+              ],
+              "click": null,
+              "icon": "RiImage2Fill",
+              "values": {
+                "comment": "",
+                "alias": "CUSTOM MODEL",
+                "debug": true,
+                "epochs": "150",
+                "optimizer": "Adam",
+                "metrics": "accuracy, ",
+                "include_probs": true,
+                "multilabel": false,
+                "probability_th": "0.7",
+                "predictor_name_fit": "license_registration",
+                "predictor_name_predict": "license_registration",
+                "predictor_name_eval": "license_registration"
+              }
+            },
+            "locked": null
+          },
+          "selectable": true,
+          "draggable": true,
+          "positionAbsolute": {
+            "x": 863.7176740484824,
+            "y": 530.1987677654433
+          },
+          "__class__": "Node"
+        },
+        {
+          "id": "4feed41e-ec92-4d8f-b78e-4166002248c8",
+          "position": {
+            "x": 1555.7176740484824,
+            "y": 566.1987677654433
+          },
+          "type": "custom",
+          "dragHandle": "#nodeHandle",
+          "sourcePosition": "right",
+          "targetPosition": "left",
+          "width": 150,
+          "height": 60,
+          "selected": false,
+          "dragging": false,
+          "data": {
+            "name": "Vision",
+            "events": null,
+            "description": "\n### Description\n\nVISION is the Loko AI component which allows to classify images either using a pre-trained Neural Networks, or using a transfer-learning model over one of them. Specifically, VISION helps you with training, predicting and managing your models.\n\n### Configuration\n\nThe heading ***Available services*** allows user to select the VISION instance of interest (remembering that different vision-models will necessarily be found on different instances). \n\nIf you just want to use a pre-trained Neural Network in order to classify your set of images, you can directly link a *File Reader* component to the *Predict* Inputs of VISION. \nMore information about pre-trained models can be found here https://keras.io/api/applications/, where you can see details on their network structure and performances. \nIf you decide to classify your image directly using one of the pre-trained Neural Networks, you should expect to receive as output one of the 1000 possible ImageNet classes.\n\nIf you want to create a transfer-learning model to customize your classifier on your own data, follow these steps:\n\n\n- **Create a model:** in *Create parameters* choose the name of the model you want to create (*Vision Model Name*) and select the pre-trained models to use (*Pretrained Models*). Then, link a *Trigger* component to the **Create** input;\n\n- **Fit a model:** in *Fit parameters* choose the name of the model you want to train (*Vision Model*), and use a *File Reader* to pass a zipped folder to the VISION component ***Fit*** input.\n\n- **Get prediction with a model:** in *Predict parameters* you can set the model to use (*Vision Model*) choosing between the customized models and the pre-trained NN. Then, you can choose if you want to see directly the predicted class or the probability of each of them, setting the **Predict proba** parameters. \nIf you use a customized model, you can also decide to see predictions as a **generic Multi-Class** or as a **Multi-Label model**; in the latter case, if you don't want to see the probability of belonging to each class you can set the value of the **MultiLabel Threshold**, that indicate the minimum probability value in order to assign a specific class.\n\n\nYou may also want to:\n\n\n- **Delete a model:** in the section *delete parameters* specify the model you want to delete. It's possible to delete only the customized models.\n\n- **Get information about a model:** in *info parameters* you have to set the model name and then choose if you just want to know if the model is fitted and the pre-trained model used, or if you want **advanced** information.\n\n\n\n\n### Output\n\nFor **Create, Fit and Delete** services the output messages will only be a sentence that confirms that the required action has been finalized. For the *fit* service it may take a while to have the output back, depending on how much the fitting lasts.\n\n\nThe output for the **info** services change if the model has already been fitted or not, and based on the setting chosen regarding advanced information. In case the model has been fitted and advanced information was activated the output will be the following:\n\n```json\n{\"predictor_name\": name of the model chosen, \n\"pretrained_model\": name of the pretrained model chosen,\n\"top_layer\": {\"n_layer\":1,\n    \"n_classes\": number of classes,\n    \"metrics\": [\"accuracy\"],\n    \"loss_function\": \"binary_crossentropy\",\n    \"epochs\":100},\n\"fitted\": say if the model was trained or not}\n```\n\nIn case the model *is not fitted* or *the advanced information* is not activated, the output will be the same without the \"top layer\" information.\n\nThe **predict** service has different output based on the settings chosen. If the field *predict proba* has been selected, we can see the probabilities next to each labels:\n\n```json\n{\"fname\": name of the file used for the prediction, \n\"pred\": [[\"cat\",0.9996217489242554],\n        [\"dog\",0.001642674207687378]]}\n```\n\nOtherwise, the output will be:\n\n```json\n{\"fname\": name of the file used for the prediction, \n\"pred\": \"cat\"}\n```\n\nIf *multilabel* is selected the output will be:\n\n```\n{\"fname\": name of the file used for the prediction, \n\"pred\": [\"cat\", \"persian\",\"black\"]}\n```\n",
+            "inputs": [
+              {
+                "id": "fit",
+                "label": "fit",
+                "service": "loko-services/fit",
+                "to": "fit"
+              },
+              {
+                "id": "predict",
+                "label": "predict",
+                "service": "loko-services/predict",
+                "to": "predict"
+              },
+              {
+                "id": "evaluate",
+                "label": "evaluate",
+                "service": "loko-services/evaluate",
+                "to": "evaluate"
+              }
+            ],
+            "outputs": [
+              {
+                "id": "fit",
+                "label": "fit"
+              },
+              {
+                "id": "predict",
+                "label": "predict"
+              },
+              {
+                "id": "evaluate",
+                "label": "evaluate"
+              }
+            ],
+            "configured": true,
+            "options": {
+              "group": "ComputerVision",
+              "args": [
+                {
+                  "name": "comment",
+                  "type": "area",
+                  "label": "Node comment",
+                  "helper": "Use it to explain the usage of this node"
+                },
+                {
+                  "name": "alias",
+                  "type": "text",
+                  "label": "Name",
+                  "helper": "Use this name as an alias"
+                },
+                {
+                  "name": "debug",
+                  "type": "boolean",
+                  "label": "Debug to Console",
+                  "divider": true
+                },
+                {
+                  "name": "predictor_name_fit",
+                  "type": "asyncSelect",
+                  "label": "Vision Model",
+                  "helper": "Name of the model you want to use for fitting",
+                  "group": "Fit parameters",
+                  "value": null,
+                  "description": "",
+                  "validation": null,
+                  "url": "http://localhost:9999/routes/loko-vision/models?info=false&model_type=custom"
+                },
+                {
+                  "name": "epochs",
+                  "type": "number",
+                  "label": "Model epochs",
+                  "helper": "",
+                  "group": "Fit parameters",
+                  "value": 150,
+                  "description": "Number of epochs to train the Neural Network",
+                  "validation": null
+                },
+                {
+                  "name": "optimizer",
+                  "type": "select",
+                  "label": "Optimizer",
+                  "helper": "",
+                  "group": "Fit parameters",
+                  "value": "Adam",
+                  "description": "Optimizer to use for the Neural Network training",
+                  "validation": null,
+                  "options": [
+                    "SGD",
+                    "RMSprop",
+                    "Adam",
+                    "AdamW",
+                    "Adadelta",
+                    "Adagrad",
+                    "Adamax",
+                    "Adafactor",
+                    "Nadam",
+                    "Ftrl"
+                  ]
+                },
+                {
+                  "name": "metrics",
+                  "type": "text",
+                  "label": "Metrics",
+                  "helper": "Insert the name of the metrics, comma separeted. E.g.: accuracy,mse,precision",
+                  "group": "Fit parameters",
+                  "value": "accuracy, ",
+                  "description": "Metrics to compute",
+                  "validation": null
+                },
+                {
+                  "name": "predictor_name_predict",
+                  "type": "asyncSelect",
+                  "label": "Vision Model",
+                  "helper": "Name of the model you want to use for predicting",
+                  "group": "Predict parameters",
+                  "value": null,
+                  "description": "",
+                  "validation": null,
+                  "url": "http://localhost:9999/routes/loko-vision/models"
+                },
+                {
+                  "name": "include_probs",
+                  "type": "boolean",
+                  "label": "Predict proba",
+                  "helper": "",
+                  "group": "Predict parameters",
+                  "value": false,
+                  "description": "",
+                  "validation": null
+                },
+                {
+                  "name": "probability_th",
+                  "type": "dynamic",
+                  "label": "Probability Threshold",
+                  "helper": "Set this value to 0.0 if you want to have all the model's classes",
+                  "group": "Predict parameters",
+                  "value": 0.01,
+                  "description": "The probability threshold level represents the miminum probability that a class needs to have in order to be \"shown\" in the results",
+                  "validation": null,
+                  "parent": "include_probs",
+                  "condition": "{parent}===true",
+                  "dynamicType": "number",
+                  "options": null,
+                  "fields": null,
+                  "url": null
+                },
+                {
+                  "name": "multilabel",
+                  "type": "boolean",
+                  "label": "Multilabel",
+                  "helper": "",
+                  "group": "Predict parameters",
+                  "value": false,
+                  "description": "If True the results will be seen as a MultiLabel problem, otherwise as a MultiClass",
+                  "validation": null
+                },
+                {
+                  "name": "multilabel_threshold",
+                  "type": "dynamic",
+                  "label": "Multilabel Threshold",
+                  "helper": "Threshold rate to decide the belongings to one class for the MultiLabel",
+                  "group": "Predict parameters",
+                  "value": "0.5",
+                  "description": "",
+                  "validation": null,
+                  "parent": "multilabel",
+                  "condition": "{parent}===true",
+                  "dynamicType": "select",
+                  "options": [
+                    "0.5",
+                    "0.6",
+                    "0.7",
+                    "0.8",
+                    "0.9"
+                  ],
+                  "fields": null,
+                  "url": null
+                },
+                {
+                  "name": "predictor_name_eval",
+                  "type": "asyncSelect",
+                  "label": "Vision Model",
+                  "helper": "Name of the model you want to evaluate",
+                  "group": "Evaluate Parameters",
+                  "value": null,
+                  "description": "",
+                  "validation": null,
+                  "url": "http://localhost:9999/routes/loko-vision/models?info=false&model_type=custom"
+                }
+              ],
+              "click": null,
+              "icon": "RiImage2Fill",
+              "values": {
+                "comment": "",
+                "alias": "PRETRAINED MODEL PREDICTIONS",
+                "debug": true,
+                "epochs": "150",
+                "optimizer": "Adam",
+                "metrics": "accuracy, ",
+                "include_probs": false,
+                "multilabel": false,
+                "predictor_name_fit": "",
+                "predictor_name_predict": "RegNetX006",
+                "predictor_name_eval": ""
+              }
+            },
+            "locked": null
+          },
+          "selectable": true,
+          "draggable": true,
+          "positionAbsolute": {
+            "x": 1555.7176740484824,
+            "y": 566.1987677654433
+          },
+          "__class__": "Node"
         }
       ],
       "edges": [
@@ -2447,62 +2584,6 @@
           "targetHandle": "create",
           "data": {
             "startColor": "#D770AD",
-            "stopColor": "#888"
-          },
-          "selected": false,
-          "dragging": false,
-          "__class__": "Edge"
-        },
-        {
-          "id": "reactflow__edge-1e99ca3c-8266-4b0b-b5cc-3b85439ba1e2output-a3eaa1e2-1ef7-46a3-90ba-e0941996da8cfit",
-          "source": "1e99ca3c-8266-4b0b-b5cc-3b85439ba1e2",
-          "sourceHandle": "output",
-          "target": "a3eaa1e2-1ef7-46a3-90ba-e0941996da8c",
-          "targetHandle": "fit",
-          "data": {
-            "startColor": "#F8637A",
-            "stopColor": "#888"
-          },
-          "selected": false,
-          "dragging": false,
-          "__class__": "Edge"
-        },
-        {
-          "id": "reactflow__edge-aa9cd733-06bb-4f02-be62-7de402273237output-a3eaa1e2-1ef7-46a3-90ba-e0941996da8cpredict",
-          "source": "aa9cd733-06bb-4f02-be62-7de402273237",
-          "sourceHandle": "output",
-          "target": "a3eaa1e2-1ef7-46a3-90ba-e0941996da8c",
-          "targetHandle": "predict",
-          "data": {
-            "startColor": "#F8637A",
-            "stopColor": "#888"
-          },
-          "selected": false,
-          "dragging": false,
-          "__class__": "Edge"
-        },
-        {
-          "id": "reactflow__edge-b4bcdee2-00c1-49d0-9929-6282061ac791output-a3eaa1e2-1ef7-46a3-90ba-e0941996da8cevaluate",
-          "source": "b4bcdee2-00c1-49d0-9929-6282061ac791",
-          "sourceHandle": "output",
-          "target": "a3eaa1e2-1ef7-46a3-90ba-e0941996da8c",
-          "targetHandle": "evaluate",
-          "data": {
-            "startColor": "#F8637A",
-            "stopColor": "#888"
-          },
-          "selected": false,
-          "dragging": false,
-          "__class__": "Edge"
-        },
-        {
-          "id": "reactflow__edge-1c562b37-2788-4124-ac72-c42fc3df040doutput-d1277932-62a3-42b7-b0c9-b4f7dffbf874predict",
-          "source": "1c562b37-2788-4124-ac72-c42fc3df040d",
-          "sourceHandle": "output",
-          "target": "d1277932-62a3-42b7-b0c9-b4f7dffbf874",
-          "targetHandle": "predict",
-          "data": {
-            "startColor": "#F8637A",
             "stopColor": "#888"
           },
           "selected": false,
@@ -2533,6 +2614,64 @@
             "startColor": "#D770AD",
             "stopColor": "#888"
           },
+          "selected": false,
+          "dragging": false,
+          "__class__": "Edge"
+        },
+        {
+          "id": "reactflow__edge-1e99ca3c-8266-4b0b-b5cc-3b85439ba1e2output-947533f2-383f-48b8-9f59-b9a536ab7350fit",
+          "source": "1e99ca3c-8266-4b0b-b5cc-3b85439ba1e2",
+          "sourceHandle": "output",
+          "target": "947533f2-383f-48b8-9f59-b9a536ab7350",
+          "targetHandle": "fit",
+          "data": {
+            "startColor": "#F8637A",
+            "stopColor": "#888"
+          },
+          "selected": false,
+          "dragging": false,
+          "__class__": "Edge"
+        },
+        {
+          "id": "reactflow__edge-aa9cd733-06bb-4f02-be62-7de402273237output-947533f2-383f-48b8-9f59-b9a536ab7350predict",
+          "source": "aa9cd733-06bb-4f02-be62-7de402273237",
+          "sourceHandle": "output",
+          "target": "947533f2-383f-48b8-9f59-b9a536ab7350",
+          "targetHandle": "predict",
+          "data": {
+            "startColor": "#F8637A",
+            "stopColor": "#888"
+          },
+          "selected": false,
+          "dragging": false,
+          "__class__": "Edge"
+        },
+        {
+          "id": "reactflow__edge-b4bcdee2-00c1-49d0-9929-6282061ac791output-947533f2-383f-48b8-9f59-b9a536ab7350evaluate",
+          "source": "b4bcdee2-00c1-49d0-9929-6282061ac791",
+          "sourceHandle": "output",
+          "target": "947533f2-383f-48b8-9f59-b9a536ab7350",
+          "targetHandle": "evaluate",
+          "data": {
+            "startColor": "#F8637A",
+            "stopColor": "#888"
+          },
+          "selected": false,
+          "dragging": false,
+          "__class__": "Edge"
+        },
+        {
+          "id": "reactflow__edge-1c562b37-2788-4124-ac72-c42fc3df040doutput-4feed41e-ec92-4d8f-b78e-4166002248c8predict",
+          "source": "1c562b37-2788-4124-ac72-c42fc3df040d",
+          "sourceHandle": "output",
+          "target": "4feed41e-ec92-4d8f-b78e-4166002248c8",
+          "targetHandle": "predict",
+          "data": {
+            "startColor": "#F8637A",
+            "stopColor": "#888"
+          },
+          "selected": false,
+          "dragging": false,
           "__class__": "Edge"
         }
       ],

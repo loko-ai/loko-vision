@@ -1,4 +1,4 @@
-from loko_extensions.model.components import Input, Output, Dynamic, AsyncSelect, Component, save_extensions
+from loko_extensions.model.components import Input, Output, Dynamic, AsyncSelect, Component, save_extensions, Select
 from loko_extensions.model.components import Arg
 
 from extensions.vision_component_doc import vision_doc
@@ -47,7 +47,18 @@ fit_group = "Fit parameters"
 pred_name = AsyncSelect(name="predictor_name_fit", label="Vision Model", url=custom_model_list, group=fit_group,
                         helper='Name of the model you want to use for fitting')
 
-fit_args_list = [pred_name]
+epochs = Arg(name="epochs", label="Model epochs", type="number", group=fit_group, value=150,
+             description="Number of epochs to train the Neural Network")
+
+optimizer = Select(name="optimizer", label="Optimizer",
+                   options=["SGD", "RMSprop", "Adam", "AdamW", "Adadelta", "Adagrad", "Adamax", "Adafactor", "Nadam",
+                            "Ftrl"], value="Adam", group=fit_group, description="Optimizer to use for the Neural Network training")
+
+metrics = Arg(name="metrics", label="Metrics", type="text", group=fit_group, value="accuracy, ",
+              helper="Insert the name of the metrics, comma separeted. E.g.: accuracy,mse,precision",
+              description="Metrics to compute")
+
+fit_args_list = [pred_name, epochs, optimizer, metrics]
 
 ######### predict args
 
@@ -90,7 +101,7 @@ multilabel_th = Dynamic(name='multilabel_threshold',
                         condition="{parent}===true", value="0.5",
                         helper='Threshold rate to decide the belongings to one class for the MultiLabel')
 
-predict_args_list = [pred_name_pred, pred_proba,probability_th, multilabel, multilabel_th]
+predict_args_list = [pred_name_pred, pred_proba, probability_th, multilabel, multilabel_th]
 
 ######### evaluate args
 

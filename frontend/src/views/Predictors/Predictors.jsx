@@ -37,7 +37,7 @@ export function Predictors({ predictors }) {
                     console.log('change import');
                     console.log(e.target.files[0]);
                     const formData = new FormData();
-                    formData.append('f', e.target.files[0]);
+                    formData.append('file', e.target.files[0]);
                     CLIENT.models.import.post(formData).then(()=>location.reload()).catch((err) => console.log(err));
                 }}
                 onSubmit={(e) => {

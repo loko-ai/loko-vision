@@ -9,7 +9,7 @@ The heading ***Available services*** allows user to select the VISION instance o
 
 If you just want to use a pre-trained Neural Network in order to classify your set of images, you can directly link a *File Reader* component to the *Predict* Inputs of VISION. 
 More information about pre-trained models can be found here https://keras.io/api/applications/, where you can see details on their network structure and performances. 
-If you decide to classify your image directly using one of the pre-trained Neural Networks, you should expect to receive as output one of the 1000 possible ImageNet classes (.
+If you decide to classify your image directly using one of the pre-trained Neural Networks, you should expect to receive as output one of the 1000 possible ImageNet classes.
 
 If you want to create a transfer-learning model to customize your classifier on your own data, follow these steps:
 

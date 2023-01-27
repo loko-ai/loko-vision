@@ -38,15 +38,11 @@ export function Predictor({ name, onClick, onDelete, onExport, ...rest }) {
   let status_alias = "Not Fitted" 
   if (state.status_tag==true) {
     color_status = "#94c099";
-    // state.status_tag = "Fitted"
     status_alias="Fitted"
   } else if (state.status_tag=="Training") {
     color_status = "#df8e6e";
-    // state.status_tag = "Busy"
     status_alias="Training"
-    //#d06464
   } else if (state.status_tag==false){
-    // state.status_tag = "Not Fitted"
     status_alias="Not Fitted"
   }
 

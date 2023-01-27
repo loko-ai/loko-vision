@@ -16,6 +16,7 @@ import { useEffect, useState } from "react";
 import reactLogo from "./assets/react.svg";
 import { CLIENT, StateContext } from "./config/constants";
 import { Predictors } from "./views/Predictors/Predictors";
+// import { Pagination } from "@chakra-ui/pagination";
 
 function App() {
   const state = useCompositeState({
@@ -35,8 +36,8 @@ function App() {
       .then((resp) => (state.pretrained = resp.data))
       .catch((err) => console.log(err));
   }, [state.refresh]);
-  console.log("PREDICTORSSSSSSSSSS HERE ", state.predictors)
-  console.log("PREDICTORSSSSSSSSSS HERE ", state.pretrained)
+  console.log("PREDICTORSSSSSSSSSS HERE ", state.predictors);
+  console.log("PREDICTORSSSSSSSSSS HERE ", state.pretrained);
 
   switch (state.view) {
     case "list":
@@ -46,10 +47,45 @@ function App() {
             <Tabs w="80%" p="2rem">
               <TabList>
                 <Tab>Predictors</Tab>
+                <Tab>Pretrained List</Tab>
               </TabList>
               <TabPanels>
                 <TabPanel>
                   <Predictors predictors={state.predictors} />
+                </TabPanel>
+                <TabPanel>
+{/*                   <Pagination */}
+{/*                     defaultPage={1} */}
+{/*                     perPage={10} */}
+{/*                     total={state.pretrained.length} */}
+{/*                   > */}
+{/*                     {({ */}
+{/*                       pages, */}
+{/*                       currentPage, */}
+{/*                       hasNextPage, */}
+{/*                       hasPreviousPage, */}
+{/*                       previousPage, */}
+{/*                       nextPage, */}
+{/*                     }) => ( */}
+{/*                       <Box> */}
+{/*                         {pages[currentPage - 1].map((el, i) => ( */}
+{/*                           <Box key={i}>{el}</Box> */}
+{/*                         ))} */}
+{/*                         <Button */}
+{/*                           onClick={previousPage} */}
+{/*                           isDisabled={!hasPreviousPage} */}
+{/*                         > */}
+{/*                           Prev */}
+{/*                         </Button> */}
+{/*                         <Button onClick={nextPage} isDisabled={!hasNextPage}> */}
+{/*                           Next */}
+{/*                         </Button> */}
+{/*                       </Box> */}
+{/*                     )} */}
+{/*                   </Pagination> */}
+                  {state.pretrained.map((el, i) => (
+                    <Box key={i}>{el}</Box>
+                  ))}
                 </TabPanel>
               </TabPanels>
             </Tabs>
@@ -58,7 +94,7 @@ function App() {
       );
 
     case "model":
-      console.log("state view === MODEL")
+      console.log("state view === MODEL");
       return (
         <Flex w="100vw" h="100vh" p="2rem">
           <Box onClick={(e) => (state.view = "list")}>Details</Box> #blueprint

@@ -12,5 +12,9 @@ for name in dir(models):
             models_mapping[name] = dict(model=m, preprocess_input=pi, decode_prediction=dp)
 
 print(models_mapping)
-
+# model = keras.Sequential()
+# model.compile(optimizer=keras.optimizers.Adam(learning_rate=1e-3),
+#               loss=.keras.losses.BinaryCrossentropy(),
+#               metrics=[keras.metrics.BinaryAccuracy(),
+#                        keras.metrics.FalseNegatives()])
 

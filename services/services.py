@@ -347,9 +347,16 @@ async def loko_fit_model(file, args):
     model_info = pdao.get(predictor_name)
     logger.debug(f"model info:: {model_info}")
     model_obj = model_info.model_obj
+    epochs = int(args.get("epochs", 100))
+    optimizer = args.get("optimizer", "adam").lower()
+    logger.debug(f"n. epochs {epochs}... optimizer chosen {optimizer}")
+    metrics = args.get("metrics", "accuracy")
+    logger.debug(f"metrics pre:: {metrics}")
+    metrics = [el for el in metrics.split(",") if (not el.isspace()) & (len(el)>0)]
+    logger.debug(f"metrics post:: {metrics}")
     if model_obj!=None:
         return json("Predictor already fitted", status=400)
-    training_task(f, model_info)
+    training_task(f, model_info, epochs, optimizer, metrics)
     return json(f"Model '{predictor_name}' fitted! Data used: {f.name} ")
 
 

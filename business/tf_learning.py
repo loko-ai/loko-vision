@@ -19,7 +19,7 @@ from utils.logger_utils import logger
 pdao = PredictorsDAO()
 
 
-def training_task(f, model_info: PredictorRequest):
+def training_task(f, model_info: PredictorRequest, epochs=100, optimizer="adam", metrics:list=["accuracy"]):
     pretrained_model = model_info.pretained_model
     predictor_name = model_info.predictor_name
     predictor_tag = model_info.predictor_tag
@@ -37,8 +37,8 @@ def training_task(f, model_info: PredictorRequest):
                                                 layers=[dict(__klass__="tfkeras.Dense", units=n_outputs_lbl,
                                                              activation="sigmoid",
                                                              input_dim=2048)]),
-                                     optimizer="adam", loss="binary_crossentropy", metrics=["accuracy"],
-                                     epochs=MODEL_EPOCHS),
+                                     optimizer=optimizer, loss="binary_crossentropy", metrics=metrics,
+                                     epochs=epochs),
                       pretrained_model=pretrained_model,
                       predictor_name=predictor_name,
                       predictor_tag=predictor_tag,
