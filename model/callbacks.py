@@ -67,7 +67,8 @@ class LogsCallback(keras.callbacks.Callback):
         self.epoch_end = datetime.now()
         infos = ' - '.join(['%s: %s' % (str(k), str(v)) for k, v in logs.items()])
         seconds = (self.epoch_end - self.epoch_start).total_seconds()
-        return 'Epoch %d/%d - %ss - ' % (epoch + 1, self.epochs, seconds) + infos
+        return f'Ep {epoch+1}/{self.epochs} - loss: {round(logs.get("loss"), 3)}'
+        # return 'Epoch %d/%d - %ss - ' % (epoch + 1, self.epochs, seconds) + infos
 
 
 class PredictorWrapper:

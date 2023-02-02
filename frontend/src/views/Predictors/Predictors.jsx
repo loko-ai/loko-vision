@@ -4,7 +4,8 @@ import React, { useState, useRef, useContext } from "react";
 import { CLIENT, StateContext } from "../../config/constants";
 import { Predictor } from "./Predictor";
 import { PredictorCreation } from "./PredictorCreation";
-import { RiAddFill,RiUploadCloud2Line } from 'react-icons/ri';
+import { Report } from "./Report";
+import { RiAddFill,RiUploadCloud2Line,RiFileChartLine } from 'react-icons/ri';
 import { PredictorDetails } from "./PredictorDetails";
 import { saveAs } from 'file-saver';
 
@@ -14,6 +15,7 @@ export function Predictors({ predictors }) {
   const state = useCompositeState({ view: "list", name:null });
   const _state = useContext(StateContext);
   const ref_import = useRef();
+  const ref_report = useRef();
 
   switch (state.view) {
     case "list":
@@ -47,6 +49,35 @@ export function Predictors({ predictors }) {
                     // location.reload();
                 }}
                 style={{ display: 'none' }}/>
+              <Button leftIcon={<RiFileChartLine />}
+                onClick={(e) =>(
+                ref_report.current.click()
+                )}
+              >
+             Report
+            </Button>
+            <input
+                type='file'
+                accept=".eval"
+                ref={ref_report}
+                onChange={(e)=>{
+                    const fileReader = new FileReader();
+                    const { files } = event.target;
+                    fileReader.readAsText(files[0], "UTF-8");
+                    fileReader.onload = e => {
+                      state.fname = files[0].name;
+                      const content = e.target.result;
+                      state.fdata = JSON.parse(content);
+                    };
+                    state.view = "report";
+                    console.log('change report');
+                }}
+                onSubmit={(e)=>{
+                    e.preventDefault();
+                    console.log('submit report');
+                }}
+                style={{ display: 'none' }}/>
+            
           </HStack>
           
           <Stack>
@@ -100,6 +131,10 @@ export function Predictors({ predictors }) {
         </Flex>
 
       );
+      case "report":
+        return (
+            <Report fname={state.fname} data={state.fdata} onClose={(e) => (state.view = "list")} />
+        );
     
     default:
       break;

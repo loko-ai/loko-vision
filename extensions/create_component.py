@@ -1,4 +1,5 @@
-from loko_extensions.model.components import Input, Output, Dynamic, AsyncSelect, Component, save_extensions, Select
+from loko_extensions.model.components import Input, Output, Dynamic, AsyncSelect, Component, save_extensions, Select, \
+    Events
 from loko_extensions.model.components import Arg
 
 from extensions.vision_component_doc import vision_doc
@@ -165,7 +166,8 @@ vision_args = fit_args_list + predict_args_list + eval_args_list
 manager_args = create_args + info_args + delete_args
 
 vision_component = Component(name="Vision", description=vision_doc, inputs=vision_input,
-                             outputs=vision_output, args=vision_args, icon="RiImage2Fill", group='ComputerVision')
+                             outputs=vision_output, args=vision_args, icon="RiImage2Fill", group='ComputerVision',
+                             events=Events(type='vision', field='predictor_name_fit'))
 
 vision_manager = Component(name="Vision Manager", description=vision_doc, inputs=manager_input, outputs=manager_output,
                            args=manager_args, icon="RiSettings5Fill", group='ComputerVision')

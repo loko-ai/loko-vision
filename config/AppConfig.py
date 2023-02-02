@@ -11,6 +11,8 @@ from keras.utils import data_utils
 
 env = EnvInit()
 REPO_PATH = env.REPO or '../repo'
+GATEWAY = env.GATEWAY
+GATEWAY_EMIT_URL = os.path.join(GATEWAY, 'emit') if GATEWAY else None
 MODEL_CACHE_TIMEOUT = env.MODEL_CACHE_TIMEOUT or 60
 # HERMES_URL = env.HERMES_URL or 'http://0.0.0.0:8082/'
 # HERMES_EMIT_URL = os.path.join(HERMES_URL, *'/ds4biz/hermes/0.0/emit'.split('/'))
