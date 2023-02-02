@@ -3,7 +3,7 @@
   "id": "loko-vision",
   "description": "",
   "created_on": "17/11/2022, 14:17:04",
-  "last_modify": "27/01/2023, 16:14:33",
+  "last_modify": "02/02/2023, 08:31:04",
   "graphs": {
     "Vision Manager": {
       "nodes": [
@@ -447,7 +447,7 @@
                 "adv_info": true,
                 "pretrained_model": "DenseNet169",
                 "predictor_name_info": "example_model",
-                "predictor_name_delete": "example_model"
+                "predictor_name_delete": ""
               }
             },
             "locked": null
@@ -816,10 +816,10 @@
           "__class__": "Node"
         },
         {
-          "id": "a4e5c994-53be-4c33-a335-c61cb302d396",
+          "id": "35e41297-91a7-46f5-9d8c-71291d850386",
           "position": {
-            "x": 902.6073020654925,
-            "y": 322.20552848169774
+            "x": 864,
+            "y": 332
           },
           "type": "custom",
           "dragHandle": "#nodeHandle",
@@ -831,7 +831,10 @@
           "dragging": false,
           "data": {
             "name": "Vision",
-            "events": null,
+            "events": {
+              "type": "vision",
+              "field": "predictor_name_fit"
+            },
             "description": "\n### Description\n\nVISION is the Loko AI component which allows to classify images either using a pre-trained Neural Networks, or using a transfer-learning model over one of them. Specifically, VISION helps you with training, predicting and managing your models.\n\n### Configuration\n\nThe heading ***Available services*** allows user to select the VISION instance of interest (remembering that different vision-models will necessarily be found on different instances). \n\nIf you just want to use a pre-trained Neural Network in order to classify your set of images, you can directly link a *File Reader* component to the *Predict* Inputs of VISION. \nMore information about pre-trained models can be found here https://keras.io/api/applications/, where you can see details on their network structure and performances. \nIf you decide to classify your image directly using one of the pre-trained Neural Networks, you should expect to receive as output one of the 1000 possible ImageNet classes.\n\nIf you want to create a transfer-learning model to customize your classifier on your own data, follow these steps:\n\n\n- **Create a model:** in *Create parameters* choose the name of the model you want to create (*Vision Model Name*) and select the pre-trained models to use (*Pretrained Models*). Then, link a *Trigger* component to the **Create** input;\n\n- **Fit a model:** in *Fit parameters* choose the name of the model you want to train (*Vision Model*), and use a *File Reader* to pass a zipped folder to the VISION component ***Fit*** input.\n\n- **Get prediction with a model:** in *Predict parameters* you can set the model to use (*Vision Model*) choosing between the customized models and the pre-trained NN. Then, you can choose if you want to see directly the predicted class or the probability of each of them, setting the **Predict proba** parameters. \nIf you use a customized model, you can also decide to see predictions as a **generic Multi-Class** or as a **Multi-Label model**; in the latter case, if you don't want to see the probability of belonging to each class you can set the value of the **MultiLabel Threshold**, that indicate the minimum probability value in order to assign a specific class.\n\n\nYou may also want to:\n\n\n- **Delete a model:** in the section *delete parameters* specify the model you want to delete. It's possible to delete only the customized models.\n\n- **Get information about a model:** in *info parameters* you have to set the model name and then choose if you just want to know if the model is fitted and the pre-trained model used, or if you want **advanced** information.\n\n\n\n\n### Output\n\nFor **Create, Fit and Delete** services the output messages will only be a sentence that confirms that the required action has been finalized. For the *fit* service it may take a while to have the output back, depending on how much the fitting lasts.\n\n\nThe output for the **info** services change if the model has already been fitted or not, and based on the setting chosen regarding advanced information. In case the model has been fitted and advanced information was activated the output will be the following:\n\n```json\n{\"predictor_name\": name of the model chosen, \n\"pretrained_model\": name of the pretrained model chosen,\n\"top_layer\": {\"n_layer\":1,\n    \"n_classes\": number of classes,\n    \"metrics\": [\"accuracy\"],\n    \"loss_function\": \"binary_crossentropy\",\n    \"epochs\":100},\n\"fitted\": say if the model was trained or not}\n```\n\nIn case the model *is not fitted* or *the advanced information* is not activated, the output will be the same without the \"top layer\" information.\n\nThe **predict** service has different output based on the settings chosen. If the field *predict proba* has been selected, we can see the probabilities next to each labels:\n\n```json\n{\"fname\": name of the file used for the prediction, \n\"pred\": [[\"cat\",0.9996217489242554],\n        [\"dog\",0.001642674207687378]]}\n```\n\nOtherwise, the output will be:\n\n```json\n{\"fname\": name of the file used for the prediction, \n\"pred\": \"cat\"}\n```\n\nIf *multilabel* is selected the output will be:\n\n```\n{\"fname\": name of the file used for the prediction, \n\"pred\": [\"cat\", \"persian\",\"black\"]}\n```\n",
             "inputs": [
               {
@@ -1026,17 +1029,12 @@
               "click": null,
               "icon": "RiImage2Fill",
               "values": {
-                "comment": "",
-                "alias": "",
-                "debug": true,
-                "epochs": "150",
+                "epochs": 150,
                 "optimizer": "Adam",
                 "metrics": "accuracy, ",
-                "include_probs": false,
-                "multilabel": false,
-                "predictor_name_fit": "lic_reg",
-                "predictor_name_predict": "lic_reg",
-                "predictor_name_eval": "lic_reg"
+                "probability_th": 0.01,
+                "multilabel_threshold": "0.5",
+                "debug": true
               }
             },
             "locked": null
@@ -1044,32 +1042,18 @@
           "selectable": true,
           "draggable": true,
           "positionAbsolute": {
-            "x": 902.6073020654925,
-            "y": 322.20552848169774
+            "x": 864,
+            "y": 332
           },
           "__class__": "Node"
         }
       ],
       "edges": [
         {
-          "id": "reactflow__edge-277aff39-3244-47aa-99c4-bab032d982e6output-a4e5c994-53be-4c33-a335-c61cb302d396predict",
-          "source": "277aff39-3244-47aa-99c4-bab032d982e6",
-          "sourceHandle": "output",
-          "target": "a4e5c994-53be-4c33-a335-c61cb302d396",
-          "targetHandle": "predict",
-          "data": {
-            "startColor": "#F8637A",
-            "stopColor": "#888"
-          },
-          "selected": false,
-          "dragging": false,
-          "__class__": "Edge"
-        },
-        {
-          "id": "reactflow__edge-4a5bc458-b007-44c0-af4e-4b5b34fa2e73output-a4e5c994-53be-4c33-a335-c61cb302d396fit",
+          "id": "reactflow__edge-4a5bc458-b007-44c0-af4e-4b5b34fa2e73output-35e41297-91a7-46f5-9d8c-71291d850386fit",
           "source": "4a5bc458-b007-44c0-af4e-4b5b34fa2e73",
           "sourceHandle": "output",
-          "target": "a4e5c994-53be-4c33-a335-c61cb302d396",
+          "target": "35e41297-91a7-46f5-9d8c-71291d850386",
           "targetHandle": "fit",
           "data": {
             "startColor": "#F8637A",
@@ -1080,10 +1064,24 @@
           "__class__": "Edge"
         },
         {
-          "id": "reactflow__edge-6a8042b8-c9f3-425d-ae5c-0dd20a3d08e6output-a4e5c994-53be-4c33-a335-c61cb302d396evaluate",
+          "id": "reactflow__edge-277aff39-3244-47aa-99c4-bab032d982e6output-35e41297-91a7-46f5-9d8c-71291d850386predict",
+          "source": "277aff39-3244-47aa-99c4-bab032d982e6",
+          "sourceHandle": "output",
+          "target": "35e41297-91a7-46f5-9d8c-71291d850386",
+          "targetHandle": "predict",
+          "data": {
+            "startColor": "#F8637A",
+            "stopColor": "#888"
+          },
+          "selected": false,
+          "dragging": false,
+          "__class__": "Edge"
+        },
+        {
+          "id": "reactflow__edge-6a8042b8-c9f3-425d-ae5c-0dd20a3d08e6output-35e41297-91a7-46f5-9d8c-71291d850386evaluate",
           "source": "6a8042b8-c9f3-425d-ae5c-0dd20a3d08e6",
           "sourceHandle": "output",
-          "target": "a4e5c994-53be-4c33-a335-c61cb302d396",
+          "target": "35e41297-91a7-46f5-9d8c-71291d850386",
           "targetHandle": "evaluate",
           "data": {
             "startColor": "#F8637A",
@@ -1662,8 +1660,8 @@
         {
           "id": "1c562b37-2788-4124-ac72-c42fc3df040d",
           "position": {
-            "x": 1277,
-            "y": 558
+            "x": 1365,
+            "y": 650
           },
           "type": "custom",
           "dragHandle": "#nodeHandle",
@@ -1756,16 +1754,16 @@
           "selectable": true,
           "draggable": true,
           "positionAbsolute": {
-            "x": 1277,
-            "y": 558
+            "x": 1365,
+            "y": 650
           },
           "__class__": "Node"
         },
         {
           "id": "15965ad2-23cd-456f-88f7-f827c1bc71db",
           "position": {
-            "x": 1462,
-            "y": 87
+            "x": 1459.0538692449206,
+            "y": 173.91085727484455
           },
           "type": "custom",
           "dragHandle": "#nodeHandle",
@@ -1909,8 +1907,8 @@
                 "predictor_tag": "license/reg",
                 "adv_info": true,
                 "pretrained_model": "ResNet50",
-                "predictor_name_delete": "m1",
-                "predictor_name_info": "license_registration"
+                "predictor_name_info": "license_registration",
+                "predictor_name_delete": "license_registration"
               }
             },
             "locked": null
@@ -1918,8 +1916,8 @@
           "selectable": true,
           "draggable": true,
           "positionAbsolute": {
-            "x": 1462,
-            "y": 87
+            "x": 1459.0538692449206,
+            "y": 173.91085727484455
           },
           "__class__": "Node"
         },
@@ -2106,22 +2104,25 @@
           "__class__": "Node"
         },
         {
-          "id": "947533f2-383f-48b8-9f59-b9a536ab7350",
+          "id": "110040d2-529b-4bd6-84ca-e0f9dc237e62",
           "position": {
-            "x": 863.7176740484824,
-            "y": 530.1987677654433
+            "x": 875.9703637775709,
+            "y": 504.7219348383772
           },
           "type": "custom",
           "dragHandle": "#nodeHandle",
           "sourcePosition": "right",
           "targetPosition": "left",
           "width": 150,
-          "height": 60,
+          "height": 56,
           "selected": false,
           "dragging": false,
           "data": {
             "name": "Vision",
-            "events": null,
+            "events": {
+              "type": "vision",
+              "field": "predictor_name_fit"
+            },
             "description": "\n### Description\n\nVISION is the Loko AI component which allows to classify images either using a pre-trained Neural Networks, or using a transfer-learning model over one of them. Specifically, VISION helps you with training, predicting and managing your models.\n\n### Configuration\n\nThe heading ***Available services*** allows user to select the VISION instance of interest (remembering that different vision-models will necessarily be found on different instances). \n\nIf you just want to use a pre-trained Neural Network in order to classify your set of images, you can directly link a *File Reader* component to the *Predict* Inputs of VISION. \nMore information about pre-trained models can be found here https://keras.io/api/applications/, where you can see details on their network structure and performances. \nIf you decide to classify your image directly using one of the pre-trained Neural Networks, you should expect to receive as output one of the 1000 possible ImageNet classes.\n\nIf you want to create a transfer-learning model to customize your classifier on your own data, follow these steps:\n\n\n- **Create a model:** in *Create parameters* choose the name of the model you want to create (*Vision Model Name*) and select the pre-trained models to use (*Pretrained Models*). Then, link a *Trigger* component to the **Create** input;\n\n- **Fit a model:** in *Fit parameters* choose the name of the model you want to train (*Vision Model*), and use a *File Reader* to pass a zipped folder to the VISION component ***Fit*** input.\n\n- **Get prediction with a model:** in *Predict parameters* you can set the model to use (*Vision Model*) choosing between the customized models and the pre-trained NN. Then, you can choose if you want to see directly the predicted class or the probability of each of them, setting the **Predict proba** parameters. \nIf you use a customized model, you can also decide to see predictions as a **generic Multi-Class** or as a **Multi-Label model**; in the latter case, if you don't want to see the probability of belonging to each class you can set the value of the **MultiLabel Threshold**, that indicate the minimum probability value in order to assign a specific class.\n\n\nYou may also want to:\n\n\n- **Delete a model:** in the section *delete parameters* specify the model you want to delete. It's possible to delete only the customized models.\n\n- **Get information about a model:** in *info parameters* you have to set the model name and then choose if you just want to know if the model is fitted and the pre-trained model used, or if you want **advanced** information.\n\n\n\n\n### Output\n\nFor **Create, Fit and Delete** services the output messages will only be a sentence that confirms that the required action has been finalized. For the *fit* service it may take a while to have the output back, depending on how much the fitting lasts.\n\n\nThe output for the **info** services change if the model has already been fitted or not, and based on the setting chosen regarding advanced information. In case the model has been fitted and advanced information was activated the output will be the following:\n\n```json\n{\"predictor_name\": name of the model chosen, \n\"pretrained_model\": name of the pretrained model chosen,\n\"top_layer\": {\"n_layer\":1,\n    \"n_classes\": number of classes,\n    \"metrics\": [\"accuracy\"],\n    \"loss_function\": \"binary_crossentropy\",\n    \"epochs\":100},\n\"fitted\": say if the model was trained or not}\n```\n\nIn case the model *is not fitted* or *the advanced information* is not activated, the output will be the same without the \"top layer\" information.\n\nThe **predict** service has different output based on the settings chosen. If the field *predict proba* has been selected, we can see the probabilities next to each labels:\n\n```json\n{\"fname\": name of the file used for the prediction, \n\"pred\": [[\"cat\",0.9996217489242554],\n        [\"dog\",0.001642674207687378]]}\n```\n\nOtherwise, the output will be:\n\n```json\n{\"fname\": name of the file used for the prediction, \n\"pred\": \"cat\"}\n```\n\nIf *multilabel* is selected the output will be:\n\n```\n{\"fname\": name of the file used for the prediction, \n\"pred\": [\"cat\", \"persian\",\"black\"]}\n```\n",
             "inputs": [
               {
@@ -2317,46 +2318,49 @@
               "icon": "RiImage2Fill",
               "values": {
                 "comment": "",
-                "alias": "CUSTOM MODEL",
+                "alias": "Custom model",
                 "debug": true,
                 "epochs": "150",
                 "optimizer": "Adam",
                 "metrics": "accuracy, ",
-                "include_probs": true,
+                "include_probs": false,
                 "multilabel": false,
-                "probability_th": "0.7",
                 "predictor_name_fit": "license_registration",
                 "predictor_name_predict": "license_registration",
                 "predictor_name_eval": "license_registration"
               }
             },
-            "locked": null
+            "locked": null,
+            "status": "Training end - 1.800223s"
           },
           "selectable": true,
           "draggable": true,
           "positionAbsolute": {
-            "x": 863.7176740484824,
-            "y": 530.1987677654433
+            "x": 875.9703637775709,
+            "y": 504.7219348383772
           },
           "__class__": "Node"
         },
         {
-          "id": "4feed41e-ec92-4d8f-b78e-4166002248c8",
+          "id": "c4a768a3-be20-4508-b4b5-2c7b14988550",
           "position": {
-            "x": 1555.7176740484824,
-            "y": 566.1987677654433
+            "x": 1571.7116915891816,
+            "y": 646.4525886137747
           },
           "type": "custom",
           "dragHandle": "#nodeHandle",
           "sourcePosition": "right",
           "targetPosition": "left",
-          "width": 150,
-          "height": 60,
+          "width": 339,
+          "height": 72,
           "selected": false,
           "dragging": false,
           "data": {
             "name": "Vision",
-            "events": null,
+            "events": {
+              "type": "vision",
+              "field": "predictor_name_fit"
+            },
             "description": "\n### Description\n\nVISION is the Loko AI component which allows to classify images either using a pre-trained Neural Networks, or using a transfer-learning model over one of them. Specifically, VISION helps you with training, predicting and managing your models.\n\n### Configuration\n\nThe heading ***Available services*** allows user to select the VISION instance of interest (remembering that different vision-models will necessarily be found on different instances). \n\nIf you just want to use a pre-trained Neural Network in order to classify your set of images, you can directly link a *File Reader* component to the *Predict* Inputs of VISION. \nMore information about pre-trained models can be found here https://keras.io/api/applications/, where you can see details on their network structure and performances. \nIf you decide to classify your image directly using one of the pre-trained Neural Networks, you should expect to receive as output one of the 1000 possible ImageNet classes.\n\nIf you want to create a transfer-learning model to customize your classifier on your own data, follow these steps:\n\n\n- **Create a model:** in *Create parameters* choose the name of the model you want to create (*Vision Model Name*) and select the pre-trained models to use (*Pretrained Models*). Then, link a *Trigger* component to the **Create** input;\n\n- **Fit a model:** in *Fit parameters* choose the name of the model you want to train (*Vision Model*), and use a *File Reader* to pass a zipped folder to the VISION component ***Fit*** input.\n\n- **Get prediction with a model:** in *Predict parameters* you can set the model to use (*Vision Model*) choosing between the customized models and the pre-trained NN. Then, you can choose if you want to see directly the predicted class or the probability of each of them, setting the **Predict proba** parameters. \nIf you use a customized model, you can also decide to see predictions as a **generic Multi-Class** or as a **Multi-Label model**; in the latter case, if you don't want to see the probability of belonging to each class you can set the value of the **MultiLabel Threshold**, that indicate the minimum probability value in order to assign a specific class.\n\n\nYou may also want to:\n\n\n- **Delete a model:** in the section *delete parameters* specify the model you want to delete. It's possible to delete only the customized models.\n\n- **Get information about a model:** in *info parameters* you have to set the model name and then choose if you just want to know if the model is fitted and the pre-trained model used, or if you want **advanced** information.\n\n\n\n\n### Output\n\nFor **Create, Fit and Delete** services the output messages will only be a sentence that confirms that the required action has been finalized. For the *fit* service it may take a while to have the output back, depending on how much the fitting lasts.\n\n\nThe output for the **info** services change if the model has already been fitted or not, and based on the setting chosen regarding advanced information. In case the model has been fitted and advanced information was activated the output will be the following:\n\n```json\n{\"predictor_name\": name of the model chosen, \n\"pretrained_model\": name of the pretrained model chosen,\n\"top_layer\": {\"n_layer\":1,\n    \"n_classes\": number of classes,\n    \"metrics\": [\"accuracy\"],\n    \"loss_function\": \"binary_crossentropy\",\n    \"epochs\":100},\n\"fitted\": say if the model was trained or not}\n```\n\nIn case the model *is not fitted* or *the advanced information* is not activated, the output will be the same without the \"top layer\" information.\n\nThe **predict** service has different output based on the settings chosen. If the field *predict proba* has been selected, we can see the probabilities next to each labels:\n\n```json\n{\"fname\": name of the file used for the prediction, \n\"pred\": [[\"cat\",0.9996217489242554],\n        [\"dog\",0.001642674207687378]]}\n```\n\nOtherwise, the output will be:\n\n```json\n{\"fname\": name of the file used for the prediction, \n\"pred\": \"cat\"}\n```\n\nIf *multilabel* is selected the output will be:\n\n```\n{\"fname\": name of the file used for the prediction, \n\"pred\": [\"cat\", \"persian\",\"black\"]}\n```\n",
             "inputs": [
               {
@@ -2552,7 +2556,7 @@
               "icon": "RiImage2Fill",
               "values": {
                 "comment": "",
-                "alias": "PRETRAINED MODEL PREDICTIONS",
+                "alias": "Prediction with pre-trained model",
                 "debug": true,
                 "epochs": "150",
                 "optimizer": "Adam",
@@ -2560,7 +2564,7 @@
                 "include_probs": false,
                 "multilabel": false,
                 "predictor_name_fit": "",
-                "predictor_name_predict": "RegNetX006",
+                "predictor_name_predict": "ResNet50",
                 "predictor_name_eval": ""
               }
             },
@@ -2569,8 +2573,116 @@
           "selectable": true,
           "draggable": true,
           "positionAbsolute": {
-            "x": 1555.7176740484824,
-            "y": 566.1987677654433
+            "x": 1571.7116915891816,
+            "y": 646.4525886137747
+          },
+          "__class__": "Node"
+        },
+        {
+          "id": "e6ca7ea4-44f0-4c53-9149-82f45d3498d3",
+          "position": {
+            "x": 1142.2178563586635,
+            "y": 497.7691409637494
+          },
+          "type": "custom",
+          "dragHandle": "#nodeHandle",
+          "sourcePosition": "right",
+          "targetPosition": "left",
+          "width": 150,
+          "height": 56,
+          "selected": false,
+          "dragging": false,
+          "data": {
+            "name": "File Writer",
+            "events": null,
+            "description": "### Description\nThe FILE WRITER component allows you to write files. The **Append** parameter allows you to write a file using multiple inputs. The destination path of the file can be defined when creating the block or passed as input in the previous block. In this way you have the possibility to write multiple files using one block.\n\n### Input\nUsing the parameter **Save as**, the format of the data to be received as input is defined. The available formats are: *text*, *bytes* and *json*. To define the destination path of the file instead, the input is defined as:\n```python\nParameters(data = data, path = filename)\n```\n\n### Output\nThe output confirms that the file has been written with the string: **Written to filename**.",
+            "inputs": [
+              {
+                "id": "input",
+                "label": "input"
+              }
+            ],
+            "outputs": [
+              {
+                "id": "output",
+                "label": "output"
+              }
+            ],
+            "configured": true,
+            "options": {
+              "group": "Outputs",
+              "args": [
+                {
+                  "name": "comment",
+                  "type": "area",
+                  "label": "Node comment",
+                  "helper": "Use it to explain the usage of this node"
+                },
+                {
+                  "name": "alias",
+                  "type": "text",
+                  "label": "Name",
+                  "helper": "Use this name as an alias"
+                },
+                {
+                  "name": "debug",
+                  "type": "boolean",
+                  "label": "Debug to Console",
+                  "divider": true
+                },
+                {
+                  "name": "path",
+                  "type": "text",
+                  "label": "Path"
+                },
+                {
+                  "name": "type",
+                  "label": "Save as",
+                  "type": "select",
+                  "options": [
+                    "text",
+                    "bytes",
+                    "json"
+                  ],
+                  "validation": {
+                    "required": "Required field"
+                  }
+                },
+                {
+                  "name": "append",
+                  "label": "Append",
+                  "type": "dynamic",
+                  "dynamicType": "boolean",
+                  "condition": "[\"text\", \"bytes\"].includes({parent})",
+                  "parent": "type"
+                },
+                {
+                  "name": "overwrite",
+                  "type": "dynamic",
+                  "dynamicType": {
+                    "true": "boolean"
+                  },
+                  "parent": "append",
+                  "label": "Overwrite"
+                }
+              ],
+              "click": null,
+              "icon": "RiFileEditFill",
+              "values": {
+                "comment": "",
+                "alias": "",
+                "debug": false,
+                "path": "data/data/eval_vision.eval",
+                "type": "json"
+              }
+            },
+            "locked": null
+          },
+          "selectable": true,
+          "draggable": true,
+          "positionAbsolute": {
+            "x": 1142.2178563586635,
+            "y": 497.7691409637494
           },
           "__class__": "Node"
         }
@@ -2619,10 +2731,10 @@
           "__class__": "Edge"
         },
         {
-          "id": "reactflow__edge-1e99ca3c-8266-4b0b-b5cc-3b85439ba1e2output-947533f2-383f-48b8-9f59-b9a536ab7350fit",
+          "id": "reactflow__edge-1e99ca3c-8266-4b0b-b5cc-3b85439ba1e2output-110040d2-529b-4bd6-84ca-e0f9dc237e62fit",
           "source": "1e99ca3c-8266-4b0b-b5cc-3b85439ba1e2",
           "sourceHandle": "output",
-          "target": "947533f2-383f-48b8-9f59-b9a536ab7350",
+          "target": "110040d2-529b-4bd6-84ca-e0f9dc237e62",
           "targetHandle": "fit",
           "data": {
             "startColor": "#F8637A",
@@ -2633,10 +2745,10 @@
           "__class__": "Edge"
         },
         {
-          "id": "reactflow__edge-aa9cd733-06bb-4f02-be62-7de402273237output-947533f2-383f-48b8-9f59-b9a536ab7350predict",
+          "id": "reactflow__edge-aa9cd733-06bb-4f02-be62-7de402273237output-110040d2-529b-4bd6-84ca-e0f9dc237e62predict",
           "source": "aa9cd733-06bb-4f02-be62-7de402273237",
           "sourceHandle": "output",
-          "target": "947533f2-383f-48b8-9f59-b9a536ab7350",
+          "target": "110040d2-529b-4bd6-84ca-e0f9dc237e62",
           "targetHandle": "predict",
           "data": {
             "startColor": "#F8637A",
@@ -2647,10 +2759,10 @@
           "__class__": "Edge"
         },
         {
-          "id": "reactflow__edge-b4bcdee2-00c1-49d0-9929-6282061ac791output-947533f2-383f-48b8-9f59-b9a536ab7350evaluate",
+          "id": "reactflow__edge-b4bcdee2-00c1-49d0-9929-6282061ac791output-110040d2-529b-4bd6-84ca-e0f9dc237e62evaluate",
           "source": "b4bcdee2-00c1-49d0-9929-6282061ac791",
           "sourceHandle": "output",
-          "target": "947533f2-383f-48b8-9f59-b9a536ab7350",
+          "target": "110040d2-529b-4bd6-84ca-e0f9dc237e62",
           "targetHandle": "evaluate",
           "data": {
             "startColor": "#F8637A",
@@ -2661,14 +2773,28 @@
           "__class__": "Edge"
         },
         {
-          "id": "reactflow__edge-1c562b37-2788-4124-ac72-c42fc3df040doutput-4feed41e-ec92-4d8f-b78e-4166002248c8predict",
+          "id": "reactflow__edge-1c562b37-2788-4124-ac72-c42fc3df040doutput-c4a768a3-be20-4508-b4b5-2c7b14988550predict",
           "source": "1c562b37-2788-4124-ac72-c42fc3df040d",
           "sourceHandle": "output",
-          "target": "4feed41e-ec92-4d8f-b78e-4166002248c8",
+          "target": "c4a768a3-be20-4508-b4b5-2c7b14988550",
           "targetHandle": "predict",
           "data": {
             "startColor": "#F8637A",
             "stopColor": "#888"
+          },
+          "selected": false,
+          "dragging": false,
+          "__class__": "Edge"
+        },
+        {
+          "id": "reactflow__edge-110040d2-529b-4bd6-84ca-e0f9dc237e62evaluate-e6ca7ea4-44f0-4c53-9149-82f45d3498d3input",
+          "source": "110040d2-529b-4bd6-84ca-e0f9dc237e62",
+          "sourceHandle": "evaluate",
+          "target": "e6ca7ea4-44f0-4c53-9149-82f45d3498d3",
+          "targetHandle": "input",
+          "data": {
+            "startColor": "#888",
+            "stopColor": "#56DCB9"
           },
           "selected": false,
           "dragging": false,

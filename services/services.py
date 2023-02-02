@@ -314,9 +314,13 @@ async def loko_delete_model(value, args):
     predictor_name = args.get("predictor_name_delete")
     if predictor_name == "":
         msg = "VISION SETTINGS MISSING!!!Model of interest not selected, you have to specify one model name"
+        logger.error(f"PROBLEM::: {msg}")
         return json(msg, status=400)
+
     if predictor_name not in [m.name for m in pdao.all()]:
-        return json(f'Model {predictor_name} does not exist!', status=400)
+        msg = f'Model {predictor_name} does not exist!'
+        logger.error(f"PROBLEM::: {msg}")
+        return json(msg, status=400)
     pdao.delete(predictor_name)
     return json(f"Model {predictor_name} deleted")
 
