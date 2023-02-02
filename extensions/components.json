@@ -5,7 +5,10 @@
   "group": "ComputerVision",
   "icon": "RiImage2Fill",
   "click": null,
-  "events": null,
+  "events": {
+   "type": "vision",
+   "field": "predictor_name_fit"
+  },
   "configured": true,
   "inputs": [
    {

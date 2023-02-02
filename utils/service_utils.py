@@ -3,14 +3,14 @@ import traceback
 
 import requests
 
-from config.AppConfig import GATEWAY_URL
+from config.AppConfig import GATEWAY_EMIT_URL
 from utils.logger_utils import logger
 
 
 def send_message(name, msg):
-    if GATEWAY_URL:
+    if GATEWAY_EMIT_URL:
         try:
-            url = os.path.join(GATEWAY_URL, *'/emit'.split('/'))
+            url = GATEWAY_EMIT_URL
             data = dict(event_name='event_ds4biz', #fisso
                         content=dict(msg=msg,
                                      type='vision', #chiedere a pisu

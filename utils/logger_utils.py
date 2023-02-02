@@ -1,7 +1,7 @@
 import logging
 import sys
 
-fmt = '%(levelname)s - %(message)s  - %(name)s:%(lineno)d - date:%(asctime)s'
+fmt = '%(levelname)s - %(asctime)s - %(filename)s:%(lineno)d - %(message)s'
 
 
 def stream_logger(name, fmt=fmt, out=sys.stdout, level=logging.DEBUG):
@@ -14,8 +14,8 @@ def stream_logger(name, fmt=fmt, out=sys.stdout, level=logging.DEBUG):
     return logger
 
 
-logging.basicConfig(format='%(levelname)s - %(message)s  - %(filename)s:%(lineno)d - date:%(asctime)s')
-
+# logging.basicConfig(format='%(levelname)s - %(message)s  - %(filename)s:%(lineno)d - date:%(asctime)s')
+#
 logger = stream_logger(__name__)
 
 # import logging

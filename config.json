@@ -1,7 +1,7 @@
 {
   "main": {
     "volumes": [
-      "/home/roberta/loko/projects/loko-vision/repo:/plugin/repo"
+      "/var/opt/loko/loko-vision/repo:/plugin/repo"
     ],
     "gui": {
       "name": "Vision GUI",

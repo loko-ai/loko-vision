@@ -6,15 +6,17 @@ import sanic
 from sanic.exceptions import SanicException
 
 from business.evaluate_report import compute_reports
-from config.AppConfig import PRETRAINED_CLASSES
+from config.AppConfig import PRETRAINED_CLASSES, GATEWAY_EMIT_URL
 from config.FactoryConfig import FACTORY
 from config.genericConfig import MODEL_EPOCHS
 from dao.predictors_dao import PredictorsDAO
+from model.callbacks import LogsCallback
 from model.mlmodel import models_mapping
 from model.predictors_model import PredictorRequest
 from utils.imageutils import read_imgs
 # from utils.service_utils import send_message
 from utils.logger_utils import logger
+from utils.service_utils import send_message
 
 pdao = PredictorsDAO()
 
@@ -48,13 +50,13 @@ def training_task(f, model_info: PredictorRequest, epochs=100, optimizer="adam",
     # print(m.top_layer)
     msg = 'model factorized'
     logger.debug(msg)
-    # send_message(predictor_name, msg)
+    send_message(predictor_name, msg)
     # print(url)
-    # cb = LogsCallback(epochs=MODEL_EPOCHS, url=GATEWAY_EMIT_URL, model_name=predictor_name)
+    cb = LogsCallback(epochs=MODEL_EPOCHS, url=GATEWAY_EMIT_URL, model_name=predictor_name)
     model_info.model_parameters = parameters
     model_info.model_parameters["fitted"] = "Training"
     pdao.save(model_info)
-    model.fit(X, y, epochs=MODEL_EPOCHS)  # , callbacks=[cb])
+    model.fit(X, y, epochs=MODEL_EPOCHS, callbacks=[cb])
     logger.debug('%s model fitted with pretrained model %s...' % (predictor_name, pretrained_model))
     model_info.model_parameters = parameters
     model_info.model_obj = model
