@@ -24,6 +24,6 @@ Installing this project extension on your LOKO AI software will make available t
 - **Step 2:** In the Applications section, you can find the installed extensions and the available ones. Click on the install buttons in order to use the above mentioned components
 ![](resources/applications_screen.png)
 
-- **Step 3:** Now that you have the extension installed in your local LOKO AI software, you can find the _Vision Manager_ and _Vision_ components in the Blocks lists, under the _"Global"_ group as shown in the figure below <img src="resources/global_extensions.png" alt="Global extensions" width="90%" height="50%" title="Global extensions" />
+- **Step 3:** Now that you have the extension installed in your local LOKO AI software, you can find the _Vision Manager_ and _Vision_ components in the Blocks lists, under the _"Global"_ group as shown in the figure below <img src="resources/global_extensions.png" alt="Global extensions" width="60%" height="40%" title="Global extensions" />
 
 [comment]: <> (![]&#40;resources/global_extensions.png&#41;)
