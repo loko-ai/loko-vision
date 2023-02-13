@@ -28,3 +28,8 @@ Installing this project extension on your LOKO AI software will make available t
 - **Step 4:** to enable these blocks you have to click the play button on the installed applications, then a red square. The first time, it will take some times, because clicking on that button you are launching a Docker container, thus a Docker image will be built. Once the image is built, here you can find also the link to the Vision GUI. 
 ![](resources/build_vision_image.png)
 
+
+# :mag_right: How to use it?
+
+
+...
