@@ -20,8 +20,10 @@ Installing this project extension on your LOKO AI software will make available t
 # :electric_plug: Installation
 
 - **Step 1:** In the top section click on the "Applications" field. ![application section](resources/applications_section.png)
-- 
+
 - **Step 2:** In the Applications section, you can find the installed extensions and the available ones. Click to install
 ![](resources/applications_screen.png)
 
-**Step 3:**
+- **Step 3:** Now that you have the extension installed in your local LOKO AI software, you can find the _Vision Manager_ and _Vision_ components in the Blocks lists, under the _"Global"_ group as shown in the figure below
+![](resources/global_extensions.png)
+
