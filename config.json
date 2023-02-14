@@ -3,6 +3,11 @@
     "volumes": [
       "/var/opt/loko/loko-vision/repo:/plugin/repo"
     ],
+    "environment": {
+      "SANIC_REQUEST_MAX_SIZE": 500000000,
+      "SANIC_REQUEST_TIMEOUT": 3,
+      "SANIC_RESPONSE_TIMEOUT": 3
+    },
     "gui": {
       "name": "Vision GUI",
       "path": "web/index.html"
