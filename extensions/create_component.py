@@ -2,7 +2,7 @@ from loko_extensions.model.components import Input, Output, Dynamic, AsyncSelect
     Events
 from loko_extensions.model.components import Arg
 
-from extensions.vision_component_doc import vision_doc
+from extensions.vision_component_doc import vision_doc, vision_manager_doc
 
 custom_model_list = "http://localhost:9999/routes/loko-vision/models?info=false&model_type=custom"
 custom_and_pretrained_model_list = "http://localhost:9999/routes/loko-vision/models"
@@ -169,7 +169,7 @@ vision_component = Component(name="Vision", description=vision_doc, inputs=visio
                              outputs=vision_output, args=vision_args, icon="RiImage2Fill", group='ComputerVision',
                              events=Events(type='vision', field='predictor_name_fit'))
 
-vision_manager = Component(name="Vision Manager", description=vision_doc, inputs=manager_input, outputs=manager_output,
+vision_manager = Component(name="Vision Manager", description=vision_manager_doc, inputs=manager_input, outputs=manager_output,
                            args=manager_args, icon="RiSettings5Fill", group='ComputerVision')
 # "RiFileTextFill"
 if __name__ == '__main__':
