@@ -76,8 +76,7 @@ Finally, once you have the model evaluation results, you can decide to save in a
 In order to do so, just open the GUI, click on the Report button (as shown in the following image) and search on your computer for the report you want to visualize.
 
 
-![](resources/gui_report.png)
-
+![](resources/report_gui.png)
 
 
 # :wrench: Configuration
