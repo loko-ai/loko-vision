@@ -5,8 +5,8 @@
     ],
     "environment": {
       "SANIC_REQUEST_MAX_SIZE": 500000000,
-      "SANIC_REQUEST_TIMEOUT": 3,
-      "SANIC_RESPONSE_TIMEOUT": 3
+      "SANIC_REQUEST_TIMEOUT": 3600,
+      "SANIC_RESPONSE_TIMEOUT": 3600
     },
     "gui": {
       "name": "Vision GUI",
