@@ -15,6 +15,7 @@ from model.callbacks import ClassifierWrapper
 from utils.logger_utils import logger
 from utils.prediction_utils import inverse_sigmoid, softmax
 # from utils.service_utils import send_message
+from utils.service_utils import send_message
 
 repo = Path(REPO_PATH)
 
@@ -83,13 +84,13 @@ class KerasImagePredictor(ImagePredictor):
             self.top_layer.update_model_from_config(mdl_config)
 
     def fit(self, X, y, callbacks=None, **kwargs):
-        # send_message(self.predictor_name, "Model Fitting")
+        send_message(self.predictor_name, "Image Preprocessing")
         X = self._preprocess_input(X)
+        send_message(self.predictor_name, "Transfer Learning Initializzation")
         if self.h5:
             self._check_model_input_shape()
         vecs = self.base_model.predict(X)
-        logger.debug(f"yyyyyyyyyyyyy {y}")
-        logger.debug("chiamo top_layer_fit")
+        send_message(self.predictor_name, "Training start")
         self.top_layer.fit(vecs, y, callbacks=callbacks)
 
 

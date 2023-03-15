@@ -21,7 +21,7 @@ from utils.service_utils import send_message
 pdao = PredictorsDAO()
 
 
-def training_task(f, model_info: PredictorRequest, epochs=100, optimizer="adam", metrics:list=["accuracy"]):
+async def training_task(f, model_info: PredictorRequest, epochs=100, optimizer="adam", metrics:list=["accuracy"]):
     pretrained_model = model_info.pretained_model
     predictor_name = model_info.predictor_name
     predictor_tag = model_info.predictor_tag
@@ -30,7 +30,6 @@ def training_task(f, model_info: PredictorRequest, epochs=100, optimizer="adam",
     # print(len(X[0]))
     # print(len(X))
     # print(len(y))
-    print(f"============> y {y}")
     n_outputs_lbl = len(set(chain.from_iterable(y)))
     parameters = dict(__klass__='ds4biz.KerasImagePredictor',
                       top_layer=dict(__klass__='ds4biz.NNpredictor',
@@ -48,7 +47,7 @@ def training_task(f, model_info: PredictorRequest, epochs=100, optimizer="adam",
                       )
     model = FACTORY(parameters)
     # print(m.top_layer)
-    msg = 'model factorized'
+    msg = 'Model Factorized'
     logger.debug(msg)
     send_message(predictor_name, msg)
     # print(url)
