@@ -41,12 +41,14 @@ class PredictorsDAO:
             logger.debug(f"predictor to save: {pr.predictor_name}")
 
             joblib.dump(pr.model_obj, p / pr.predictor_name)
+            self.get.cache_clear()
         except Exception as inst:
             logger.exception(inst)
             raise PredictorDAOException("Can't save predictor")
 
     def delete(self, predictor_name):
         shutil.rmtree(self.path / predictor_name)
+        self.get.cache_clear()
 
     def all(self):
         return self.path.glob('*')

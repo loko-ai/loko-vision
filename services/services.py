@@ -212,6 +212,10 @@ async def predict(request, predictor_name):
 @doc.consumes(doc.Boolean(name="advanced_info"), location="query")
 async def info(request, predictor_name):
     adv_info = eval(request.args.get('advanced_info', 'false').capitalize())
+    if predictor_name not in [m.name for m in pdao.all()]:
+        msg = f'Model {predictor_name} does not exist!'
+        logger.error(f"PROBLEM::: {msg}")
+        return json(msg, status=400)
     models = get_model_info(predictor_name=predictor_name, advanced_info=adv_info )
     print(json(models))
     return json(models)
@@ -295,6 +299,10 @@ async def loko_get_model_info(value, args):
     predictor_name = args.get("predictor_name_info")
     if predictor_name == "":
         msg = "VISION SETTINGS MISSING!!!Model of interest not selected, you have to specify one model name"
+        return json(msg, status=400)
+    if predictor_name not in [m.name for m in pdao.all()]:
+        msg = f'Model {predictor_name} does not exist!'
+        logger.error(f"PROBLEM::: {msg}")
         return json(msg, status=400)
     adv_info = args.get('adv_info', False)
     logger.debug(f"adv info {adv_info}")
