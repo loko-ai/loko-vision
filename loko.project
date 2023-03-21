@@ -3,7 +3,7 @@
   "id": "loko-vision",
   "description": "",
   "created_on": "17/11/2022, 14:17:04",
-  "last_modify": "13/03/2023, 14:48:08",
+  "last_modify": "21/03/2023, 16:21:43",
   "graphs": {
     "Vision Manager": {
       "nodes": [
@@ -446,8 +446,8 @@
                 "predictor_tag": "example tag",
                 "adv_info": true,
                 "pretrained_model": "DenseNet169",
-                "predictor_name_delete": "example_model",
-                "predictor_name_info": "example_model"
+                "predictor_name_info": "example_model",
+                "predictor_name_delete": "example_model"
               }
             },
             "locked": null
@@ -1038,12 +1038,12 @@
                 "include_probs": false,
                 "multilabel": false,
                 "predictor_name_fit": "example_model",
-                "predictor_name_eval": "",
-                "predictor_name_predict": ""
+                "predictor_name_predict": "example_model",
+                "predictor_name_eval": "example_model"
               }
             },
-            "locked": null,
-            "status": "Training end - 1.563955s"
+            "status": "Training end - 1.556300s",
+            "locked": null
           },
           "selectable": true,
           "draggable": true,

@@ -1,6 +1,9 @@
+import asyncio
+import functools
 import logging
 import traceback
 import zipfile
+from concurrent.futures import ProcessPoolExecutor
 from itertools import chain
 
 import os
@@ -21,7 +24,7 @@ from sanic_openapi.openapi2 import doc
 
 from business.evaluate_report import compute_reports
 from business.tf_learning import training_task, predict_task, evaluate_task
-from config.AppConfig import REPO_PATH
+from config.AppConfig import REPO_PATH, PROCESS_WORKERS
 from dao.inmemory_dao import InMemoryDAO
 from dao.predictors_dao import PredictorsDAO, PredictorDAOException
 from model.mlmodel import models_mapping
@@ -29,6 +32,8 @@ from model.predictors_model import PredictorRequest
 from utils.logger_utils import stream_logger, logger
 from utils.model_utils import get_models_list, get_model_info
 from utils.pom_utils import get_pom_major_minor
+
+POOL = ProcessPoolExecutor(max_workers=PROCESS_WORKERS)
 
 # todo: 2 - controllare tipologia immagini non supportate e gestione errori file;
 #      3 - aggiustare parametri dei servizi
@@ -71,6 +76,7 @@ bp = Blueprint("default")#, url_prefix=url_prefix)
 app.config["API_TITLE"] = name
 CORS(app)
 app.static("/web", "/frontend/dist")
+
 #loko_vision/0.0/
 get_models_params_description = '''
 <b>model_type:</b> return the type of models available for the chosen category: pre-trained, custom or both types.
@@ -399,7 +405,9 @@ async def loko_predict_model(file, args):
     if multilabel and predictor_name in models_mapping.keys():
         return json('You cannot use a pre-trained model (%s) as multilabel model' % predictor_name, status=400)
     mlb_threshold = float(args.get("multilabel_threshold", 0.5)) if multilabel else None
-    preds_res = predict_task(f, predictor_name, proba, multilabel, mlb_threshold, proba_threshold=proba_threshold)
+    preds_res = await app.loop.run_in_executor(POOL, functools.partial(predict_task), f, predictor_name, proba, multilabel, mlb_threshold, proba_threshold)
+
+    # preds_res = predict_task(f, predictor_name, proba, multilabel, mlb_threshold, proba_threshold=proba_threshold)
     return json(preds_res)  # , status=200)
 
 
@@ -420,7 +428,8 @@ async def loko_evaluate_model(file, args):
         return json("There is no file for model prediction", status=400)
     else:
         f = file[0]
-    res = evaluate_task(f, predictor_name)
+    # res = evaluate_task(f, predictor_name)
+    res = await app.loop.run_in_executor(POOL, functools.partial(evaluate_task), f, predictor_name)
     return json(res)
 
 
