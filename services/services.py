@@ -3,7 +3,6 @@ import functools
 import logging
 import traceback
 import zipfile
-from concurrent.futures import ProcessPoolExecutor
 from itertools import chain
 
 import os
@@ -24,7 +23,7 @@ from sanic_openapi.openapi2 import doc
 
 from business.evaluate_report import compute_reports
 from business.tf_learning import training_task, predict_task, evaluate_task
-from config.AppConfig import REPO_PATH, PROCESS_WORKERS
+from config.AppConfig import REPO_PATH, POOL
 from dao.inmemory_dao import InMemoryDAO
 from dao.predictors_dao import PredictorsDAO, PredictorDAOException
 from model.mlmodel import models_mapping
@@ -33,7 +32,6 @@ from utils.logger_utils import stream_logger, logger
 from utils.model_utils import get_models_list, get_model_info
 from utils.pom_utils import get_pom_major_minor
 
-POOL = ProcessPoolExecutor(max_workers=PROCESS_WORKERS)
 
 # todo: 2 - controllare tipologia immagini non supportate e gestione errori file;
 #      3 - aggiustare parametri dei servizi
@@ -375,7 +373,11 @@ async def loko_fit_model(file, args):
     if model_obj!=None:
         logger.debug(f"model obj: {model_obj}")
         return json("Predictor already fitted", status=400)
-    app.loop.create_task(training_task(f, model_info, epochs, optimizer, metrics))
+
+    async def run_executor_train():
+        result = await app.loop.run_in_executor(POOL, functools.partial(training_task), f, model_info, epochs, optimizer, metrics)
+
+    app.loop.create_task(run_executor_train())
     return json(f"Model '{predictor_name}' is fitting! Data used: {f.name} ")
 
 
@@ -473,4 +475,4 @@ async def manage_exception(request, exception):
 
 if __name__ == '__main__':
     app.blueprint(bp)
-    app.run("0.0.0.0", port=8080, auto_reload=True)
+    app.run("0.0.0.0", port=8080, auto_reload=False)

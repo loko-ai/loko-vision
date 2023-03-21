@@ -21,7 +21,7 @@ from utils.service_utils import send_message
 pdao = PredictorsDAO()
 
 
-async def training_task(f, model_info: PredictorRequest, epochs=100, optimizer="adam", metrics:list=["accuracy"]):
+def training_task(f, model_info: PredictorRequest, epochs=100, optimizer="adam", metrics:list=["accuracy"]):
     pretrained_model = model_info.pretained_model
     predictor_name = model_info.predictor_name
     predictor_tag = model_info.predictor_tag
