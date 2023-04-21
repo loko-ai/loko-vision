@@ -3,7 +3,7 @@
   "id": "loko-vision",
   "description": "",
   "created_on": "17/11/2022, 14:17:04",
-  "last_modify": "21/03/2023, 17:23:48",
+  "last_modify": "23/03/2023, 09:21:43",
   "graphs": {
     "Vision Manager": {
       "nodes": [
@@ -1042,7 +1042,7 @@
                 "predictor_name_eval": "example_model"
               }
             },
-            "status": "Training end - 1.699336s",
+            "status": "Training end - 4.064260s",
             "locked": null
           },
           "selectable": true,

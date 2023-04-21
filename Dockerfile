@@ -9,8 +9,8 @@ FROM python:3.10-slim
 ARG user
 ARG password
 EXPOSE 8080
-ADD ./requirements.txt /
-RUN pip install -r /requirements.txt
+ADD ./requirements.lock /
+RUN pip install -r /requirements.lock
 ARG GATEWAY
 ENV GATEWAY=$GATEWAY
 ADD . /plugin
