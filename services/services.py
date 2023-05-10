@@ -5,6 +5,7 @@ import traceback
 import zipfile
 from itertools import chain
 
+from loguru import logger
 import os
 import io
 from pathlib import Path
@@ -33,7 +34,6 @@ from dao.inmemory_dao import InMemoryDAO
 from dao.predictors_dao import PredictorsDAO, PredictorDAOException
 from model.mlmodel import models_mapping
 from model.predictors_model import PredictorRequest
-from utils.logger_utils import stream_logger, logger
 from utils.model_utils import get_models_list, get_model_info
 from utils.pom_utils import get_pom_major_minor
 
