@@ -1,5 +1,6 @@
 import os
 import traceback
+from loguru import logger
 
 import requests
 from tensorflow import keras
@@ -10,7 +11,6 @@ from tensorflow.keras.callbacks import EarlyStopping
 
 
 #todo: cancellare e passare a predictor_base
-from utils.logger_utils import logger
 
 
 class LogsCallback(keras.callbacks.Callback):
@@ -57,7 +57,7 @@ class LogsCallback(keras.callbacks.Callback):
     def on_train_end(self, logs=None):
         self.train_end = datetime.now()
         seconds = (self.train_end - self.train_start).total_seconds()
-        return 'Training end - %fs' % seconds
+        return 'Training end in %0.3fs - %i epochs runned' % (seconds, self.epochs)
 
     def on_epoch_begin(self, epoch, logs=None):
         self.epoch_start = datetime.now()

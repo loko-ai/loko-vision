@@ -1,4 +1,3 @@
-import logging
 from pathlib import Path
 from typing import List, Union, Dict
 
@@ -12,7 +11,7 @@ from tensorflow.keras.models import load_model
 
 from config.AppConfig import REPO_PATH
 from config.genericConfig import PREDICTOR_H5_FILENAME
-from utils.logger_utils import logger
+from loguru import logger
 
 repo = Path(REPO_PATH)
 #todo: cambiare print in log
@@ -57,7 +56,7 @@ class NNClassifierWrapper:
                 self.multilabel = True
                 self.target_vectorizer = target_vectorizer or MultiLabelBinarizer()
         else:
-            logger.warn("The NN predictor model is empty or None")
+            logger.warning("The NN predictor model is empty or None")
 
 
     @property
@@ -80,10 +79,10 @@ class NNClassifierWrapper:
             logger.debug("transforming target variable...")
             y = self.target_vectorizer.fit_transform(y)
         logger.debug("casting data to numpy")
-        logger.debug(f"Y val pre:::: {y}")
+        logger.debug(f"Y val pre:::: {y[:3]}")
 
         y = self._cast_target_to_numpy(y)
-        logger.debug(f"Y val:::: {y}")
+        logger.debug(f"Y val example:::: {y[:3]}")
 
         X = self._cast_target_to_numpy(X)
         logger.debug("compiling and fitting model...")
@@ -94,15 +93,19 @@ class NNClassifierWrapper:
         #     print(inst)
 
     def predict_proba(self, X):
+        logger.debug("casting target to numpy")
         X = self._cast_target_to_numpy(X)
         # print(X)
+
+        logger.debug("computing prediction...")
         res = [[float(pred) for pred in el] for el in self.model.predict(X)]
-        logger.debug(f"predictor NN predict-proba: {res}",)
+        logger.debug("returning prediction!")
+        # logger.debug(f"predictor NN predict-proba: {res}",)
         return res
 
     def evaluate(self, X, y):
         logger.debug("NN evaluate")
-        logger.debug(f"Y pre val:::: {y}")
+        # logger.debug(f"Y pre val:::: {y}")
 
         X = self._cast_target_to_numpy(X)
         if self.multilabel:
@@ -110,13 +113,11 @@ class NNClassifierWrapper:
             y = self.target_vectorizer.fit_transform(y)
         y = self._cast_target_to_numpy(y)
         # logger.debug(X)
-        logger.debug(f"Y val:::: {y}")
+        # logger.debug(f"Y val:::: {y}")
         eval = self.model.evaluate(X, y)
-        logger.debug(f"eval::: {eval}")
         metrics_name = self.model.metrics_names
         logger.debug(f"metrics_name = {metrics_name}")
         eval_res = {m_name: m_value for m_value, m_name in zip(eval, metrics_name)}
-        logger.debug(f"eval_res: {eval_res}")
         logger.debug(f"keras {keras.__version__}")
         logger.debug(f"tf {tf.__version__}")
         if "loss" in eval_res:

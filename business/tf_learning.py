@@ -8,14 +8,13 @@ from sanic.exceptions import SanicException
 from business.evaluate_report import compute_reports
 from config.AppConfig import PRETRAINED_CLASSES, GATEWAY_EMIT_URL
 from config.FactoryConfig import FACTORY
-from config.genericConfig import MODEL_EPOCHS
 from dao.predictors_dao import PredictorsDAO
 from model.callbacks import LogsCallback
 from model.mlmodel import models_mapping
 from model.predictors_model import PredictorRequest
 from utils.imageutils import read_imgs
 # from utils.service_utils import send_message
-from utils.logger_utils import logger
+from loguru import logger
 from utils.service_utils import send_message
 
 pdao = PredictorsDAO()
@@ -51,11 +50,11 @@ def training_task(f, model_info: PredictorRequest, epochs=100, optimizer="adam",
     logger.debug(msg)
     send_message(predictor_name, msg)
     # print(url)
-    cb = LogsCallback(epochs=MODEL_EPOCHS, url=GATEWAY_EMIT_URL, model_name=predictor_name)
+    cb = LogsCallback(epochs=epochs, url=GATEWAY_EMIT_URL, model_name=predictor_name)
     model_info.model_parameters = parameters
     model_info.model_parameters["fitted"] = "Training"
     pdao.save(model_info)
-    model.fit(X, y, epochs=MODEL_EPOCHS, callbacks=[cb])
+    model.fit(X, y, epochs=epochs, callbacks=[cb])
     logger.debug('%s model fitted with pretrained model %s...' % (predictor_name, pretrained_model))
     model_info.model_parameters = parameters
     model_info.model_obj = model
@@ -85,14 +84,13 @@ def predict_task(f, predictor_name, proba, multilabel, mlb_threshold, proba_thre
                                 predictor_name=predictor_name)
         model = FACTORY(model_parameters)
     preds = model.predict(X, multilabel=multilabel)
-    logger.debug(f"================================================\n{preds}")
     logger.debug("len preds %s, len files %s" % (str(len(preds)), str(len(fnames))))
     if not proba:
         if mlb_threshold != None:
-            logger.debug("prediction without predict_proba, mlb threshold!=none : %s " % str(preds))
+            # logger.debug("prediction without predict_proba, mlb threshold!=none : %s " % str(preds))
             preds = [[label[0] for label in p if label[1] >= mlb_threshold] for p in preds]  # [0]
         else:
-            logger.debug("prediction without predict_proba, mlb threshold==none : %s " % str(preds))
+            # logger.debug("prediction without predict_proba, mlb threshold==none : %s " % str(preds))
 
             preds = [[pp[0] for pp in p][0] for p in preds]  # [0]
             logger.debug(len(preds))
@@ -102,7 +100,7 @@ def predict_task(f, predictor_name, proba, multilabel, mlb_threshold, proba_thre
 
     # if mlb_threshold != None:
     #     preds = [dict(fname=p["fname"], pred=1) if p["pred"]>mlb_threshold else dict(fname=p["fname"], pred=0) for p in preds ]
-    logger.debug('preds: %s' % str(preds_res))
+    # logger.debug('preds: %s' % str(preds_res))
     return preds_res
 
 

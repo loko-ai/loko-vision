@@ -8,7 +8,7 @@ import joblib
 
 from config.AppConfig import REPO_PATH
 from config.FactoryConfig import FACTORY
-from utils.logger_utils import logger
+from loguru import logger
 from model.predictors_model import PredictorRequest, BLUEPRINT_FILENAME, PRETRAINED_MODEL_LBL, \
     PREDICTOR_NAME_LBL, PREDICTOR_TAG_LBL, FITTED_STATUS_LBL
 

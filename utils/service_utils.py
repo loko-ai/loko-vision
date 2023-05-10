@@ -4,7 +4,7 @@ import traceback
 import requests
 
 from config.AppConfig import GATEWAY_EMIT_URL
-from utils.logger_utils import logger
+from loguru import logger
 
 
 def send_message(name, msg):

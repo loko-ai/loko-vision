@@ -4,7 +4,7 @@ from PIL import Image
 import io
 import zipfile
 
-from utils.logger_utils import logger
+from loguru import logger
 
 img_format_accepted = [".jpg", "jpeg", ".png", ".tiff", ".bmp", ".svg"]
 
@@ -32,7 +32,7 @@ def read_imgs(f):
                             images.append(img)
                             labels.append(img_labels)
                             fnames.append(fname.name)
-                            logger.debug(f'LABEL: {img_labels} - NAME: {fname.name}')
+                            # logger.debug(f'LABEL: {img_labels} - NAME: {fname.name}')
                             # logger.debug(fname)
                             # logger.debug('NAME: %s'%fname.name)
                             # logger.debug('LABEL: %s'%str(img_labels))

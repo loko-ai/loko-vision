@@ -12,7 +12,7 @@ from tensorflow import keras
 from config.AppConfig import REPO_PATH
 from config.genericConfig import PRETRAINED_TH_PREDICTION
 from model.callbacks import ClassifierWrapper
-from utils.logger_utils import logger
+from loguru import logger
 from utils.prediction_utils import inverse_sigmoid, softmax
 # from utils.service_utils import send_message
 from utils.service_utils import send_message
@@ -129,7 +129,7 @@ class KerasImagePredictor(ImagePredictor):
 
     def evaluate(self, X, y, **kwargs):
         logger.debug("KERAS NN eval...")
-        logger.debug(f"y {y}")
+        # logger.debug(f"y {y}")
         X = self._preprocess_input(X)
         if self.top_layer:
             # send_message(self.predictor_name, "Starts prediction")

@@ -21,6 +21,7 @@ from sanic.exceptions import SanicException, NotFound
 from sanic.response import raw
 from sanic_cors import CORS
 from sanic_ext import Config
+from sanic import Sanic
 # from sanic_openapi.openapi2 import doc
 from sanic_ext.extensions.openapi.definitions import Parameter
 from sanic_ext.extensions.openapi.types import String
@@ -95,10 +96,10 @@ get_models_params_description = '''
 '''
 
 #
-# @app.listener("before_server_start")
-# async def before_server_start(app: Sanic, loop):
-#     app.ctx.loop = loop
-#     # app.executor = ProcessPoolExecutor()
+@app.listener("before_server_start")
+async def before_server_start(app: Sanic, loop):
+    app.ctx.loop = loop
+    # app.executor = ProcessPoolExecutor()
 
 
 
@@ -453,7 +454,7 @@ async def loko_predict_model(file, args):
     if multilabel and predictor_name in models_mapping.keys():
         return json('You cannot use a pre-trained model (%s) as multilabel model' % predictor_name, status=400)
     mlb_threshold = float(args.get("multilabel_threshold", 0.5)) if multilabel else None
-    preds_res = await app.loop.run_in_executor(POOL, functools.partial(predict_task), f, predictor_name, proba,
+    preds_res = await app.loop.run_in_executor(None, functools.partial(predict_task), f, predictor_name, proba,
                                                multilabel, mlb_threshold, proba_threshold)
 
     # preds_res = predict_task(f, predictor_name, proba, multilabel, mlb_threshold, proba_threshold=proba_threshold)
@@ -477,7 +478,7 @@ async def loko_evaluate_model(file, args):
     else:
         f = file[0]
     # res = evaluate_task(f, predictor_name)
-    res = await app.loop.run_in_executor(POOL, functools.partial(evaluate_task), f, predictor_name)
+    res = await app.loop.run_in_executor(None, functools.partial(evaluate_task), f, predictor_name)
     return json(res)
 
 

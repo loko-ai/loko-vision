@@ -3,22 +3,22 @@
   "id": "loko-vision",
   "description": "",
   "created_on": "17/11/2022, 14:17:04",
-  "last_modify": "03/05/2023, 13:12:00",
+  "last_modify": "10/05/2023, 15:54:06",
   "graphs": {
     "Vision Manager": {
       "nodes": [
         {
           "id": "82fbfd0e-f569-4432-ac23-088cf1ecc786",
           "position": {
-            "x": 683,
+            "x": 684,
             "y": 182
           },
           "type": "custom",
           "dragHandle": "#nodeHandle",
           "sourcePosition": "right",
           "targetPosition": "left",
-          "width": 150,
-          "height": 56,
+          "width": 164,
+          "height": 104,
           "selected": false,
           "dragging": false,
           "data": {
@@ -99,7 +99,7 @@
           "selectable": true,
           "draggable": true,
           "positionAbsolute": {
-            "x": 683,
+            "x": 684,
             "y": 182
           },
           "__class__": "Node"
@@ -301,15 +301,15 @@
         {
           "id": "9c1b2cf1-e6e7-4180-ab62-41c67195f819",
           "position": {
-            "x": 1044,
-            "y": 275
+            "x": 971,
+            "y": 280
           },
           "type": "custom",
           "dragHandle": "#nodeHandle",
           "sourcePosition": "right",
           "targetPosition": "left",
-          "width": 150,
-          "height": 56,
+          "width": 181,
+          "height": 60,
           "selected": false,
           "dragging": false,
           "data": {
@@ -455,8 +455,8 @@
           "selectable": true,
           "draggable": true,
           "positionAbsolute": {
-            "x": 1044,
-            "y": 275
+            "x": 971,
+            "y": 280
           },
           "__class__": "Node"
         }
@@ -818,8 +818,8 @@
         {
           "id": "35e41297-91a7-46f5-9d8c-71291d850386",
           "position": {
-            "x": 863,
-            "y": 330
+            "x": 860,
+            "y": 321
           },
           "type": "custom",
           "dragHandle": "#nodeHandle",
@@ -1032,24 +1032,24 @@
                 "comment": "",
                 "alias": "",
                 "debug": true,
-                "epochs": "150",
+                "epochs": "350",
                 "optimizer": "Adam",
                 "metrics": "accuracy, ",
                 "include_probs": false,
                 "multilabel": false,
                 "predictor_name_fit": "example_model",
-                "predictor_name_predict": "example_model",
-                "predictor_name_eval": "example_model"
+                "predictor_name_eval": "example_model",
+                "predictor_name_predict": "example_model"
               }
             },
-            "status": "Training end - 4.064260s",
+            "status": "Training end in 3.866s - 350 epochs runned",
             "locked": null
           },
           "selectable": true,
           "draggable": true,
           "positionAbsolute": {
-            "x": 863,
-            "y": 330
+            "x": 860,
+            "y": 321
           },
           "__class__": "Node"
         }

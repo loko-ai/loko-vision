@@ -1,7 +1,7 @@
 from config.FactoryConfig import FACTORY
 from dao.predictors_dao import PredictorsDAO
 from model.mlmodel import models_mapping
-from utils.logger_utils import logger
+from loguru import logger
 
 pdao = PredictorsDAO()
 
@@ -24,7 +24,7 @@ def get_models_list(models_type, info=False):
 
 def get_model_info(predictor_name, advanced_info=False):  # , model_info=False):
     p = pdao.get(predictor_name)
-    logger.debug(f"pppppp::: {p.model_parameters}")
+    logger.debug(f"model parameters::: {p.model_parameters}")
 
     tl_params = p.model_parameters
     res = dict(predictor_name=p.predictor_name, pretrained_model=p.pretained_model, predictor_tag=p.predictor_tag,
