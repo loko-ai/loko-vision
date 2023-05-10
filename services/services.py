@@ -94,10 +94,13 @@ get_models_params_description = '''
 <b>model_type:</b> return the type of models available for the chosen category: pre-trained, custom or both types.
 '''
 
+#
+# @app.listener("before_server_start")
+# async def before_server_start(app: Sanic, loop):
+#     app.ctx.loop = loop
+#     # app.executor = ProcessPoolExecutor()
 
-@app.listener("before_server_start")
-async def before_server_start(app: Sanic, loop):
-    app.ctx.loop = loop
+
 
 
 @app.get("/models/")
@@ -169,6 +172,9 @@ fit_params_description = '''
 @openapi.tag('Vision')
 @openapi.description(fit_params_description)
 # @openapi.parameter(doc.Boolean(name="multilabel"), location="query")
+@openapi.parameter(name="optimizer", schema=str, value="adam", location="query")
+@openapi.parameter(name="epochs", schema=int, location="query")
+@openapi.parameter(name="metrics", schema=str, value="accuracy,", location="query")
 @openapi.parameter(name="predictor_name", location="path", required=True)
 @file()
 async def fit(request, predictor_name):
@@ -181,6 +187,19 @@ async def fit(request, predictor_name):
         return json("There is no file to train the model", status=400)
     else:
         f = request.files["file"][0]
+
+    optimizer = request.args.get("optimizer", 'adam')
+
+    epochs = request.args.get("epochs", 150)
+    logger.debug(f"n. epochs {epochs}... optimizer chosen {optimizer}")
+
+
+
+    metrics = request.args.get("metrics", "accuracy")
+    logger.debug(f"metrics pre:: {metrics}")
+    metrics = [el for el in metrics.split(",") if (not el.isspace()) & (len(el) > 0)]
+    logger.debug(f"metrics post:: {metrics}")
+
     # if predictor_name in [m.name for m in pdao.all()]:
     #     return json('Model %s already exist!' % predictor_name, status=400) #todo: decidere se lasciarlo
     model_info = pdao.get(predictor_name)
@@ -188,7 +207,15 @@ async def fit(request, predictor_name):
     if model_obj != None:
         return json("Predictor already fitted", status=400)
 
-    training_task(f, model_info)
+    training_task(f, model_info, epochs, optimizer, metrics)
+    #
+    # loop = asyncio.get_event_loop()
+    #
+    # async def run_executor_train():
+    #     result = await loop.run_in_executor(POOL, functools.partial(training_task), f, model_info, epochs, optimizer,
+    #                                         metrics)
+    #
+    # loop.create_task(run_executor_train())
     return json('Model %s fitted! Data used: %s' % (predictor_name, f.name))  # , status=200)
 
 
@@ -389,13 +416,15 @@ async def loko_fit_model(file, args):
     if model_obj != None:
         logger.debug(f"model obj: {model_obj}")
         return json("Predictor already fitted", status=400)
-    loop = asyncio.get_event_loop()
+
+
+    # loop = asyncio.get_running_loop()
 
     async def run_executor_train():
-        result = await loop.run_in_executor(POOL, functools.partial(training_task), f, model_info, epochs, optimizer,
+        result = await app.loop.run_in_executor(None, functools.partial(training_task), f, model_info, epochs, optimizer,
                                             metrics)
-
-    loop.create_task(run_executor_train())
+    #
+    app.loop.create_task(run_executor_train())
     return json(f"Model '{predictor_name}' is fitting! Data used: {f.name} ")
 
 
