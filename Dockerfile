@@ -9,12 +9,12 @@ FROM python:3.10-slim
 ARG user
 ARG password
 EXPOSE 8080
-ADD ./requirements.lock /
-RUN pip install -r /requirements.lock
+ADD ./requirements.txt /
+RUN  pip install -r /requirements.txt
 ARG GATEWAY
 ENV GATEWAY=$GATEWAY
 ADD . /plugin
 ENV PYTHONPATH=$PYTHONPATH:/plugin
 COPY --from=builder /frontend/dist /frontend/dist
 WORKDIR /plugin/services
-CMD python services.py
+CMD  python services.py

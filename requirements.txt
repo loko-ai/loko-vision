@@ -1,7 +1,8 @@
 Pillow
 loko-extensions
-sanic == 22.6.2
+sanic
 sanic-cors
+sanic-ext
 sanic-openapi
 scikit-learn
-tensorflow == 2.10
+tensorflow

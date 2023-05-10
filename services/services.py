@@ -13,13 +13,17 @@ from tempfile import NamedTemporaryFile
 import sanic
 import tensorflow as tf
 from loko_extensions.business.decorators import extract_value_args
+from sanic_ext.extensions.openapi import openapi
+
 from sanic import Blueprint, text
 from sanic import json, Sanic
 from sanic.exceptions import SanicException, NotFound
 from sanic.response import raw
 from sanic_cors import CORS
-from sanic_openapi import swagger_blueprint
-from sanic_openapi.openapi2 import doc
+from sanic_ext import Config
+# from sanic_openapi.openapi2 import doc
+from sanic_ext.extensions.openapi.definitions import Parameter
+from sanic_ext.extensions.openapi.types import String
 
 from business.evaluate_report import compute_reports
 from business.tf_learning import training_task, predict_task, evaluate_task
@@ -31,7 +35,6 @@ from model.predictors_model import PredictorRequest
 from utils.logger_utils import stream_logger, logger
 from utils.model_utils import get_models_list, get_model_info
 from utils.pom_utils import get_pom_major_minor
-
 
 # todo: 2 - controllare tipologia immagini non supportate e gestione errori file;
 #      3 - aggiustare parametri dei servizi
@@ -48,7 +51,6 @@ from utils.pom_utils import get_pom_major_minor
 
 from utils.zip_utils import make_zipfile
 
-
 #
 # os.environ["XLA_FLAGS"]="--xla_gpu_cuda_data_dir=/usr/local/cuda-11.8"
 
@@ -59,33 +61,51 @@ im_dao = InMemoryDAO()
 pdao = PredictorsDAO()
 
 
+def file(name='file'):
+    def tmp(f):
+        content = {"multipart/form-data": {
+            "schema": {"type": "object", "properties": {name: {"type": "string", "format": "binary"}}}}}
+        return openapi.body(content, required=True)(f)
+
+    return tmp
+
+
 def get_app(name):
-    app = Sanic(name,)
-    swagger_blueprint.url_prefix = "/api"
-    app.blueprint(swagger_blueprint)
+    app = Sanic(name)
+    app_config = Config(oas_url_prefix="/api", oas_ui_default="swagger",
+                        swagger_ui_configuration=dict(DocExpansion=None))
+    # blueprint.url_prefix = "/api"
+    # app.blueprint(blueprint)
+    app.extend(config=app_config)
     return app
 
 
 name = "loko-vision"
 app = get_app(name)
 # url_prefix = f"loko_vision/{get_pom_major_minor()}/"
-bp = Blueprint("default")#, url_prefix=url_prefix)
+bp = Blueprint("default")  # , url_prefix=url_prefix)
 # app.config["API_VERSION"] = get_pom_major_minor()
 app.config["API_TITLE"] = name
 CORS(app)
 app.static("/web", "/frontend/dist")
 
-#loko_vision/0.0/
+# loko_vision/0.0/
 get_models_params_description = '''
 <b>model_type:</b> return the type of models available for the chosen category: pre-trained, custom or both types.
 '''
 
 
-@bp.get("/models/")
-@doc.tag('Vision')
-@doc.description(get_models_params_description)
-@doc.consumes(doc.String(name="model_type", choices=["all", "custom", "pretrained"], description="Default model_type='all'"))
-@doc.consumes(doc.Boolean(name="info", description="Default info='False'"))
+@app.listener("before_server_start")
+async def before_server_start(app: Sanic, loop):
+    app.ctx.loop = loop
+
+
+@app.get("/models/")
+@openapi.tag('Vision')
+@openapi.description(get_models_params_description)
+@openapi.parameter(
+    parameter=Parameter(name="model_type", schema=String(enum=["all", "custom", "pretrained"]), location="path"))
+@openapi.parameter(name="info", description="Default info='False'", schema=bool)
 async def models(request):
     logger.debug("dentro get models")
     model_type = request.args.get("model_type", "all")
@@ -99,9 +119,9 @@ delete_params_description = '''
 '''
 
 
-@bp.delete("/models/<predictor_name>")
-@doc.tag('Vision')
-@doc.consumes(doc.String(name="predictor_name"), location="path", required=True)
+@app.delete("/models/<predictor_name>")
+@openapi.tag('Vision')
+@openapi.parameter(name="predictor_name", location="path", required=True)
 async def delete_model(request, predictor_name):
     # print([m.name for m in pdao.all()])
     if predictor_name not in [m.name for m in pdao.all()]:
@@ -116,12 +136,13 @@ create_params_description = '''
 '''
 
 
-@bp.post("/models/<predictor_name>")
-@doc.tag('Vision')
-@doc.description(create_params_description)
-@doc.consumes(doc.String(name="predictor_tag"), location="query")
-@doc.consumes(doc.String(name="pretrained_model", choices=list(models_mapping.keys())), location="query")
-@doc.consumes(doc.String(name="predictor_name"), location="path", required=True)
+@app.post("/models/<predictor_name>")
+@openapi.tag('Vision')
+@openapi.description(create_params_description)
+@openapi.parameter(name="predictor_tag", location="query")
+@openapi.parameter(
+    parameter=Parameter(name="pretrained_model", schema=String(enum=list(models_mapping.keys())), location="query"))
+@openapi.parameter(name="predictor_name", location="path", required=True)
 async def create_model(request, predictor_name):
     if predictor_name in models_mapping.keys():
         raise Exception("You cannot use this name for a custom model")
@@ -138,19 +159,18 @@ async def create_model(request, predictor_name):
     return json('Model %s created' % (predictor_name))  # , status=200)
 
 
-
 fit_params_description = '''
 <b>predictor_name:</b> name of the predictor that you want to fit
 <b>file:</b> zipped folder or single image
 '''
 
 
-@bp.post("/models/<predictor_name>/fit")
-@doc.tag('Vision')
-@doc.description(fit_params_description)
-@doc.consumes(doc.File(name="file"), location="formData", content_type="multipart/form-data", required=True)
-# @doc.consumes(doc.Boolean(name="multilabel"), location="query")
-@doc.consumes(doc.String(name="predictor_name"), location="path", required=True)
+@app.post("/models/<predictor_name>/fit")
+@openapi.tag('Vision')
+@openapi.description(fit_params_description)
+# @openapi.parameter(doc.Boolean(name="multilabel"), location="query")
+@openapi.parameter(name="predictor_name", location="path", required=True)
+@file()
 async def fit(request, predictor_name):
     print(predictor_name)
     if predictor_name not in [m.name for m in pdao.all()]:
@@ -165,7 +185,7 @@ async def fit(request, predictor_name):
     #     return json('Model %s already exist!' % predictor_name, status=400) #todo: decidere se lasciarlo
     model_info = pdao.get(predictor_name)
     model_obj = model_info.model_obj
-    if model_obj!=None:
+    if model_obj != None:
         return json("Predictor already fitted", status=400)
 
     training_task(f, model_info)
@@ -181,16 +201,16 @@ predict_params_description = '''
 '''
 
 
-@bp.post("/models/<predictor_name>/predict")
-@doc.tag('Vision')
-@doc.description(predict_params_description)
-@doc.consumes(doc.String(name="predictor_name"), location="path", required=True)
-# @doc.consumes(doc.Integer(name="top"), location="query")
-@doc.consumes(doc.Boolean(name="multilabel"), location="query")
-@doc.consumes(doc.Float(name="multilabel_threshold"), location="query")
-@doc.consumes(doc.Float(name="proba_threshold"), location="query")
-@doc.consumes(doc.Boolean(name="include_probs"), location="query")
-@doc.consumes(doc.File(name="file"), location="formData", content_type="multipart/form-data", required=True)
+@app.post("/models/<predictor_name>/predict")
+@openapi.tag('Vision')
+@openapi.description(predict_params_description)
+@openapi.parameter(name="predictor_name", location="path", required=True)
+# @openapi.parameter(doc.Integer(name="top"), location="query")
+@openapi.parameter(name="multilabel", schema=bool, location="query")
+@openapi.parameter(name="multilabel_threshold", schema=float, location="query")
+@openapi.parameter(name="proba_threshold", schema=float, location="query")
+@openapi.parameter(name="include_probs", schema=bool, location="query")
+@file()
 async def predict(request, predictor_name):
     if not request.files.get("file"):
         return json("There is no file for model prediction", status=400)
@@ -210,28 +230,26 @@ async def predict(request, predictor_name):
     return json(preds_res)  # , status=200)
 
 
-@bp.get("/models/<predictor_name>/info")
-@doc.tag('Vision')
-@doc.consumes(doc.String(name="predictor_name"), location="path", required=True)
-@doc.consumes(doc.Boolean(name="advanced_info"), location="query")
+@app.get("/models/<predictor_name>/info")
+@openapi.tag('Vision')
+@openapi.parameter(name="predictor_name", location="path", required=True)
+@openapi.parameter(name="advanced_info", schema=bool, location="query")
 async def info(request, predictor_name):
     adv_info = eval(request.args.get('advanced_info', 'false').capitalize())
     if predictor_name not in [m.name for m in pdao.all()]:
         msg = f'Model {predictor_name} does not exist!'
         logger.error(f"PROBLEM::: {msg}")
         return json(msg, status=400)
-    models = get_model_info(predictor_name=predictor_name, advanced_info=adv_info )
+    models = get_model_info(predictor_name=predictor_name, advanced_info=adv_info)
     print(json(models))
     return json(models)
 
 
-
-
-@bp.get("/models/<predictor_name>/export")
-@doc.tag('Vision')
-@doc.summary('Download existing vision model')
-@doc.consumes(doc.String(name="predictor_name"), location="path", required=True)
-async def export_predictor(request,predictor_name):
+@app.get("/models/<predictor_name>/export")
+@openapi.tag('Vision')
+@openapi.summary('Download existing vision model')
+@openapi.parameter(name="predictor_name", location="path", required=True)
+async def export_predictor(request, predictor_name):
     file_name = predictor_name + '.zip'
     path = Path(REPO_PATH) / predictor_name
     print(path)
@@ -242,10 +260,10 @@ async def export_predictor(request,predictor_name):
     return raw(buffer.getvalue(), headers=headers)
 
 
-@bp.post("/models/import")
-@doc.tag('Vision')
-@doc.summary('Upload existing vision model')
-@doc.consumes(doc.File(name="file"), location="formData", content_type="multipart/form-data", required=True)
+@app.post("/models/import")
+@openapi.tag('Vision')
+@openapi.summary('Upload existing vision model')
+@file()
 async def import_predictor(request):
     path = Path(REPO_PATH)
     print(path)
@@ -265,17 +283,17 @@ async def import_predictor(request):
     return sanic.json('Done')
 
 
-@bp.post("/loko-services/create")
-@doc.tag('Loko Model Service')
-@doc.summary("Save an object in 'models'")
-@doc.description('''
+@app.post("/loko-services/create")
+@openapi.tag('Loko Model Service')
+@openapi.summary("Save an object in 'models'")
+@openapi.description('''
 ''')
 @extract_value_args(file=False)
 async def loko_create_model(value, args):
     logger.debug(f"CREATE MODEL SERVICE... args:::: {args}")
 
     predictor_name = args.get("predictor_name", "")
-    if predictor_name=="":
+    if predictor_name == "":
         msg = "VISION SETTINGS MISSING!!!Model name not setted, you have to specify it"
         return json(msg, status=400)
     if predictor_name in models_mapping.keys():
@@ -293,10 +311,9 @@ async def loko_create_model(value, args):
     return json('Model %s created' % (predictor_name))  # , status=200)
 
 
-
-@bp.post("/loko-services/info")
-@doc.tag('Loko Model Service')
-@doc.summary("Get info about a model")
+@app.post("/loko-services/info")
+@openapi.tag('Loko Model Service')
+@openapi.summary("Get info about a model")
 @extract_value_args(file=False)
 async def loko_get_model_info(value, args):
     logger.debug(f"GET INFO SERVICE... args:::: {args}")
@@ -315,10 +332,9 @@ async def loko_get_model_info(value, args):
     return json(models)
 
 
-
-@bp.post("/loko-services/delete")
-@doc.tag('Loko Model Service')
-@doc.summary("Delete model")
+@app.post("/loko-services/delete")
+@openapi.tag('Loko Model Service')
+@openapi.summary("Delete model")
 @extract_value_args(file=False)
 async def loko_delete_model(value, args):
     logger.debug(f"DELETE MODEL SERVICE... args:::: {args}")
@@ -337,10 +353,10 @@ async def loko_delete_model(value, args):
     return json(f"Model {predictor_name} deleted")
 
 
-@bp.post("/loko-services/fit")
-@doc.tag('Loko Model Service')
-@doc.summary("Fit a model")
-@doc.description('''
+@app.post("/loko-services/fit")
+@openapi.tag('Loko Model Service')
+@openapi.summary("Fit a model")
+@openapi.description('''
 ''')
 @extract_value_args(file=True)
 async def loko_fit_model(file, args):
@@ -368,27 +384,28 @@ async def loko_fit_model(file, args):
     logger.debug(f"n. epochs {epochs}... optimizer chosen {optimizer}")
     metrics = args.get("metrics", "accuracy")
     logger.debug(f"metrics pre:: {metrics}")
-    metrics = [el for el in metrics.split(",") if (not el.isspace()) & (len(el)>0)]
+    metrics = [el for el in metrics.split(",") if (not el.isspace()) & (len(el) > 0)]
     logger.debug(f"metrics post:: {metrics}")
-    if model_obj!=None:
+    if model_obj != None:
         logger.debug(f"model obj: {model_obj}")
         return json("Predictor already fitted", status=400)
+    loop = asyncio.get_event_loop()
 
     async def run_executor_train():
-        result = await app.loop.run_in_executor(POOL, functools.partial(training_task), f, model_info, epochs, optimizer, metrics)
+        result = await loop.run_in_executor(POOL, functools.partial(training_task), f, model_info, epochs, optimizer,
+                                            metrics)
 
-    app.loop.create_task(run_executor_train())
+    loop.create_task(run_executor_train())
     return json(f"Model '{predictor_name}' is fitting! Data used: {f.name} ")
 
 
-@bp.post("/loko-services/predict")
-@doc.tag('Loko Model Service')
-@doc.summary("Predict model")
-@doc.description('''
+@app.post("/loko-services/predict")
+@openapi.tag('Loko Model Service')
+@openapi.summary("Predict model")
+@openapi.description('''
 ''')
 @extract_value_args(file=True)
 async def loko_predict_model(file, args):
-
     logger.debug(f"PREDICT SERVICE... args {args}")
     predictor_name = args.get("predictor_name_predict")
     if predictor_name == "":
@@ -407,17 +424,17 @@ async def loko_predict_model(file, args):
     if multilabel and predictor_name in models_mapping.keys():
         return json('You cannot use a pre-trained model (%s) as multilabel model' % predictor_name, status=400)
     mlb_threshold = float(args.get("multilabel_threshold", 0.5)) if multilabel else None
-    preds_res = await app.loop.run_in_executor(POOL, functools.partial(predict_task), f, predictor_name, proba, multilabel, mlb_threshold, proba_threshold)
+    preds_res = await app.loop.run_in_executor(POOL, functools.partial(predict_task), f, predictor_name, proba,
+                                               multilabel, mlb_threshold, proba_threshold)
 
     # preds_res = predict_task(f, predictor_name, proba, multilabel, mlb_threshold, proba_threshold=proba_threshold)
     return json(preds_res)  # , status=200)
 
 
-
-@bp.post("/loko-services/evaluate")
-@doc.tag('Loko Model Service')
-@doc.summary("Evaluate model")
-@doc.description('''
+@app.post("/loko-services/evaluate")
+@openapi.tag('Loko Model Service')
+@openapi.summary("Evaluate model")
+@openapi.description('''
 ''')
 @extract_value_args(file=True)
 async def loko_evaluate_model(file, args):
@@ -435,13 +452,12 @@ async def loko_evaluate_model(file, args):
     return json(res)
 
 
-
-@bp.post("/models/<predictor_name>/evaluate")
-@doc.tag('Vision')
-@doc.description(fit_params_description)
-@doc.consumes(doc.File(name="file"), location="formData", content_type="multipart/form-data", required=True)
-# @doc.consumes(doc.Boolean(name="multilabel"), location="query")
-@doc.consumes(doc.String(name="predictor_name"), location="path", required=True)
+@app.post("/models/<predictor_name>/evaluate")
+@openapi.tag('Vision')
+@openapi.description(fit_params_description)
+# @openapi.parameter(doc.Boolean(name="multilabel"), location="query")
+@openapi.parameter(name="predictor_name", location="path", required=True)
+@file()
 async def evaluate_model(request, predictor_name):
     print(predictor_name)
 
@@ -454,7 +470,6 @@ async def evaluate_model(request, predictor_name):
     res = evaluate_task(f, predictor_name)
 
     return json(res)  # , status=200)
-
 
 
 @app.exception(Exception)

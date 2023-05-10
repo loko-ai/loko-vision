@@ -3,7 +3,7 @@
   "id": "loko-vision",
   "description": "",
   "created_on": "17/11/2022, 14:17:04",
-  "last_modify": "23/03/2023, 09:21:43",
+  "last_modify": "03/05/2023, 13:12:00",
   "graphs": {
     "Vision Manager": {
       "nodes": [
@@ -614,15 +614,15 @@
         {
           "id": "4a5bc458-b007-44c0-af4e-4b5b34fa2e73",
           "position": {
-            "x": 537,
-            "y": 204
+            "x": 422,
+            "y": 181
           },
           "type": "custom",
           "dragHandle": "#nodeHandle",
           "sourcePosition": "right",
           "targetPosition": "left",
-          "width": 156,
-          "height": 88,
+          "width": 197,
+          "height": 104,
           "selected": false,
           "dragging": false,
           "data": {
@@ -708,8 +708,8 @@
           "selectable": true,
           "draggable": true,
           "positionAbsolute": {
-            "x": 537,
-            "y": 204
+            "x": 422,
+            "y": 181
           },
           "__class__": "Node"
         },
@@ -818,15 +818,15 @@
         {
           "id": "35e41297-91a7-46f5-9d8c-71291d850386",
           "position": {
-            "x": 864,
-            "y": 332
+            "x": 863,
+            "y": 330
           },
           "type": "custom",
           "dragHandle": "#nodeHandle",
           "sourcePosition": "right",
           "targetPosition": "left",
           "width": 150,
-          "height": 56,
+          "height": 60,
           "selected": false,
           "dragging": false,
           "data": {
@@ -1048,8 +1048,8 @@
           "selectable": true,
           "draggable": true,
           "positionAbsolute": {
-            "x": 864,
-            "y": 332
+            "x": 863,
+            "y": 330
           },
           "__class__": "Node"
         }

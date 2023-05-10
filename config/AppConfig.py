@@ -13,8 +13,9 @@ from keras.utils import data_utils
 env = EnvInit()
 REPO_PATH = env.REPO or '../repo'
 GATEWAY = env.GATEWAY
-PROCESS_WORKERS = env.get("PROCESS_WORKERS", 4)
+PROCESS_WORKERS = env.get("PROCESS_WORKERS", 1)
 POOL = ProcessPoolExecutor(max_workers=PROCESS_WORKERS)
+
 
 GATEWAY_EMIT_URL = os.path.join(GATEWAY, 'emit') if GATEWAY else None
 MODEL_CACHE_TIMEOUT = env.MODEL_CACHE_TIMEOUT or 60*60*4
