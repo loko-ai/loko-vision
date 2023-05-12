@@ -17,4 +17,4 @@ ADD . /plugin
 ENV PYTHONPATH=$PYTHONPATH:/plugin
 COPY --from=builder /frontend/dist /frontend/dist
 WORKDIR /plugin/services
-CMD  python services.py
+CMD  python services.py --single_process

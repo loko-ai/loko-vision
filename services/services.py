@@ -520,4 +520,4 @@ async def manage_exception(request, exception):
 
 if __name__ == '__main__':
     app.blueprint(bp)
-    app.run("0.0.0.0", port=8080, auto_reload=False, single_process=False)
+    app.run("0.0.0.0", port=8080, auto_reload=False, single_process=True)
