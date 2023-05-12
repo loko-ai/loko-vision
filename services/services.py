@@ -422,7 +422,7 @@ async def loko_fit_model(file, args):
     # loop = asyncio.get_running_loop()
 
     async def run_executor_train():
-        result = await app.loop.run_in_executor(None, functools.partial(training_task), f, model_info, epochs, optimizer,
+        result = await app.loop.run_in_executor(POOL, functools.partial(training_task), f, model_info, epochs, optimizer,
                                             metrics)
     #
     app.loop.create_task(run_executor_train())
@@ -454,7 +454,7 @@ async def loko_predict_model(file, args):
     if multilabel and predictor_name in models_mapping.keys():
         return json('You cannot use a pre-trained model (%s) as multilabel model' % predictor_name, status=400)
     mlb_threshold = float(args.get("multilabel_threshold", 0.5)) if multilabel else None
-    preds_res = await app.loop.run_in_executor(None, functools.partial(predict_task), f, predictor_name, proba,
+    preds_res = await app.loop.run_in_executor(POOL, functools.partial(predict_task), f, predictor_name, proba,
                                                multilabel, mlb_threshold, proba_threshold)
 
     # preds_res = predict_task(f, predictor_name, proba, multilabel, mlb_threshold, proba_threshold=proba_threshold)
@@ -478,7 +478,7 @@ async def loko_evaluate_model(file, args):
     else:
         f = file[0]
     # res = evaluate_task(f, predictor_name)
-    res = await app.loop.run_in_executor(None, functools.partial(evaluate_task), f, predictor_name)
+    res = await app.loop.run_in_executor(POOL, functools.partial(evaluate_task), f, predictor_name)
     return json(res)
 
 
@@ -520,4 +520,4 @@ async def manage_exception(request, exception):
 
 if __name__ == '__main__':
     app.blueprint(bp)
-    app.run("0.0.0.0", port=8080, auto_reload=False)
+    app.run("0.0.0.0", port=8080, auto_reload=False, single_process=False)
