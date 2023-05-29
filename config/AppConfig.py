@@ -3,6 +3,8 @@ import os
 from concurrent.futures import ProcessPoolExecutor
 from pathlib import Path
 
+from loguru import logger
+
 from utils.env_utils import EnvInit
 from keras.utils import data_utils
 
@@ -10,10 +12,12 @@ from keras.utils import data_utils
 #os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID" #If the line below doesn't work, uncomment this line (make sure to comment the line below); it should help.
 # os.environ['CUDA_VISIBLE_DEVICES'] = '1'
 
+
+
 env = EnvInit()
 REPO_PATH = env.REPO or '../repo'
 GATEWAY = env.GATEWAY
-PROCESS_WORKERS = env.get("PROCESS_WORKERS", 1)
+PROCESS_WORKERS = env.get("PROCESS_WORKERS", 4)
 POOL = ProcessPoolExecutor(max_workers=PROCESS_WORKERS)
 
 

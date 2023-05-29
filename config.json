@@ -1,7 +1,8 @@
 {
   "main": {
     "volumes": [
-      "/var/opt/loko/loko-vision/repo:/plugin/repo"
+      "/var/opt/loko/loko-vision/repo:/plugin/repo",
+      "/var/opt/loko/loko-vision/keras-models:/root/.keras"
     ],
     "environment": {
       "SANIC_REQUEST_MAX_SIZE": 500000000,

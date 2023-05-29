@@ -28,17 +28,17 @@ def preprocess_input(X):
     ### transfer learning ###
     base_mdl_out_size = base_model.layers[-2].output.type_spec.shape[1]
     input_shape = base_model.input.type_spec.shape[1:3]
-    print(f"input shape {input_shape}")
+    # print(f"input shape {input_shape}")
 
     X = [image.img_to_array(xx.convert('RGB').resize(input_shape, Resampling.NEAREST)) for xx in X]
     X = np.array(X)
-    print(f"x:;; {X}")
+    # print(f"x:;; {X}")
     X = models_mapping[pretrained_model]['preprocess_input'](X)
-    print(f"x {X}")
+    # print(f"x {X}")
     return X
 
 model = keras.applications.ResNet50()
 
-
 xx = preprocess_input([img])
 pred = model.predict(xx)
+

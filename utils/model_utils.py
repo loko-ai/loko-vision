@@ -6,14 +6,13 @@ from loguru import logger
 pdao = PredictorsDAO()
 
 
-def get_models_list(models_type, info=False):
+def get_models_list(models_type, model_info=False):
     if models_type == "custom":
         models = [m.name for m in pdao.all()]
-        print(models)
     elif models_type == "pretrained":
         models = [k for k in models_mapping.keys()]
     else:
-        if info:
+        if model_info:
             custom_models = [dict(name=m.name, type="custom") for m in pdao.all()]
             pretrained_models = [dict(name=m, type="pretrained") for m in models_mapping.keys()]
             models = custom_models + pretrained_models

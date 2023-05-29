@@ -21,6 +21,7 @@ pdao = PredictorsDAO()
 
 
 def training_task(f, model_info: PredictorRequest, epochs=100, optimizer="adam", metrics:list=["accuracy"]):
+
     pretrained_model = model_info.pretained_model
     predictor_name = model_info.predictor_name
     predictor_tag = model_info.predictor_tag
@@ -53,7 +54,9 @@ def training_task(f, model_info: PredictorRequest, epochs=100, optimizer="adam",
     cb = LogsCallback(epochs=epochs, url=GATEWAY_EMIT_URL, model_name=predictor_name)
     model_info.model_parameters = parameters
     model_info.model_parameters["fitted"] = "Training"
+    logger.debug("model status updated")
     pdao.save(model_info)
+    logger.debug("model status correctly saved")
     model.fit(X, y, epochs=epochs, callbacks=[cb])
     logger.debug('%s model fitted with pretrained model %s...' % (predictor_name, pretrained_model))
     model_info.model_parameters = parameters

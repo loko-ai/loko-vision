@@ -85,11 +85,15 @@ class KerasImagePredictor(ImagePredictor):
 
     def fit(self, X, y, callbacks=None, **kwargs):
         send_message(self.predictor_name, "Image Preprocessing")
+        logger.debug("starting image preprocessing")
         X = self._preprocess_input(X)
         send_message(self.predictor_name, "Transfer Learning Initializzation")
+        logger.debug("done with image preprocessing, checking input shape...")
         if self.h5:
             self._check_model_input_shape()
+        logger.debug("transfer learning initializzation")
         vecs = self.base_model.predict(X)
+        logger.debug("start training")
         send_message(self.predictor_name, "Training start")
         self.top_layer.fit(vecs, y, callbacks=callbacks)
 

@@ -108,8 +108,8 @@ async def before_server_start(app: Sanic, loop):
 @openapi.tag('Vision')
 @openapi.description(get_models_params_description)
 @openapi.parameter(
-    parameter=Parameter(name="model_type", schema=String(enum=["all", "custom", "pretrained"]), location="path"))
-@openapi.parameter(name="info", description="Default info='False'", schema=bool)
+    parameter=Parameter(name="model_type", schema=String(enum=["all", "custom", "pretrained"]), location="query"))
+@openapi.parameter(name="info", description="Default info='False'", schema=str, location="query")
 async def models(request):
     logger.debug("dentro get models")
     model_type = request.args.get("model_type", "all")
@@ -148,12 +148,18 @@ create_params_description = '''
     parameter=Parameter(name="pretrained_model", schema=String(enum=list(models_mapping.keys())), location="query"))
 @openapi.parameter(name="predictor_name", location="path", required=True)
 async def create_model(request, predictor_name):
+    logger.debug(f"predictor creation {predictor_name}")
+    if predictor_name == "":
+        msg = "VISION SETTINGS MISSING!!!Model name not setted, you have to specify it"
+        return json(msg, status=400)
     if predictor_name in models_mapping.keys():
         raise Exception("You cannot use this name for a custom model")
     if predictor_name in get_models_list(models_type="custom"):
         return json('Model %s already exist!' % predictor_name, status=400)
+
     pretrained_model = request.args.get("pretrained_model", 'ResNet50')
     predictor_tag = request.args.get("predictor_tag", None)
+
     psr = PredictorRequest(predictor_name=predictor_name, pretained_model=pretrained_model, predictor_tag=predictor_tag)
     try:
         pdao.save(psr)
@@ -161,6 +167,7 @@ async def create_model(request, predictor_name):
         logging.exception(inst)
         return json('Model %s already exist!' % predictor_name, status=400)
     return json('Model %s created' % (predictor_name))  # , status=200)
+
 
 
 fit_params_description = '''
@@ -193,8 +200,6 @@ async def fit(request, predictor_name):
 
     epochs = request.args.get("epochs", 150)
     logger.debug(f"n. epochs {epochs}... optimizer chosen {optimizer}")
-
-
 
     metrics = request.args.get("metrics", "accuracy")
     logger.debug(f"metrics pre:: {metrics}")
@@ -263,14 +268,22 @@ async def predict(request, predictor_name):
 @openapi.parameter(name="predictor_name", location="path", required=True)
 @openapi.parameter(name="advanced_info", schema=bool, location="query")
 async def info(request, predictor_name):
-    adv_info = eval(request.args.get('advanced_info', 'false').capitalize())
+    logger.debug(f"getting info on {predictor_name}")
+    if predictor_name == "":
+        msg = "VISION SETTINGS MISSING!!!Model of interest not selected, you have to specify one model name"
+        return json(msg, status=400)
     if predictor_name not in [m.name for m in pdao.all()]:
         msg = f'Model {predictor_name} does not exist!'
         logger.error(f"PROBLEM::: {msg}")
         return json(msg, status=400)
+    adv_info = eval(request.args.get('advanced_info', 'false').capitalize())
+    logger.debug(f"adv info {adv_info}")
+
     models = get_model_info(predictor_name=predictor_name, advanced_info=adv_info)
-    print(json(models))
+    logger.debug(f"getting info on {predictor_name}::: models {models}")
+    # print(json(models))
     return json(models)
+
 
 
 @app.get("/models/<predictor_name>/export")

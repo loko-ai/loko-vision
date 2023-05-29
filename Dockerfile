@@ -1,19 +1,19 @@
-FROM node:16.15.0 AS builder
-ADD ./frontend/package.json /frontend/package.json
+﻿FROM node:16.15.0 AS builder
+COPY ./frontend/package.json /frontend/package.json
 WORKDIR /frontend
 RUN yarn install
-ADD ./frontend /frontend
+COPY ./frontend /frontend
 RUN yarn build --base="/routes/loko-vision/web/"
 
 FROM python:3.10-slim
 ARG user
 ARG password
 EXPOSE 8080
-ADD ./requirements.lock /
+COPY ./requirements.lock /
 RUN  pip install -r /requirements.lock
 ARG GATEWAY
 ENV GATEWAY=$GATEWAY
-ADD . /plugin
+COPY . /plugin
 ENV PYTHONPATH=$PYTHONPATH:/plugin
 COPY --from=builder /frontend/dist /frontend/dist
 WORKDIR /plugin/services

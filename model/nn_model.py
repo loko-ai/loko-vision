@@ -79,10 +79,10 @@ class NNClassifierWrapper:
             logger.debug("transforming target variable...")
             y = self.target_vectorizer.fit_transform(y)
         logger.debug("casting data to numpy")
-        logger.debug(f"Y val pre:::: {y[:3]}")
+        logger.debug(f"Y val pre:::: {y[0]}")
 
         y = self._cast_target_to_numpy(y)
-        logger.debug(f"Y val example:::: {y[:3]}")
+        logger.debug(f"Y val example:::: {y[0]}")
 
         X = self._cast_target_to_numpy(X)
         logger.debug("compiling and fitting model...")
