@@ -6,4 +6,4 @@ sanic-cors
 sanic-ext
 sanic-openapi
 scikit-learn
-tensorflow
+tensorflow = 2.12.0

@@ -12,6 +12,8 @@ EXPOSE 8080
 COPY ./requirements.lock /
 RUN  pip install -r /requirements.lock
 ARG GATEWAY
+ARG PORT
+ENV PORT 8080
 ENV GATEWAY=$GATEWAY
 COPY . /plugin
 ENV PYTHONPATH=$PYTHONPATH:/plugin

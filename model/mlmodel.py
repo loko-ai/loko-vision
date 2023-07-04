@@ -67,6 +67,7 @@ class KerasImagePredictor(ImagePredictor):
     def _preprocess_input(self, X):
         # send_message(self.predictor_name, "Image Pre-Processing")
         input_shape = self.base_model.input.type_spec.shape[1:3]
+        logger.debug(f"inputshape::: {input_shape}")
         X = [image.img_to_array(xx.convert('RGB').resize(input_shape, Resampling.NEAREST)) for xx in X]
         X = np.array(X)
         X = models_mapping[self.pretrained_model]['preprocess_input'](X)
@@ -109,6 +110,8 @@ class KerasImagePredictor(ImagePredictor):
 
         ### transfer learning ###
         X = self._preprocess_input(X)
+        logger.debug(f"inputshape::: {X.shape}")
+
         if self.top_layer:
             # send_message(self.predictor_name, "Starts prediction")
             logger.debug("creating input vector using pre-trained model")
