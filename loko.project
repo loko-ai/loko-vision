@@ -3,7 +3,7 @@
   "id": "loko-vision",
   "description": "",
   "created_on": "17/11/2022, 14:17:04",
-  "last_modify": "29/05/2023, 09:40:59",
+  "last_modify": "04/07/2023, 08:53:29",
   "graphs": {
     "Vision Manager": {
       "nodes": [
@@ -442,12 +442,12 @@
                 "comment": "",
                 "alias": "",
                 "debug": true,
-                "predictor_name": "example_model2",
+                "predictor_name": "example_model",
                 "predictor_tag": "example tag",
                 "adv_info": true,
                 "pretrained_model": "DenseNet169",
-                "predictor_name_delete": "example_model",
-                "predictor_name_info": "example_model"
+                "predictor_name_info": "example_model",
+                "predictor_name_delete": ""
               }
             },
             "locked": null
@@ -1037,12 +1037,12 @@
                 "metrics": "accuracy, ",
                 "include_probs": false,
                 "multilabel": false,
-                "predictor_name_fit": "sd",
+                "predictor_name_fit": "example_model",
                 "predictor_name_predict": "example_model",
                 "predictor_name_eval": "example_model"
               }
             },
-            "status": "Training end in 3.866s - 350 epochs runned",
+            "status": "Training end in 3.553s - 350 epochs runned",
             "locked": null
           },
           "selectable": true,
@@ -1441,8 +1441,8 @@
                 "debug": false,
                 "read_content": false,
                 "value": {
-                  "name": "license_dataset.zip",
-                  "path": "data/data/vision/license_dataset.zip",
+                  "name": "empty_zip.zip",
+                  "path": "data/data/vision/empty_zip.zip",
                   "parent": "data/data/vision",
                   "isDir": false,
                   "hidden": false
@@ -1463,7 +1463,7 @@
           "id": "aa9cd733-06bb-4f02-be62-7de402273237",
           "position": {
             "x": 432,
-            "y": 540
+            "y": 543.600007719174
           },
           "type": "custom",
           "dragHandle": "#nodeHandle",
@@ -1543,8 +1543,8 @@
                 "debug": false,
                 "read_content": false,
                 "value": {
-                  "name": "patente_test.jpg",
-                  "path": "data/data/vision/patente_test.jpg",
+                  "name": "empty_zip.zip",
+                  "path": "data/data/vision/empty_zip.zip",
                   "parent": "data/data/vision",
                   "isDir": false,
                   "hidden": false
@@ -1557,7 +1557,7 @@
           "draggable": true,
           "positionAbsolute": {
             "x": 432,
-            "y": 540
+            "y": 543.600007719174
           },
           "__class__": "Node"
         },
@@ -1909,12 +1909,12 @@
                 "comment": "",
                 "alias": "",
                 "debug": true,
-                "predictor_name": "license_registration",
+                "predictor_name": "error_model",
                 "predictor_tag": "license/reg",
                 "adv_info": true,
                 "pretrained_model": "ResNet50",
-                "predictor_name_info": "license_registration",
-                "predictor_name_delete": "license_registration"
+                "predictor_name_info": "",
+                "predictor_name_delete": "error_model"
               }
             },
             "locked": null
@@ -2112,15 +2112,15 @@
         {
           "id": "110040d2-529b-4bd6-84ca-e0f9dc237e62",
           "position": {
-            "x": 875.9703637775709,
-            "y": 504.7219348383772
+            "x": 872.4978671181558,
+            "y": 507.3944276382054
           },
           "type": "custom",
           "dragHandle": "#nodeHandle",
           "sourcePosition": "right",
           "targetPosition": "left",
-          "width": 150,
-          "height": 56,
+          "width": 164,
+          "height": 72,
           "selected": false,
           "dragging": false,
           "data": {
@@ -2331,27 +2331,27 @@
                 "metrics": "accuracy, ",
                 "include_probs": false,
                 "multilabel": false,
-                "predictor_name_fit": "license_registration",
-                "predictor_name_predict": "license_registration",
-                "predictor_name_eval": "license_registration"
+                "predictor_name_fit": "error_model",
+                "predictor_name_predict": "EfficientNetB4",
+                "predictor_name_eval": "error_model"
               }
             },
-            "locked": null,
-            "status": "Training end - 2.175786s"
+            "status": "Training end in 1.629s - 150 epochs runned",
+            "locked": null
           },
           "selectable": true,
           "draggable": true,
           "positionAbsolute": {
-            "x": 875.9703637775709,
-            "y": 504.7219348383772
+            "x": 872.4978671181558,
+            "y": 507.3944276382054
           },
           "__class__": "Node"
         },
         {
           "id": "c4a768a3-be20-4508-b4b5-2c7b14988550",
           "position": {
-            "x": 1571.7116915891816,
-            "y": 646.4525886137747
+            "x": 1623.7116915891816,
+            "y": 650.4525886137747
           },
           "type": "custom",
           "dragHandle": "#nodeHandle",
@@ -2579,8 +2579,8 @@
           "selectable": true,
           "draggable": true,
           "positionAbsolute": {
-            "x": 1571.7116915891816,
-            "y": 646.4525886137747
+            "x": 1623.7116915891816,
+            "y": 650.4525886137747
           },
           "__class__": "Node"
         },
@@ -2594,7 +2594,7 @@
           "dragHandle": "#nodeHandle",
           "sourcePosition": "right",
           "targetPosition": "left",
-          "width": 150,
+          "width": 156,
           "height": 56,
           "selected": false,
           "dragging": false,
@@ -2692,6 +2692,354 @@
             "y": 497.7691409637494
           },
           "__class__": "Node"
+        },
+        {
+          "id": "de5f46ef-d7fc-476e-b845-2b5b56e6c91e",
+          "position": {
+            "x": 2275.053869244921,
+            "y": 215.91085727484455
+          },
+          "type": "custom",
+          "dragHandle": "#nodeHandle",
+          "sourcePosition": "right",
+          "targetPosition": "left",
+          "width": 181,
+          "height": 60,
+          "selected": false,
+          "dragging": false,
+          "data": {
+            "name": "Vision Manager",
+            "events": null,
+            "description": "\n### Description\n\nVISION is the Loko AI component which allows to classify images either using a pre-trained Neural Networks, or using a transfer-learning model over one of them. Specifically, VISION helps you with training, predicting and managing your models.\n\n### Configuration\n\nThe heading ***Available services*** allows user to select the VISION instance of interest (remembering that different vision-models will necessarily be found on different instances). \n\nIf you just want to use a pre-trained Neural Network in order to classify your set of images, you can directly link a *File Reader* component to the *Predict* Inputs of VISION. \nMore information about pre-trained models can be found here https://keras.io/api/applications/, where you can see details on their network structure and performances. \nIf you decide to classify your image directly using one of the pre-trained Neural Networks, you should expect to receive as output one of the 1000 possible ImageNet classes (.\n\nIf you want to create a transfer-learning model to customize your classifier on your own data, follow these steps:\n\n\n- **Create a model:** in *Create parameters* choose the name of the model you want to create (*Vision Model Name*) and select the pre-trained models to use (*Pretrained Models*). Then, link a *Trigger* component to the **Create** input;\n\n- **Fit a model:** in *Fit parameters* choose the name of the model you want to train (*Vision Model*), and use a *File Reader* to pass a zipped folder to the VISION component ***Fit*** input.\n\n- **Get prediction with a model:** in *Predict parameters* you can set the model to use (*Vision Model*) choosing between the customized models and the pre-trained NN. Then, you can choose if you want to see directly the predicted class or the probability of each of them, setting the **Predict proba** parameters. \nIf you use a customized model, you can also decide to see predictions as a **generic Multi-Class** or as a **Multi-Label model**; in the latter case, if you don't want to see the probability of belonging to each class you can set the value of the **MultiLabel Threshold**, that indicate the minimum probability value in order to assign a specific class.\n\n\nYou may also want to:\n\n\n- **Delete a model:** in the section *delete parameters* specify the model you want to delete. It's possible to delete only the customized models.\n\n- **Get information about a model:** in *info parameters* you have to set the model name and then choose if you just want to know if the model is fitted and the pre-trained model used, or if you want **advanced** information.\n\n\n\n\n### Output\n\nFor **Create, Fit and Delete** services the output messages will only be a sentence that confirms that the required action has been finalized. For the *fit* service it may take a while to have the output back, depending on how much the fitting lasts.\n\n\nThe output for the **info** services change if the model has already been fitted or not, and based on the setting chosen regarding advanced information. In case the model has been fitted and advanced information was activated the output will be the following:\n\n```json\n{\"predictor_name\": name of the model chosen, \n\"pretrained_model\": name of the pretrained model chosen,\n\"top_layer\": {\"n_layer\":1,\n    \"n_classes\": number of classes,\n    \"metrics\": [\"accuracy\"],\n    \"loss_function\": \"binary_crossentropy\",\n    \"epochs\":100},\n\"fitted\": say if the model was trained or not}\n```\n\nIn case the model *is not fitted* or *the advanced information* is not activated, the output will be the same without the \"top layer\" information.\n\nThe **predict** service has different output based on the settings chosen. If the field *predict proba* has been selected, we can see the probabilities next to each labels:\n\n```json\n{\"fname\": name of the file used for the prediction, \n\"pred\": [[\"cat\",0.9996217489242554],\n        [\"dog\",0.001642674207687378]]}\n```\n\nOtherwise, the output will be:\n\n```json\n{\"fname\": name of the file used for the prediction, \n\"pred\": \"cat\"}\n```\n\nIf *multilabel* is selected the output will be:\n\n```\n{\"fname\": name of the file used for the prediction, \n\"pred\": [\"cat\", \"persian\",\"black\"]}\n```\n",
+            "inputs": [
+              {
+                "id": "create",
+                "label": "create",
+                "service": "loko-services/create",
+                "to": "create"
+              },
+              {
+                "id": "info",
+                "label": "info",
+                "service": "loko-services/info",
+                "to": "info"
+              },
+              {
+                "id": "delete",
+                "label": "delete",
+                "service": "loko-services/delete",
+                "to": "delete"
+              }
+            ],
+            "outputs": [
+              {
+                "id": "create",
+                "label": "create"
+              },
+              {
+                "id": "info",
+                "label": "info"
+              },
+              {
+                "id": "delete",
+                "label": "delete"
+              }
+            ],
+            "configured": true,
+            "options": {
+              "group": "ComputerVision",
+              "args": [
+                {
+                  "name": "comment",
+                  "type": "area",
+                  "label": "Node comment",
+                  "helper": "Use it to explain the usage of this node"
+                },
+                {
+                  "name": "alias",
+                  "type": "text",
+                  "label": "Name",
+                  "helper": "Use this name as an alias"
+                },
+                {
+                  "name": "debug",
+                  "type": "boolean",
+                  "label": "Debug to Console",
+                  "divider": true
+                },
+                {
+                  "name": "predictor_name",
+                  "type": "text",
+                  "label": "Vision Model Name",
+                  "helper": "Name of the model you want to use for fitting/predicting",
+                  "group": "Create Parameters",
+                  "value": null,
+                  "description": "",
+                  "validation": null
+                },
+                {
+                  "name": "pretrained_model",
+                  "type": "asyncSelect",
+                  "label": "Pretrained model",
+                  "helper": "choose your pretrained NN",
+                  "group": "Create Parameters",
+                  "value": null,
+                  "description": "",
+                  "validation": null,
+                  "url": "http://localhost:9999/routes/loko-vision/models?model_type=pretrained"
+                },
+                {
+                  "name": "predictor_tag",
+                  "type": "text",
+                  "label": "Model tag",
+                  "helper": "Create a tag that helps you to recognize the aim of the model",
+                  "group": "Create Parameters",
+                  "value": null,
+                  "description": "",
+                  "validation": null
+                },
+                {
+                  "name": "predictor_name_info",
+                  "type": "asyncSelect",
+                  "label": "Vision Model",
+                  "helper": "Name of the model you want to know details about",
+                  "group": "Info parameters",
+                  "value": null,
+                  "description": "",
+                  "validation": null,
+                  "url": "http://localhost:9999/routes/loko-vision/models?info=false&model_type=custom"
+                },
+                {
+                  "name": "adv_info",
+                  "type": "boolean",
+                  "label": "Advanced information",
+                  "helper": "",
+                  "group": "Info parameters",
+                  "value": null,
+                  "description": "",
+                  "validation": null
+                },
+                {
+                  "name": "predictor_name_delete",
+                  "type": "asyncSelect",
+                  "label": "Vision Model",
+                  "helper": "Name of the model you want to delete",
+                  "group": "Delete parameters",
+                  "value": null,
+                  "description": "",
+                  "validation": null,
+                  "url": "http://localhost:9999/routes/loko-vision/models?info=false&model_type=custom"
+                }
+              ],
+              "click": null,
+              "icon": "RiSettings5Fill",
+              "values": {
+                "comment": "",
+                "alias": "",
+                "debug": true,
+                "predictor_name": "error_model",
+                "predictor_tag": "errors handling",
+                "adv_info": true,
+                "pretrained_model": "ResNet50",
+                "predictor_name_delete": "error_model",
+                "predictor_name_info": ""
+              }
+            },
+            "locked": null
+          },
+          "selectable": true,
+          "draggable": true,
+          "positionAbsolute": {
+            "x": 2275.053869244921,
+            "y": 215.91085727484455
+          },
+          "__class__": "Node"
+        },
+        {
+          "id": "0c354117-28f7-422b-956d-5dc51f053182",
+          "position": {
+            "x": 1756,
+            "y": 285
+          },
+          "type": "custom",
+          "dragHandle": "#nodeHandle",
+          "sourcePosition": "right",
+          "targetPosition": "left",
+          "width": 150,
+          "height": 88,
+          "selected": false,
+          "dragging": false,
+          "data": {
+            "name": "Trigger",
+            "events": null,
+            "description": "### Description\nThe TRIGGER component is used to start streams.\n\n### Output\nThe parameter Type can be set as a **String** or an **Object**. The parameter Value, on the other hand, defines the actual output of the component.",
+            "inputs": [],
+            "outputs": [
+              {
+                "id": "output",
+                "label": "output"
+              }
+            ],
+            "configured": true,
+            "options": {
+              "group": "Common",
+              "args": [
+                {
+                  "name": "comment",
+                  "type": "area",
+                  "label": "Node comment",
+                  "helper": "Use it to explain the usage of this node"
+                },
+                {
+                  "name": "alias",
+                  "type": "text",
+                  "label": "Name",
+                  "helper": "Use this name as an alias"
+                },
+                {
+                  "name": "debug",
+                  "type": "boolean",
+                  "label": "Debug to Console",
+                  "divider": true
+                },
+                {
+                  "name": "type",
+                  "type": "select",
+                  "description": "The type of data",
+                  "label": "Type",
+                  "validation": {
+                    "required": "Required field"
+                  },
+                  "fragment": null,
+                  "advanced": false,
+                  "options": [
+                    "String",
+                    "Object"
+                  ],
+                  "value": null
+                },
+                {
+                  "name": "value",
+                  "type": "dynamic",
+                  "dynamicType": {
+                    "String": "area",
+                    "Object": "code"
+                  },
+                  "parent": "type",
+                  "label": "Value",
+                  "validation": {
+                    "required": "Required field"
+                  }
+                }
+              ],
+              "click": "Send message",
+              "icon": "RiPlayFill",
+              "values": {
+                "type": "String",
+                "value": "Hello world!"
+              }
+            }
+          },
+          "selectable": true,
+          "draggable": true,
+          "positionAbsolute": {
+            "x": 1756,
+            "y": 285
+          },
+          "__class__": "Node"
+        },
+        {
+          "id": "2b8a893b-6dc9-49c1-8eb7-1a29d346c999",
+          "position": {
+            "x": 1876,
+            "y": 40
+          },
+          "type": "custom",
+          "dragHandle": "#nodeHandle",
+          "sourcePosition": "right",
+          "targetPosition": "left",
+          "width": 150,
+          "height": 56,
+          "selected": false,
+          "dragging": false,
+          "data": {
+            "name": "Trigger",
+            "events": null,
+            "description": "### Description\nThe TRIGGER component is used to start streams.\n\n### Output\nThe parameter Type can be set as a **String** or an **Object**. The parameter Value, on the other hand, defines the actual output of the component.",
+            "inputs": [],
+            "outputs": [
+              {
+                "id": "output",
+                "label": "output"
+              }
+            ],
+            "configured": true,
+            "options": {
+              "group": "Common",
+              "args": [
+                {
+                  "name": "comment",
+                  "type": "area",
+                  "label": "Node comment",
+                  "helper": "Use it to explain the usage of this node"
+                },
+                {
+                  "name": "alias",
+                  "type": "text",
+                  "label": "Name",
+                  "helper": "Use this name as an alias"
+                },
+                {
+                  "name": "debug",
+                  "type": "boolean",
+                  "label": "Debug to Console",
+                  "divider": true
+                },
+                {
+                  "name": "type",
+                  "type": "select",
+                  "description": "The type of data",
+                  "label": "Type",
+                  "validation": {
+                    "required": "Required field"
+                  },
+                  "fragment": null,
+                  "advanced": false,
+                  "options": [
+                    "String",
+                    "Object"
+                  ],
+                  "value": null
+                },
+                {
+                  "name": "value",
+                  "type": "dynamic",
+                  "dynamicType": {
+                    "String": "area",
+                    "Object": "code"
+                  },
+                  "parent": "type",
+                  "label": "Value",
+                  "validation": {
+                    "required": "Required field"
+                  }
+                }
+              ],
+              "click": "Send message",
+              "icon": "RiPlayFill",
+              "values": {
+                "type": "String",
+                "value": "Hello world!"
+              }
+            }
+          },
+          "selectable": true,
+          "draggable": true,
+          "positionAbsolute": {
+            "x": 1876,
+            "y": 40
+          },
+          "__class__": "Node"
         }
       ],
       "edges": [
@@ -2715,20 +3063,6 @@
           "sourceHandle": "output",
           "target": "15965ad2-23cd-456f-88f7-f827c1bc71db",
           "targetHandle": "delete",
-          "data": {
-            "startColor": "#D770AD",
-            "stopColor": "#888"
-          },
-          "selected": false,
-          "dragging": false,
-          "__class__": "Edge"
-        },
-        {
-          "id": "reactflow__edge-fee3482c-3a61-4f73-8f0b-87fa19bb65a0output-15965ad2-23cd-456f-88f7-f827c1bc71dbinfo",
-          "source": "fee3482c-3a61-4f73-8f0b-87fa19bb65a0",
-          "sourceHandle": "output",
-          "target": "15965ad2-23cd-456f-88f7-f827c1bc71db",
-          "targetHandle": "info",
           "data": {
             "startColor": "#D770AD",
             "stopColor": "#888"
@@ -2802,6 +3136,48 @@
           "data": {
             "startColor": "#888",
             "stopColor": "#56DCB9"
+          },
+          "selected": false,
+          "dragging": false,
+          "__class__": "Edge"
+        },
+        {
+          "id": "d47650f5-52be-46ca-bdf5-63068f0a15df",
+          "source": "0c354117-28f7-422b-956d-5dc51f053182",
+          "sourceHandle": "output",
+          "target": "de5f46ef-d7fc-476e-b845-2b5b56e6c91e",
+          "targetHandle": "delete",
+          "data": {
+            "startColor": "#D770AD",
+            "stopColor": "#888"
+          },
+          "selected": false,
+          "dragging": false,
+          "__class__": "Edge"
+        },
+        {
+          "id": "reactflow__edge-2b8a893b-6dc9-49c1-8eb7-1a29d346c999output-de5f46ef-d7fc-476e-b845-2b5b56e6c91ecreate",
+          "source": "2b8a893b-6dc9-49c1-8eb7-1a29d346c999",
+          "sourceHandle": "output",
+          "target": "de5f46ef-d7fc-476e-b845-2b5b56e6c91e",
+          "targetHandle": "create",
+          "data": {
+            "startColor": "#D770AD",
+            "stopColor": "#888"
+          },
+          "selected": false,
+          "dragging": false,
+          "__class__": "Edge"
+        },
+        {
+          "id": "reactflow__edge-fee3482c-3a61-4f73-8f0b-87fa19bb65a0output-15965ad2-23cd-456f-88f7-f827c1bc71dbcreate",
+          "source": "fee3482c-3a61-4f73-8f0b-87fa19bb65a0",
+          "sourceHandle": "output",
+          "target": "15965ad2-23cd-456f-88f7-f827c1bc71db",
+          "targetHandle": "create",
+          "data": {
+            "startColor": "#D770AD",
+            "stopColor": "#888"
           },
           "selected": false,
           "dragging": false,
@@ -2946,15 +3322,15 @@
         {
           "id": "22b72b20-0e7e-4f4c-8672-114f82e357bc",
           "position": {
-            "x": 924,
-            "y": 210
+            "x": 926,
+            "y": 208
           },
           "type": "custom",
           "dragHandle": "#nodeHandle",
           "sourcePosition": "right",
           "targetPosition": "left",
           "width": 150,
-          "height": 56,
+          "height": 60,
           "selected": false,
           "dragging": false,
           "data": {
@@ -3176,8 +3552,8 @@
           "selectable": true,
           "draggable": true,
           "positionAbsolute": {
-            "x": 924,
-            "y": 210
+            "x": 926,
+            "y": 208
           },
           "__class__": "Node"
         },

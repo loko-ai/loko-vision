@@ -17,6 +17,7 @@ from keras.utils import data_utils
 env = EnvInit()
 REPO_PATH = env.REPO or '../repo'
 GATEWAY = env.GATEWAY
+PORT = int(env.get("PORT", 8083))
 PROCESS_WORKERS = env.get("PROCESS_WORKERS", 4)
 POOL = ProcessPoolExecutor(max_workers=PROCESS_WORKERS)
 

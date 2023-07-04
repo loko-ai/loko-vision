@@ -51,37 +51,42 @@ class PredictorsDAO:
         self.get.cache_clear()
 
     def all(self):
-        return self.path.glob('*')
+        return self.path.glob("[!.]*")
 
     @lru_cache(maxsize=1)
-    def get(self, predictor_name):
-        try:
-            with open(self.path / predictor_name / BLUEPRINT_FILENAME, 'r') as f:
-                blueprint = json.load(f)
-            # if "model_parameters" in blueprint.
-            print(self.path / predictor_name / predictor_name)
-            model_obj = joblib.load(self.path / predictor_name / predictor_name)
-            with open(self.path / predictor_name / BLUEPRINT_FILENAME, 'r') as f:
-                blueprint = json.load(f)
-            model_parameters = blueprint.get("top_layer")
-            # print("mod==========", model_parameters)
+    def get(self, predictor_name, custom_model=True):
+        logger.debug(f"loading {predictor_name}. Is it a custom model? {custom_model}")
+        if not custom_model:
+            model_parameters = dict(__klass__='ds4biz.KerasImagePredictor',
+                                    pretrained_model=predictor_name,
+                                    predictor_name=predictor_name)
 
-            # print(blueprint)
-            # print(model_parameters)
-            if model_parameters is not None:
-                # print("modelllllll ",model_parameters)
-                res = PredictorRequest(predictor_name=blueprint[PREDICTOR_NAME_LBL],
-                                       pretained_model=blueprint[PRETRAINED_MODEL_LBL],
-                                       predictor_tag=blueprint.get(PREDICTOR_TAG_LBL, None),
-                                       model_obj=model_obj, model_parameters=model_parameters, fitted=blueprint.get(FITTED_STATUS_LBL, False))
-            else:
-                res = PredictorRequest(predictor_name=blueprint[PREDICTOR_NAME_LBL],
-                                       pretained_model=blueprint[PRETRAINED_MODEL_LBL],
-                                       predictor_tag=blueprint.get(PREDICTOR_TAG_LBL, None)
-                                       , fitted=blueprint.get(FITTED_STATUS_LBL, False))
-        except Exception as inst:
-            print(inst)
-            raise PredictorDAOException("Can't load predictor")
+            res = FACTORY(model_parameters)
+            # model = f_cached(**model_parameters)
+        else:
+            try:
+                # with open(self.path / predictor_name / BLUEPRINT_FILENAME, 'r') as f:
+                #     blueprint = json.load(f)
+                # if "model_parameters" in blueprint.
+                logger.debug(f"predictor path: {self.path / predictor_name / predictor_name}")
+                model_obj = joblib.load(self.path / predictor_name / predictor_name)
+                with open(self.path / predictor_name / BLUEPRINT_FILENAME, 'r') as f:
+                    blueprint = json.load(f)
+                model_parameters = blueprint.get("top_layer")
+                if model_parameters is not None:
+                    # print("modelllllll ",model_parameters)
+                    res = PredictorRequest(predictor_name=blueprint[PREDICTOR_NAME_LBL],
+                                           pretained_model=blueprint[PRETRAINED_MODEL_LBL],
+                                           predictor_tag=blueprint.get(PREDICTOR_TAG_LBL, None),
+                                           model_obj=model_obj, model_parameters=model_parameters, fitted=blueprint.get(FITTED_STATUS_LBL, False))
+                else:
+                    res = PredictorRequest(predictor_name=blueprint[PREDICTOR_NAME_LBL],
+                                           pretained_model=blueprint[PRETRAINED_MODEL_LBL],
+                                           predictor_tag=blueprint.get(PREDICTOR_TAG_LBL, None)
+                                           , fitted=blueprint.get(FITTED_STATUS_LBL, False))
+            except Exception as inst:
+                logger.error(f"Error loading predictor: {inst}")
+                raise PredictorDAOException("Can't load predictor")
         return res
 
 

@@ -7,12 +7,14 @@ from PIL.Image import Resampling
 from tensorflow.keras.preprocessing import image
 from tensorflow.keras.applications.resnet50 import preprocess_input
 
+
 import time
 
 
 img_path = "Colline.jpg"
 img = Image.open(img_path)
 model = keras.applications.ResNet50()
+model
 input_shape = model.input.type_spec.shape[1:3]
 
 def preprocess_and_predict(X):

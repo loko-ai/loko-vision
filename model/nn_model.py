@@ -73,7 +73,7 @@ class NNClassifierWrapper:
         self.model = tf.keras.Sequential().from_config(config)
 
     def fit(self, X, y, callbacks=None, batch_size=64):
-        logger.debug("nnfit....")
+        logger.debug("Fitting the neural network top layer....")
         # try:
         if self.multilabel:
             logger.debug("transforming target variable...")
@@ -82,7 +82,7 @@ class NNClassifierWrapper:
         logger.debug(f"Y val pre:::: {y[0]}")
 
         y = self._cast_target_to_numpy(y)
-        logger.debug(f"Y val example:::: {y[0]}")
+        logger.debug(f"Y val example after casting:::: {y[0]}")
 
         X = self._cast_target_to_numpy(X)
         logger.debug("compiling and fitting model...")
@@ -118,14 +118,11 @@ class NNClassifierWrapper:
         metrics_name = self.model.metrics_names
         logger.debug(f"metrics_name = {metrics_name}")
         eval_res = {m_name: m_value for m_value, m_name in zip(eval, metrics_name)}
-        logger.debug(f"keras {keras.__version__}")
-        logger.debug(f"tf {tf.__version__}")
         if "loss" in eval_res:
-            logger.debug(f"los---- {self.loss}")
+            logger.debug(f"loss---- {self.loss}")
             logger.debug(f"losses {self.model.losses}")
             loss_name = self.loss
             eval_res[loss_name] = eval_res.pop("loss")
-        logger.debug(f"evaluate res::::: -----> {eval_res}")
         return eval_res
 
     def save(self, path):
